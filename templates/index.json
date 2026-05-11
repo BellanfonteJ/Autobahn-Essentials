@@ -187,12 +187,6 @@
         "feature_3": {
           "type": "feature",
           "settings": {
-            "text": "Secure checkout with clear cart, order, and support paths."
-          }
-        },
-        "feature_4": {
-          "type": "feature",
-          "settings": {
             "text": "Fitment-minded help for choosing the right upgrade before you buy."
           }
         }
@@ -200,8 +194,7 @@
       "block_order": [
         "feature_1",
         "feature_2",
-        "feature_3",
-        "feature_4"
+        "feature_3"
       ],
       "settings": {
         "eyebrow": "Real builds. Real results.",
