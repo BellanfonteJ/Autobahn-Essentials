@@ -1,30 +1,3 @@
-# Autobahn Essentials Shopify Theme
-
-A custom Shopify Online Store 2.0 theme for Autobahn Essentials, built around a premium automotive parts and garage essentials storefront.
-
-## What is included
-
-- Dark performance-inspired storefront styling with red accent controls
-- Autobahn Essentials AE logo and brand kit reference assets
-- Brand-kit palette: performance orange, pure black, dark charcoal, carbon fiber gray, steel gray, and pure white
-- Montserrat-style headings and Roboto-style body copy loaded for the storefront
-- Editable Shopify theme settings for logo, favicon, colors, page width, sticky header, and announcement bar
-- Homepage sections for hero, trust/spec strip, featured products, featured collections, and image-with-text merchandising
-- Brand CTA section matching the orange "Upgrade Your Build Today" treatment
-- Floating ticker banner for the slogan, part types, and shipping/upgrade hooks
-- Shop dropdown for Engine Performance, Turbo Upgrades, Exterior Styling, Interior Accessories, Maintenance, and Garage Gear
-- Centered AE logo that stays clean and links home
-- Instagram social section and footer link for `@autobahnessentials`
-- Branded custom page templates for About, Builds, Fitment Guide, Contact, Shipping & Returns, and FAQ
-- Vehicle/part finder for year, make, model, and part type search
-- Promo tiles for product drops, build features, and OEM+ upgrade paths
-- Quick buy product cards with rollover image support and product badges
-- Product detail specs, fitment, shipping tabs, stock counter, and back-in-stock request form
-- Collection search toolbar, tag filter chips, breadcrumbs, cart notes, and back-to-top button
-- Product, collection, cart, search, page, blog, article, 404, and list-collections templates
-- Reusable product card, price, and icon snippets
-- Local static preview at `preview.html`
-- Local page template preview at `pages-preview.html`
 
 ## Changelog
 
