@@ -26,6 +26,14 @@ A custom Shopify Online Store 2.0 theme for Autobahn Essentials, built around a 
 - Local static preview at `preview.html`
 - Local page template preview at `pages-preview.html`
 
+## Changelog
+
+### 2026-05-11 - Small wiring update
+
+- Wired homepage CTAs and promo tiles to concrete shop, builds, search, and Instagram destinations.
+- Improved header search, mobile nav, and cart drawer button behavior in `assets/theme.js`.
+- Added safe fallback handling for builds-page Instagram links.
+
 ## Upload to Shopify
 
 1. In Shopify admin, go to **Online Store > Themes**.

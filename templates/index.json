@@ -17,9 +17,9 @@
         "accent_heading": "Performance.",
         "text": "Premium OEM+ and aftermarket parts for Euro builds.",
         "primary_label": "Shop Now",
-        "primary_link": "",
+        "primary_link": "/collections/all",
         "secondary_label": "View Builds",
-        "secondary_link": "",
+        "secondary_link": "/pages/builds",
         "stat_1": "OEM+",
         "stat_label_1": "Quality parts",
         "stat_2": "Euro",
@@ -132,7 +132,7 @@
             "eyebrow": "Product drop",
             "heading": "New Turbo Upgrades",
             "text": "Upgraded performance built to last.",
-            "link": ""
+            "link": "/search?type=product&q=Turbo+upgrade"
           }
         },
         "build": {
@@ -141,7 +141,7 @@
             "eyebrow": "Build feature",
             "heading": "600HP Build",
             "text": "Explore parts for high-output street setups.",
-            "link": ""
+            "link": "/pages/builds"
           }
         },
         "daily": {
@@ -150,7 +150,7 @@
             "eyebrow": "OEM+ essentials",
             "heading": "Daily Driver Ready",
             "text": "Clean upgrades for fit, finish, and reliability.",
-            "link": ""
+            "link": "/collections/all"
           }
         }
       },
@@ -166,7 +166,7 @@
       "settings": {
         "heading": "Upgrade Your Build Today.",
         "button_label": "Shop Now",
-        "button_link": ""
+        "button_link": "/collections/all"
       }
     },
     "image_text": {
@@ -201,7 +201,7 @@
         "heading": "Trusted By Enthusiasts",
         "text": "Autobahn Essentials is a performance-driven brand dedicated to providing high quality OEM+ and aftermarket parts for European vehicles.",
         "button_label": "Shop Now",
-        "button_link": ""
+        "button_link": "/collections/all"
       }
     },
     "instagram": {
@@ -211,7 +211,7 @@
         "heading": "See Autobahn Essentials on Instagram",
         "text": "Follow product drops, customer builds, install inspiration, and behind-the-scenes performance content.",
         "handle": "@autobahnessentials",
-        "instagram_url": "",
+        "instagram_url": "https://www.instagram.com/autobahnessentials/",
         "button_label": "Follow @autobahnessentials",
         "footer_text": "Builds, drops, reels, and real results"
       }

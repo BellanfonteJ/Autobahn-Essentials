@@ -1,5 +1,12 @@
 {% render 'breadcrumbs' %}
 
+{%- liquid
+  assign instagram_url = section.settings.instagram_url
+  if instagram_url == blank
+    assign instagram_url = 'https://www.instagram.com/autobahnessentials/'
+  endif
+-%}
+
 <section class="ae-page-hero" style="--ae-page-image: url({{ 'autobahn-hero.svg' | asset_url }});">
   <div class="page-width ae-page-hero__inner">
     <div>
@@ -8,7 +15,7 @@
       <p>{{ section.settings.text }}</p>
       <div class="ae-page-actions">
         <a class="button" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">{{ section.settings.primary_label }}</a>
-        <a class="button button--secondary" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.secondary_label }}</a>
+        <a class="button button--secondary" href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.secondary_label }}</a>
       </div>
     </div>
     <div class="ae-page-stats" aria-label="Build page highlights">
@@ -57,7 +64,7 @@
       <div class="eyebrow">Submit a build</div>
       <h2>{{ section.settings.submit_heading }}</h2>
       <p>{{ section.settings.submit_text }}</p>
-      <a class="button" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.submit_label }}</a>
+      <a class="button" href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.submit_label }}</a>
     </div>
   </div>
 </section>

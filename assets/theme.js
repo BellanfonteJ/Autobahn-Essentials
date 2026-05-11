@@ -6,6 +6,11 @@ const menuToggle = document.querySelector('[data-menu-toggle]');
 const mobileNav = document.querySelector('[data-mobile-nav]');
 
 if (searchToggle && searchDrawer) {
+  function closeSearchDrawer() {
+    searchDrawer.classList.remove('is-open');
+    searchToggle.setAttribute('aria-expanded', 'false');
+  }
+
   searchToggle.addEventListener('click', () => {
     const isOpen = searchDrawer.classList.toggle('is-open');
     searchToggle.setAttribute('aria-expanded', String(isOpen));
@@ -13,13 +18,50 @@ if (searchToggle && searchDrawer) {
       searchDrawer.querySelector('input[type="search"]')?.focus();
     }
   });
+
+  document.addEventListener('click', (evt) => {
+    if (!searchDrawer.classList.contains('is-open')) return;
+    if (searchDrawer.contains(evt.target) || searchToggle.contains(evt.target)) return;
+    closeSearchDrawer();
+  });
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape' && searchDrawer.classList.contains('is-open')) {
+      closeSearchDrawer();
+      searchToggle.focus();
+    }
+  });
 }
 
 if (menuToggle && mobileNav) {
+  function closeMobileNav() {
+    mobileNav.classList.remove('is-open');
+    document.body.classList.remove('is-menu-open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+  }
+
   menuToggle.addEventListener('click', () => {
     const isOpen = mobileNav.classList.toggle('is-open');
     document.body.classList.toggle('is-menu-open', isOpen);
     menuToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  mobileNav.addEventListener('click', (evt) => {
+    const link = evt.target.closest('a');
+    if (link && window.matchMedia('(max-width: 990px)').matches) closeMobileNav();
+  });
+
+  document.addEventListener('click', (evt) => {
+    if (!mobileNav.classList.contains('is-open')) return;
+    if (mobileNav.contains(evt.target) || menuToggle.contains(evt.target)) return;
+    closeMobileNav();
+  });
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape' && mobileNav.classList.contains('is-open')) {
+      closeMobileNav();
+      menuToggle.focus();
+    }
   });
 }
 
@@ -246,6 +288,7 @@ if (cartDrawer) {
     el.addEventListener('click', (evt) => {
       evt.preventDefault();
       openCartDrawer();
+      refreshCart();
     });
   });
 
