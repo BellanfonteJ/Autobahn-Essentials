@@ -7,6 +7,7 @@
       </div>
     </div>
 
+    {%- assign collection_placeholders = 'photo-1592198084033-aade902d1aae,photo-1568844293986-8d0400bd4745,photo-1606664515524-ed2f786a0bd6,photo-1605559424843-9e4c228bf1c2,photo-1485827404703-89b55fcc595e,photo-1542362567-b07e54358753' | split: ',' -%}
     <div class="collection-grid">
       {%- for block in section.blocks -%}
         {%- assign collection = block.settings.collection -%}
@@ -17,7 +18,8 @@
             {%- elsif block.settings.image != blank -%}
               {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 50vw' }}
             {%- else -%}
-              <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" loading="lazy">
+              {%- assign placeholder_index = forloop.index0 | modulo: collection_placeholders.size -%}
+              <img src="https://images.unsplash.com/{{ collection_placeholders[placeholder_index] }}?w=900&q=80&auto=format&fit=crop" alt="" loading="lazy" sizes="(min-width: 990px) 25vw, 50vw">
             {%- endif -%}
           </div>
           <div class="collection-card__info">

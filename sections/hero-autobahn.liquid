@@ -1,9 +1,11 @@
 <section class="hero">
-  {%- if section.settings.image != blank -%}
-    <div class="hero__media">
+  <div class="hero__media">
+    {%- if section.settings.image != blank -%}
       {{ section.settings.image | image_url: width: 2400 | image_tag: loading: 'eager', sizes: '100vw' }}
-    </div>
-  {%- endif -%}
+    {%- else -%}
+      <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=2400&q=80&auto=format&fit=crop" alt="Modified euro performance car" loading="eager" sizes="100vw">
+    {%- endif -%}
+  </div>
 
   <div class="hero__content">
     {%- if section.settings.eyebrow != blank -%}
