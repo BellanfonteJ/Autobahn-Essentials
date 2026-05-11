@@ -2188,3 +2188,181 @@ select option:hover {
     flex-direction: column;
   }
 }
+
+/* Refinement layer: darker native selects and softer shared surfaces. */
+select,
+select.field,
+.select {
+  border-color: rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background-color: #080808 !important;
+  color: #fff !important;
+  color-scheme: dark;
+}
+
+select option,
+select optgroup,
+.select option,
+.select optgroup,
+.field option,
+.field optgroup {
+  background-color: #080808 !important;
+  color: #fff !important;
+}
+
+select option:checked,
+select option:hover,
+.select option:checked,
+.select option:hover,
+.field option:checked,
+.field option:hover {
+  background-color: #e8432a !important;
+  color: #fff !important;
+}
+
+.field,
+.select,
+.quantity__input,
+.button,
+.shopify-payment-button__button,
+.nav-dropdown summary,
+.nav-dropdown__menu,
+.nav-dropdown__menu a,
+.ticker-banner,
+.filter-chip,
+.trust-pill,
+.product-tabs details,
+.pagination a,
+.pagination span,
+.empty-state,
+.ae-form-status {
+  border-radius: 8px;
+}
+
+.icon-button,
+.back-to-top {
+  border-radius: 999px;
+}
+
+.vehicle-finder__shell,
+.product-card,
+.collection-card,
+.article-card,
+.promo-tile,
+.image-text__media,
+.product-gallery__main,
+.product-info,
+.social-card,
+.ae-card,
+.ae-faq-list details {
+  border-radius: 8px;
+  border-color: rgba(255, 255, 255, 0.13);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    var(--color-surface);
+}
+
+.vehicle-finder__shell,
+.product-info,
+.ae-card,
+.social-card {
+  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.28);
+}
+
+.vehicle-finder__shell,
+.ae-card--accent,
+.ae-form-status {
+  border-left-width: 1px;
+}
+
+.vehicle-finder__shell {
+  padding: 24px;
+}
+
+.product-card,
+.collection-card,
+.article-card,
+.promo-tile,
+.social-card,
+.ae-card {
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.22);
+}
+
+.product-card:hover,
+.collection-card:hover,
+.article-card:hover,
+.promo-tile:hover,
+.social-card:hover,
+.social-card:focus-visible,
+.ae-build-card:hover {
+  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.32);
+}
+
+.product-card__badge,
+.ae-pill {
+  border-radius: 999px;
+}
+
+.hero__stats,
+.spec-strip__grid {
+  gap: 12px;
+  border: 0;
+  background: transparent;
+}
+
+.hero-stat,
+.spec-item {
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    rgba(17, 17, 17, 0.94);
+}
+
+.social-card__grid span {
+  border-radius: 8px;
+}
+
+.cart-item img,
+.product-thumbs img,
+.product-thumb-button {
+  border-radius: 8px;
+}
+
+.ae-page-stat {
+  border-radius: 8px;
+  border-left-width: 1px;
+}
+
+.vehicle-finder__shell {
+  background:
+    linear-gradient(135deg, rgba(232, 67, 42, 0.11), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    rgba(5, 5, 5, 0.96);
+}
+
+.promo-tile {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.84)),
+    linear-gradient(135deg, rgba(232, 67, 42, 0.2), rgba(255, 255, 255, 0.035)),
+    #111;
+}
+
+.social-card {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(232, 67, 42, 0.32), transparent 30%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018)),
+    #101010;
+}
+
+.vehicle-finder__shell,
+.ae-card--accent,
+.ae-form-status {
+  border-left: 3px solid var(--color-accent);
+}
+
+@media (max-width: 640px) {
+  .vehicle-finder__shell {
+    padding: 18px;
+  }
+}
