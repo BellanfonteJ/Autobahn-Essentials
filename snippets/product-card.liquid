@@ -1,16 +1,16 @@
 {%- liquid
-  assign sizes = '(min-width: 990px) 25vw, (min-width: 640px) 50vw, 100vw'
+  assign sizes = '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw'
 -%}
 
 <article class="product-card">
   <a href="{{ product.url }}" class="product-card__media" aria-label="{{ product.title | escape }}">
     {%- if product.featured_media -%}
-      {{ product.featured_media | image_url: width: 820 | image_tag: loading: 'lazy', sizes: sizes, class: 'product-card__image' }}
+      {{ product.featured_media | image_url: width: 820 | image_tag: loading: 'lazy', decoding: 'async', sizes: sizes, class: 'product-card__image' }}
       {%- if product.media[1] and product.media[1].media_type == 'image' -%}
-        {{ product.media[1] | image_url: width: 820 | image_tag: loading: 'lazy', sizes: sizes, class: 'product-card__image product-card__image--hover' }}
+        {{ product.media[1] | image_url: width: 820 | image_tag: loading: 'lazy', decoding: 'async', sizes: sizes, class: 'product-card__image product-card__image--hover' }}
       {%- endif -%}
     {%- else -%}
-      <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" loading="lazy" class="product-card__image">
+      <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" width="1800" height="1000" loading="lazy" class="product-card__image">
     {%- endif -%}
 
     {%- if product.metafields.custom.badge != blank -%}

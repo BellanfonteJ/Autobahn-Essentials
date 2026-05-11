@@ -13,11 +13,11 @@
         <a class="collection-card" href="{{ collection.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
           <div class="collection-card__media">
             {%- if collection.featured_image -%}
-              {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 50vw' }}
+              {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw' }}
             {%- elsif block.settings.image != blank -%}
-              {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 50vw' }}
+              {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw' }}
             {%- else -%}
-              <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" loading="lazy">
+              <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" width="1800" height="1000" loading="lazy">
             {%- endif -%}
           </div>
           <div class="collection-card__info">

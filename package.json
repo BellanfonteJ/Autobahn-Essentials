@@ -1,0 +1,14 @@
+{
+  "name": "autobahn-essentials-shopify-theme",
+  "private": true,
+  "packageManager": "pnpm@11.0.9",
+  "scripts": {
+    "shopify": "shopify",
+    "theme:check": "shopify theme check",
+    "theme:dev": "shopify theme dev",
+    "theme:package": "shopify theme package"
+  },
+  "devDependencies": {
+    "@shopify/cli": "^3.94.3"
+  }
+}

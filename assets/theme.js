@@ -5,10 +5,25 @@ const searchDrawer = document.querySelector('[data-search-drawer]');
 const menuToggle = document.querySelector('[data-menu-toggle]');
 const mobileNav = document.querySelector('[data-mobile-nav]');
 
+const closeMobileMenu = () => {
+  if (!menuToggle || !mobileNav) return;
+  mobileNav.classList.remove('is-open');
+  document.body.classList.remove('is-menu-open');
+  menuToggle.setAttribute('aria-expanded', 'false');
+};
+
+const closeSearchDrawer = () => {
+  if (!searchToggle || !searchDrawer) return;
+  searchDrawer.classList.remove('is-open');
+  searchToggle.setAttribute('aria-expanded', 'false');
+};
+
 if (searchToggle && searchDrawer) {
-  searchToggle.addEventListener('click', () => {
+  searchToggle.addEventListener('click', (event) => {
+    event.stopPropagation();
     const isOpen = searchDrawer.classList.toggle('is-open');
     searchToggle.setAttribute('aria-expanded', String(isOpen));
+    if (isOpen) closeMobileMenu();
     if (isOpen) {
       searchDrawer.querySelector('input[type="search"]')?.focus();
     }
@@ -16,10 +31,37 @@ if (searchToggle && searchDrawer) {
 }
 
 if (menuToggle && mobileNav) {
-  menuToggle.addEventListener('click', () => {
+  menuToggle.addEventListener('click', (event) => {
+    event.stopPropagation();
     const isOpen = mobileNav.classList.toggle('is-open');
     document.body.classList.toggle('is-menu-open', isOpen);
     menuToggle.setAttribute('aria-expanded', String(isOpen));
+    if (isOpen) closeSearchDrawer();
+  });
+
+  mobileNav.addEventListener('click', (event) => {
+    if (event.target.closest('a')) {
+      closeMobileMenu();
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!mobileNav.classList.contains('is-open')) return;
+    if (mobileNav.contains(event.target) || menuToggle.contains(event.target)) return;
+    closeMobileMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeMobileMenu();
+      closeSearchDrawer();
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.matchMedia('(min-width: 991px)').matches) {
+      closeMobileMenu();
+    }
   });
 }
 
