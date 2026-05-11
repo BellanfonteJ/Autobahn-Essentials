@@ -286,22 +286,28 @@ summary:focus-visible {
 }
 
 .site-header__inner {
+  position: relative;
   min-height: 92px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
   gap: 24px;
 }
 
 .site-logo {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  min-width: max-content;
+  width: 100%;
+  min-width: 0;
+  min-height: 78px;
   color: #fff;
   font-size: 1.05rem;
   font-weight: 950;
-  letter-spacing: 0.06em;
+  letter-spacing: 0;
+  text-align: center;
   text-transform: uppercase;
 }
 
@@ -317,22 +323,51 @@ summary:focus-visible {
 }
 
 .site-logo img {
+  position: absolute;
+  inset: 50% auto auto 50%;
   width: auto;
   max-width: 246px;
   max-height: 72px;
   object-fit: contain;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.site-logo__text {
+  max-width: min(320px, 48vw);
+  color: #fff;
+  font-size: clamp(0.82rem, 1.25vw, 1.08rem);
+  font-weight: 950;
+  line-height: 1.05;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.site-header:hover .site-logo img,
+.site-header:focus-within .site-logo img {
+  opacity: 0;
+  transform: translate(-50%, -54%) scale(0.96);
+}
+
+.site-header:hover .site-logo__text,
+.site-header:focus-within .site-logo__text {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .header-logo {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   z-index: 24;
-  grid-column: 2;
-  grid-row: 1;
-  min-width: 278px;
+  width: min(34vw, 320px);
+  min-width: 220px;
   min-height: 78px;
   display: grid;
   place-items: center;
-  justify-self: center;
+  transform: translate(-50%, -50%);
 }
 
 .site-nav {
@@ -439,7 +474,7 @@ summary:focus-visible {
 }
 
 .header-actions {
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 1;
   display: flex;
   align-items: center;

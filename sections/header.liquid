@@ -59,6 +59,7 @@
         {%- else -%}
           <img src="{{ 'autobahn-essentials-logo.png' | asset_url }}" alt="{{ shop.name | default: 'Autobahn Essentials' | escape }}" width="940" height="430" loading="eager">
         {%- endif -%}
+        <span class="site-logo__text" aria-hidden="true">{{ shop.name | default: 'Autobahn Essentials' }}</span>
       </a>
     </div>
 
