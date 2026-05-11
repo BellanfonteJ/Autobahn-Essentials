@@ -29,10 +29,16 @@
       <p>{{ section.settings.grid_text }}</p>
     </div>
 
+    {%- assign build_placeholders = 'photo-1494976388531-d1058494cdd8,photo-1583121274602-3e2820c69888,photo-1555215695-3004980ad54e,photo-1503376780353-7e6692767b70,photo-1605559424843-9e4c228bf1c2,photo-1606664515524-ed2f786a0bd6' | split: ',' -%}
     <div class="ae-grid-3">
       {%- for block in section.blocks -%}
         <article class="ae-card ae-build-card" {{ block.shopify_attributes }}>
-          <div class="ae-build-card__media"{% if block.settings.image != blank %} style="--ae-build-image: url({{ block.settings.image | image_url: width: 900 }});"{% endif %}></div>
+          {%- if block.settings.image != blank -%}
+            <div class="ae-build-card__media" style="--ae-build-image: url({{ block.settings.image | image_url: width: 900 }});"></div>
+          {%- else -%}
+            {%- assign placeholder_index = forloop.index0 | modulo: build_placeholders.size -%}
+            <div class="ae-build-card__media" style="--ae-build-image: url(https://images.unsplash.com/{{ build_placeholders[placeholder_index] }}?w=900&q=80&auto=format&fit=crop);"></div>
+          {%- endif -%}
           <div class="ae-build-card__body">
             <div class="eyebrow">{{ block.settings.vehicle }}</div>
             <h3>{{ block.settings.title }}</h3>
