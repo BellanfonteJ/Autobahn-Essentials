@@ -1,10 +1,40 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
-      "type": "hero-autobahn"
+      "type": "hero-autobahn",
+      "settings": {
+        "eyebrow": "Autobahn Essentials",
+        "heading": "Built For",
+        "accent_heading": "Performance.",
+        "text": "Premium OEM+ and aftermarket parts for Euro builds.",
+        "primary_label": "Shop Now",
+        "primary_link": "",
+        "secondary_label": "View Builds",
+        "secondary_link": "",
+        "stat_1": "OEM+",
+        "stat_label_1": "Quality parts",
+        "stat_2": "Euro",
+        "stat_label_2": "Build focus",
+        "stat_3": "Fast",
+        "stat_label_3": "Shipping"
+      }
     },
     "vehicle_finder": {
-      "type": "vehicle-finder"
+      "type": "vehicle-finder",
+      "settings": {
+        "eyebrow": "Find your fit",
+        "heading": "Search by vehicle, category, or upgrade path",
+        "button_label": "Find Parts"
+      }
     },
     "spec_strip": {
       "type": "spec-strip",
@@ -42,7 +72,56 @@
           }
         }
       },
-      "block_order": ["fitment", "performance", "dispatch", "garage"]
+      "block_order": [
+        "fitment",
+        "performance",
+        "dispatch",
+        "garage"
+      ],
+      "settings": {}
+    },
+    "featured_collections": {
+      "type": "featured-collections",
+      "blocks": {
+        "performance": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "title": "Engine Performance"
+          }
+        },
+        "detailing": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "title": "Turbo Upgrades"
+          }
+        },
+        "maintenance": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "title": "Exterior Styling"
+          }
+        },
+        "garage": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "title": "Interior Accessories"
+          }
+        }
+      },
+      "block_order": [
+        "performance",
+        "detailing",
+        "maintenance",
+        "garage"
+      ],
+      "settings": {
+        "eyebrow": "Shop by category",
+        "heading": "Shop By Category"
+      }
     },
     "promo_tiles": {
       "type": "promo-tiles",
@@ -52,7 +131,8 @@
           "settings": {
             "eyebrow": "Product drop",
             "heading": "New Turbo Upgrades",
-            "text": "Upgraded performance built to last."
+            "text": "Upgraded performance built to last.",
+            "link": ""
           }
         },
         "build": {
@@ -60,7 +140,8 @@
           "settings": {
             "eyebrow": "Build feature",
             "heading": "600HP Build",
-            "text": "Explore parts for high-output street setups."
+            "text": "Explore parts for high-output street setups.",
+            "link": ""
           }
         },
         "daily": {
@@ -68,44 +149,25 @@
           "settings": {
             "eyebrow": "OEM+ essentials",
             "heading": "Daily Driver Ready",
-            "text": "Clean upgrades for fit, finish, and reliability."
+            "text": "Clean upgrades for fit, finish, and reliability.",
+            "link": ""
           }
         }
       },
-      "block_order": ["turbo", "build", "daily"]
+      "block_order": [
+        "turbo",
+        "build",
+        "daily"
+      ],
+      "settings": {}
     },
     "brand_cta": {
-      "type": "brand-cta"
-    },
-    "featured_collections": {
-      "type": "featured-collections",
-      "blocks": {
-        "performance": {
-          "type": "collection",
-          "settings": {
-            "title": "Engine Performance"
-          }
-        },
-        "detailing": {
-          "type": "collection",
-          "settings": {
-            "title": "Turbo Upgrades"
-          }
-        },
-        "maintenance": {
-          "type": "collection",
-          "settings": {
-            "title": "Exterior Styling"
-          }
-        },
-        "garage": {
-          "type": "collection",
-          "settings": {
-            "title": "Interior Accessories"
-          }
-        }
-      },
-      "block_order": ["performance", "detailing", "maintenance", "garage"]
+      "type": "brand-cta",
+      "settings": {
+        "heading": "Upgrade Your Build Today.",
+        "button_label": "Shop Now",
+        "button_link": ""
+      }
     },
     "image_text": {
       "type": "image-with-text",
@@ -129,11 +191,68 @@
           }
         }
       },
-      "block_order": ["feature_1", "feature_2", "feature_3"]
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3"
+      ],
+      "settings": {
+        "eyebrow": "Real builds. Real results.",
+        "heading": "Trusted By Enthusiasts",
+        "text": "Autobahn Essentials is a performance-driven brand dedicated to providing high quality OEM+ and aftermarket parts for European vehicles.",
+        "button_label": "Shop Now",
+        "button_link": ""
+      }
     },
     "instagram": {
-      "type": "social-instagram"
+      "type": "social-instagram",
+      "settings": {
+        "eyebrow": "Follow the builds",
+        "heading": "See Autobahn Essentials on Instagram",
+        "text": "Follow product drops, customer builds, install inspiration, and behind-the-scenes performance content.",
+        "handle": "@autobahnessentials",
+        "instagram_url": "",
+        "button_label": "Follow @autobahnessentials",
+        "footer_text": "Builds, drops, reels, and real results"
+      }
+    },
+    "1778486386eae17192": {
+      "type": "apps",
+      "blocks": {
+        "instafeed_app_block_wf4pjC": {
+          "type": "shopify://apps/instafeed/blocks/app-block/c447db20-095d-4a10-9725-b5977662c9d5",
+          "settings": {
+            "title": "",
+            "title_color": "",
+            "title_size_v2": 0,
+            "alignment": "center",
+            "instafeed_margin_top": 0,
+            "instafeed_margin_bottom": 0,
+            "instafeed_margin_sides": 0,
+            "show_instagram_link": false,
+            "link_alignment": "left",
+            "link_color": "#000000",
+            "background_color": "",
+            "feed_id": "",
+            "html_area": ""
+          }
+        }
+      },
+      "block_order": [
+        "instafeed_app_block_wf4pjC"
+      ],
+      "settings": {}
     }
   },
-  "order": ["hero", "vehicle_finder", "spec_strip", "featured_collections", "promo_tiles", "brand_cta", "image_text", "instagram"]
+  "order": [
+    "hero",
+    "vehicle_finder",
+    "spec_strip",
+    "featured_collections",
+    "promo_tiles",
+    "brand_cta",
+    "image_text",
+    "instagram",
+    "1778486386eae17192"
+  ]
 }
