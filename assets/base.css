@@ -2307,6 +2307,75 @@ select option:hover {
     align-items: start;
     flex-direction: column;
   }
+
+  /* Scale down oversized desktop type on phones */
+  body {
+    font-size: 15px;
+  }
+
+  .hero h1,
+  .ae-page-hero h1 {
+    font-size: clamp(2rem, 11vw, 3.25rem);
+    line-height: 1;
+  }
+
+  .hero__copy,
+  .ae-page-hero p {
+    font-size: clamp(0.95rem, 3.6vw, 1.05rem);
+  }
+
+  .section-heading h1,
+  .section-heading h2,
+  .product-info h1,
+  .image-text__content h2,
+  .brand-cta h2,
+  .ae-feature h2,
+  .social-section__content h2,
+  .vehicle-finder h2 {
+    font-size: clamp(1.35rem, 6.4vw, 2rem);
+    line-height: 1.05;
+  }
+
+  .section-heading {
+    flex-direction: column;
+    align-items: start;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+  }
+
+  .button,
+  .shopify-payment-button__button {
+    min-height: 44px;
+    padding: 0 18px;
+    font-size: 0.9rem;
+  }
+
+  .hero__actions {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .hero__actions .button {
+    flex: 1 1 auto;
+  }
+
+  .product-card__title,
+  .collection-card__title,
+  .article-card__title {
+    font-size: 0.95rem;
+  }
+
+  .price {
+    font-size: 1rem;
+  }
+
+  .ticker-banner__track span {
+    font-size: 0.78rem;
+  }
 }
 
 /* Refinement layer: darker native selects and softer shared surfaces. */
