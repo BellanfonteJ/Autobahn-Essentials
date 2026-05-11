@@ -6,7 +6,7 @@
         <h2>{{ section.settings.heading }}</h2>
       </div>
 
-      <form class="vehicle-finder__form" action="{{ routes.search_url }}" method="get" data-vehicle-finder>
+      <form class="vehicle-finder__form" action="{{ routes.search_url }}" method="get" data-vehicle-finder data-garage-save>
         <input type="hidden" name="type" value="product">
         <input type="hidden" name="q" value="">
 
@@ -26,6 +26,9 @@
 
         <label class="visually-hidden" for="FinderModel-{{ section.id }}">Model</label>
         <input class="field" id="FinderModel-{{ section.id }}" type="text" name="vehicle_model" placeholder="Model">
+
+        <label class="visually-hidden" for="FinderChassis-{{ section.id }}">Chassis</label>
+        <input class="field" id="FinderChassis-{{ section.id }}" type="text" name="vehicle_chassis" placeholder="Chassis">
 
         <label class="visually-hidden" for="FinderPart-{{ section.id }}">Part type</label>
         <select class="select" id="FinderPart-{{ section.id }}" name="part_type">

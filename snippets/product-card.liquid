@@ -32,6 +32,7 @@
       <a href="{{ product.url }}">{{ product.title }}</a>
     </h3>
     {% render 'price', product: product %}
+    {% render 'fitment-badge', product: product, context: 'card' %}
     {%- if product.available -%}
       {%- form 'product', product, class: 'product-card__quick-buy' -%}
         <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">

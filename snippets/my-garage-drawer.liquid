@@ -1,0 +1,70 @@
+<div
+  id="MyGarage"
+  class="garage-drawer"
+  data-garage-drawer
+  data-garage-empty-title="{{ 'garage.empty_title' | t | escape }}"
+  data-garage-empty-summary="{{ 'garage.empty_summary' | t | escape }}"
+  data-garage-saved-title-template="{{ 'garage.saved_title' | t: vehicle: '[vehicle]' | escape }}"
+  data-garage-saved-summary="{{ 'garage.saved_summary' | t | escape }}"
+>
+  <div class="page-width garage-drawer__inner">
+    <div class="garage-drawer__intro">
+      <div class="eyebrow">{{ 'garage.eyebrow' | t }}</div>
+      <h2 data-garage-title>{{ 'garage.empty_title' | t }}</h2>
+      <p data-garage-summary>{{ 'garage.empty_summary' | t }}</p>
+    </div>
+
+    <form class="garage-form" data-garage-form>
+      <label class="visually-hidden" for="GarageYear">{{ 'garage.year' | t }}</label>
+      <input
+        class="field"
+        id="GarageYear"
+        type="text"
+        name="vehicle_year"
+        inputmode="numeric"
+        autocomplete="off"
+        placeholder="{{ 'garage.year' | t }}"
+        data-garage-input="year"
+      >
+
+      <label class="visually-hidden" for="GarageMake">{{ 'garage.make' | t }}</label>
+      <select class="select" id="GarageMake" name="vehicle_make" data-garage-input="make">
+        <option value="">{{ 'garage.make' | t }}</option>
+        <option>BMW</option>
+        <option>Audi</option>
+        <option>Volkswagen</option>
+        <option>Mercedes-Benz</option>
+        <option>Porsche</option>
+        <option>Mini</option>
+      </select>
+
+      <label class="visually-hidden" for="GarageModel">{{ 'garage.model' | t }}</label>
+      <input
+        class="field"
+        id="GarageModel"
+        type="text"
+        name="vehicle_model"
+        autocomplete="off"
+        placeholder="{{ 'garage.model' | t }}"
+        data-garage-input="model"
+      >
+
+      <label class="visually-hidden" for="GarageChassis">{{ 'garage.chassis' | t }}</label>
+      <input
+        class="field"
+        id="GarageChassis"
+        type="text"
+        name="vehicle_chassis"
+        autocomplete="off"
+        placeholder="{{ 'garage.chassis' | t }}"
+        data-garage-input="chassis"
+      >
+
+      <button class="button" type="submit">{{ 'garage.save' | t }}</button>
+      <button class="button button--secondary" type="button" data-garage-clear>{{ 'garage.clear' | t }}</button>
+      <button class="icon-button garage-drawer__close" type="button" data-garage-close aria-label="{{ 'garage.close' | t }}">
+        {% render 'icon', icon: 'close' %}
+      </button>
+    </form>
+  </div>
+</div>

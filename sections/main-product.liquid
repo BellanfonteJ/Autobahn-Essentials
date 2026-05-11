@@ -1,18 +1,31 @@
 {% render 'breadcrumbs' %}
 
+{%- assign gallery_images = product.media | where: 'media_type', 'image' -%}
+{%- assign featured_image = product.featured_media.preview_image -%}
+{%- if product.featured_media.media_type != 'image' and gallery_images.size > 0 -%}
+  {%- assign first_gallery_image = gallery_images | first -%}
+  {%- assign featured_image = first_gallery_image.preview_image -%}
+{%- endif -%}
+
 <section class="section">
   <div class="page-width product-page">
     <div class="product-gallery">
       <div class="product-gallery__main">
-        {%- if product.featured_media -%}
-          {%- assign featured_image = product.featured_media.preview_image -%}
+        {%- if featured_image -%}
           <img
             data-gallery-main
             src="{{ featured_image | image_url: width: 1400 }}"
+            srcset="
+              {{ featured_image | image_url: width: 640 }} 640w,
+              {{ featured_image | image_url: width: 1000 }} 1000w,
+              {{ featured_image | image_url: width: 1400 }} 1400w,
+              {{ featured_image | image_url: width: 2000 }} 2000w
+            "
             alt="{{ featured_image.alt | default: product.title | escape }}"
             width="{{ featured_image.width }}"
             height="{{ featured_image.height }}"
             loading="eager"
+            fetchpriority="high"
             sizes="(min-width: 990px) 58vw, 100vw"
           >
         {%- else -%}
@@ -20,22 +33,41 @@
         {%- endif -%}
       </div>
 
-      {%- if product.media.size > 1 -%}
+      {%- if gallery_images.size > 1 -%}
         <div class="product-thumbs">
-          {%- for media in product.media limit: 5 -%}
-            {%- if media.media_type == 'image' -%}
-              {%- assign thumb_image = media.preview_image -%}
-              <button class="product-thumb-button" type="button" aria-label="{{ thumb_image.alt | default: product.title | escape }}">
-                <img
-                  src="{{ thumb_image | image_url: width: 240 }}"
-                  alt="{{ thumb_image.alt | default: product.title | escape }}"
-                  width="{{ thumb_image.width }}"
-                  height="{{ thumb_image.height }}"
-                  loading="lazy"
-                  data-gallery-thumb="{{ thumb_image | image_url: width: 1400 }}"
-                >
-              </button>
+          {%- for media in gallery_images limit: 5 -%}
+            {%- assign thumb_image = media.preview_image -%}
+            {%- assign is_active_thumb = false -%}
+            {%- if media.id == product.featured_media.id -%}
+              {%- assign is_active_thumb = true -%}
+            {%- elsif product.featured_media.media_type != 'image' and forloop.first -%}
+              {%- assign is_active_thumb = true -%}
             {%- endif -%}
+            <button
+              class="product-thumb-button{% if is_active_thumb %} is-active{% endif %}"
+              type="button"
+              aria-label="{{ thumb_image.alt | default: product.title | escape }}"
+              aria-current="{% if is_active_thumb %}true{% else %}false{% endif %}"
+              data-gallery-thumb
+              data-gallery-thumb-src="{{ thumb_image | image_url: width: 1400 }}"
+              data-gallery-thumb-srcset="
+                {{ thumb_image | image_url: width: 640 }} 640w,
+                {{ thumb_image | image_url: width: 1000 }} 1000w,
+                {{ thumb_image | image_url: width: 1400 }} 1400w,
+                {{ thumb_image | image_url: width: 2000 }} 2000w
+              "
+              data-gallery-thumb-alt="{{ thumb_image.alt | default: product.title | escape }}"
+              data-gallery-thumb-width="{{ thumb_image.width }}"
+              data-gallery-thumb-height="{{ thumb_image.height }}"
+            >
+              <img
+                src="{{ thumb_image | image_url: width: 240 }}"
+                alt="{{ thumb_image.alt | default: product.title | escape }}"
+                width="{{ thumb_image.width }}"
+                height="{{ thumb_image.height }}"
+                loading="lazy"
+              >
+            </button>
           {%- endfor -%}
         </div>
       {%- endif -%}
@@ -63,6 +95,7 @@
           <span>{{ 'products.product.sold_out' | t }}</span>
         {%- endif -%}
       </div>
+      {% render 'fitment-badge', product: product, context: 'product' %}
 
       {%- if product.description != blank -%}
         <div class="rte">{{ product.description }}</div>

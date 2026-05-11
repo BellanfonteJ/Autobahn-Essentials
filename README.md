@@ -1,44 +1,75 @@
-# Autobahn Essentials Shopify Theme
+# Autobahn Essentials V1.0 Shopify Theme
 
-A custom Shopify Online Store 2.0 theme for Autobahn Essentials, built around a premium automotive parts and garage essentials storefront.
+Autobahn Essentials V1.0 is a custom Shopify Online Store 2.0 theme for a premium automotive parts storefront. It is built around fast mobile browsing, confident product discovery, vehicle fitment support, and a dark performance-focused brand system.
 
-## What is included
+## V1.0 Highlights
 
-- Dark performance-inspired storefront styling with red accent controls
-- Autobahn Essentials AE logo and brand kit reference assets
-- Brand-kit palette: performance orange, pure black, dark charcoal, carbon fiber gray, steel gray, and pure white
-- Montserrat-style headings and Roboto-style body copy loaded for the storefront
-- Editable Shopify theme settings for logo, favicon, colors, page width, sticky header, and announcement bar
-- Homepage sections for hero, trust/spec strip, featured products, featured collections, and image-with-text merchandising
-- Brand CTA section matching the orange "Upgrade Your Build Today" treatment
-- Floating ticker banner for the slogan, part types, and shipping/upgrade hooks
-- Shop dropdown for Engine Performance, Turbo Upgrades, Exterior Styling, Interior Accessories, Maintenance, and Garage Gear
-- Centered AE logo that stays clean and links home
-- Instagram social section and footer link for `@autobahnessentials`
-- Branded custom page templates for About, Builds, Fitment Guide, Contact, Shipping & Returns, and FAQ
-- Vehicle/part finder for year, make, model, and part type search
-- Promo tiles for product drops, build features, and OEM+ upgrade paths
+- Mobile-optimized header, navigation, search, product grids, filter chips, and product cards
+- My Garage vehicle fitment with saved Year, Make, Model, and Chassis
+- Dynamic fitment badges on product cards and product pages
+- Product photo previews with responsive image switching and active thumbnail states
+- Vehicle/part finder for year, make, model, chassis, and part type search
+- Product detail specs, fitment, shipping tabs, stock counter, sticky add-to-cart, and back-in-stock request form
 - Quick buy product cards with rollover image support and product badges
-- Product detail specs, fitment, shipping tabs, stock counter, and back-in-stock request form
-- Collection search toolbar, tag filter chips, breadcrumbs, cart notes, and back-to-top button
-- Product, collection, cart, search, page, blog, article, 404, and list-collections templates
-- Reusable product card, price, and icon snippets
-- Local static preview at `preview.html`
-- Local page template preview at `pages-preview.html`
+- Homepage sections for hero, trust/spec strip, featured products, featured collections, promo tiles, image-with-text merchandising, brand CTA, and Instagram/social content
+- Branded custom page templates for About, Builds, Fitment Guide, Contact, Shipping & Returns, and FAQ
+- Collection search toolbar, tag filter chips, breadcrumbs, cart notes, pagination, and back-to-top button
+- Self-hosted storefront fonts and Theme Check clean Liquid/CSS/JS
+
+## My Garage Fitment
+
+Shoppers can save their vehicle from the header garage button or from supported fitment search forms. The saved vehicle stays in the browser and updates fitment badges across browsing and product pages.
+
+Badges can show:
+
+- `Fits your BMW F30`
+- `Check fitment for BMW F30`
+- `Universal fit`
+- `Check fitment`
+
+To make badges accurate, add product tags or custom metafields that include the relevant fitment terms. Useful tags include make, model, chassis, engine, and year values such as `BMW`, `F30`, `B58`, `Audi`, `B8`, or `MK7`.
+
+Supported custom metafields:
+
+- `custom.fitment`
+- `custom.fitment_notes`
+- `custom.vehicle_make`
+- `custom.vehicle_model`
+- `custom.chassis`
+- `custom.years`
+
+## Development
+
+Install dependencies:
+
+```sh
+node .tools/pnpm-js/bin/pnpm.mjs install
+```
+
+Run Shopify Theme Check:
+
+```sh
+node .tools/pnpm-js/bin/pnpm.mjs run theme:check
+```
+
+Start a Shopify theme preview after connecting a store:
+
+```sh
+node .tools/pnpm-js/bin/pnpm.mjs run theme:dev -- --store=your-store.myshopify.com
+```
+
+Package the theme:
+
+```sh
+node .tools/pnpm-js/bin/pnpm.mjs run theme:package
+```
 
 ## Upload to Shopify
 
 1. In Shopify admin, go to **Online Store > Themes**.
 2. Choose **Add theme > Upload zip file**.
-3. Upload `autobahn-essentials-shopify-theme.zip`.
-4. Open the theme editor and set:
-   - Logo and favicon
-   - Main menu and footer menus
-   - Hero image
-   - Featured products collection
-   - Featured collection blocks
-   - Optional custom logo if you want to replace the bundled AE asset
-   - Ticker slogan and visibility from theme settings
+3. Upload the packaged theme zip.
+4. Open the theme editor and configure logo, favicon, menus, hero media, featured collections, featured products, ticker text, and footer links.
 5. Create pages in Shopify admin and assign the matching theme templates:
    - About Us -> `page.about`
    - Builds -> `page.builds`
@@ -47,8 +78,13 @@ A custom Shopify Online Store 2.0 theme for Autobahn Essentials, built around a 
    - Shipping & Returns -> `page.shipping-returns`
    - FAQ -> `page.faq`
 
-## Local Preview
+## V1.0 Validation
 
-Open `preview.html` in a browser to see the storefront direction without Shopify data. Open `pages-preview.html` to preview the custom page template styling.
+Before release, the theme passed:
 
-The preview files are static reference mockups and are not included in the Shopify upload zip. Shopify renders the Liquid theme from the `assets`, `sections`, `snippets`, `templates`, `config`, `layout`, and `locales` folders. Products, checkout, dynamic collections, theme editor settings, menus, and assigned page templates only work after upload to Shopify.
+- JavaScript syntax check
+- Locale JSON parse
+- `git diff --check`
+- Shopify Theme Check
+- Desktop browser smoke test for My Garage, fitment badges, product photo previews, and console errors
+- Mobile browser smoke test for menu behavior, My Garage, fitment badge updates, garage clearing, and console errors

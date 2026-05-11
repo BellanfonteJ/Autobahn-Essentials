@@ -19,7 +19,7 @@
   <div class="page-width ae-page-content">
     <div class="ae-card ae-card--accent">
       <div class="eyebrow">Find your fit</div>
-      <form class="ae-fitment-form" action="{{ routes.search_url }}" method="get" role="search" data-vehicle-finder>
+      <form class="ae-fitment-form" action="{{ routes.search_url }}" method="get" role="search" data-vehicle-finder data-garage-save>
         <input type="hidden" name="type" value="product">
         <input type="hidden" name="q" value="">
         <input class="field" type="text" name="vehicle_year" placeholder="Year">
@@ -33,6 +33,7 @@
           <option>Mini</option>
         </select>
         <input class="field" type="text" name="vehicle_model" placeholder="Model">
+        <input class="field" type="text" name="vehicle_chassis" placeholder="Chassis">
         <select class="select" name="part_type">
           <option value="">Part type</option>
           <option>Downpipes</option>
