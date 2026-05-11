@@ -175,31 +175,38 @@
         "feature_1": {
           "type": "feature",
           "settings": {
-            "text": "Confident, straightforward, performance-driven product pages."
+            "text": "Quality-vetted OEM+ and aftermarket parts selected for real builds."
           }
         },
         "feature_2": {
           "type": "feature",
           "settings": {
-            "text": "Clear categories for engine, turbo, exterior, and interior upgrades."
+            "text": "Fast order processing and shipping on in-stock essentials."
           }
         },
         "feature_3": {
           "type": "feature",
           "settings": {
-            "text": "A dark brand system with AE orange accents throughout."
+            "text": "Secure checkout with clear cart, order, and support paths."
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "text": "Fitment-minded help for choosing the right upgrade before you buy."
           }
         }
       },
       "block_order": [
         "feature_1",
         "feature_2",
-        "feature_3"
+        "feature_3",
+        "feature_4"
       ],
       "settings": {
         "eyebrow": "Real builds. Real results.",
         "heading": "Trusted By Enthusiasts",
-        "text": "Autobahn Essentials is a performance-driven brand dedicated to providing high quality OEM+ and aftermarket parts for European vehicles.",
+        "text": "Shop parts with confidence: selected for quality, packed for quick turnaround, and backed by support that understands European builds.",
         "button_label": "Shop Now",
         "button_link": "/collections/all"
       }

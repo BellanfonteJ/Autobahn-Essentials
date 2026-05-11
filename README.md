@@ -28,6 +28,11 @@ A custom Shopify Online Store 2.0 theme for Autobahn Essentials, built around a 
 
 ## Changelog
 
+### 2026-05-11 - Trust copy update
+
+- Reworked the homepage image-with-text section to focus on part quality, shipping speed, secure checkout, and fitment-minded support.
+- Updated the section defaults so newly added image-with-text blocks use customer trust messaging instead of theme-demo language.
+
 ### 2026-05-11 - Small wiring update
 
 - Wired homepage CTAs and promo tiles to concrete shop, builds, search, and Instagram destinations.
