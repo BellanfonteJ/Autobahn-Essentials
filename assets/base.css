@@ -410,16 +410,8 @@ summary:focus-visible {
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
-.site-header:hover .site-logo img,
-.site-header:focus-within .site-logo img {
-  opacity: 0;
-  transform: translate(-50%, -54%) scale(0.96);
-}
-
-.site-header:hover .site-logo__text,
-.site-header:focus-within .site-logo__text {
-  opacity: 1;
-  transform: translateY(0);
+.site-logo__text {
+  display: none;
 }
 
 .header-logo {
@@ -446,7 +438,8 @@ summary:focus-visible {
 
 @media (min-width: 991px) {
   .site-nav > a,
-  .site-nav .nav-dropdown {
+  .site-nav .nav-dropdown,
+  .header-actions {
     opacity: 0;
     visibility: hidden;
     transition: opacity 180ms ease, visibility 0s linear 180ms;
@@ -454,8 +447,10 @@ summary:focus-visible {
 
   .site-header:hover .site-nav > a,
   .site-header:hover .site-nav .nav-dropdown,
+  .site-header:hover .header-actions,
   .site-header:focus-within .site-nav > a,
   .site-header:focus-within .site-nav .nav-dropdown,
+  .site-header:focus-within .header-actions,
   .site-nav:has(details[open]) > a,
   .site-nav:has(details[open]) .nav-dropdown {
     opacity: 1;
