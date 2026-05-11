@@ -64,3 +64,22 @@ if (backToTop) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
+// sticky atc bar
+const stickyAtc = document.getElementById('sticky-atc');
+const mainAtcBtn = document.querySelector('[data-atc-main]');
+
+if (stickyAtc && mainAtcBtn) {
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      stickyAtc.classList.toggle('is-visible', !entry.isIntersecting);
+      stickyAtc.setAttribute('aria-hidden', String(entry.isIntersecting));
+    },
+    { threshold: 0, rootMargin: '-92px 0px 0px 0px' } // offset for sticky header height
+  );
+  observer.observe(mainAtcBtn);
+
+  // wire the sticky btn to submit the main product form
+  document.getElementById('sticky-atc-btn')?.addEventListener('click', () => {
+    document.querySelector('[data-product-form]')?.requestSubmit();
+  });
+}
