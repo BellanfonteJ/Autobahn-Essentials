@@ -444,6 +444,26 @@ summary:focus-visible {
   gap: 28px;
 }
 
+@media (min-width: 991px) {
+  .site-nav > a,
+  .site-nav .nav-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 180ms ease, visibility 0s linear 180ms;
+  }
+
+  .site-header:hover .site-nav > a,
+  .site-header:hover .site-nav .nav-dropdown,
+  .site-header:focus-within .site-nav > a,
+  .site-header:focus-within .site-nav .nav-dropdown,
+  .site-nav:has(details[open]) > a,
+  .site-nav:has(details[open]) .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 180ms ease, visibility 0s linear 0s;
+  }
+}
+
 .site-nav a,
 .nav-dropdown summary {
   color: #fff;
