@@ -44,9 +44,6 @@
       },
       "block_order": ["fitment", "performance", "dispatch", "garage"]
     },
-    "featured_products": {
-      "type": "featured-products"
-    },
     "promo_tiles": {
       "type": "promo-tiles",
       "blocks": {
@@ -138,5 +135,5 @@
       "type": "social-instagram"
     }
   },
-  "order": ["hero", "vehicle_finder", "spec_strip", "featured_collections", "promo_tiles", "featured_products", "brand_cta", "image_text", "instagram"]
+  "order": ["hero", "vehicle_finder", "spec_strip", "featured_collections", "promo_tiles", "brand_cta", "image_text", "instagram"]
 }
