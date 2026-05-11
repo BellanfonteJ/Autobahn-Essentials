@@ -1550,6 +1550,24 @@ select option:hover {
   font-size: 1.06rem;
 }
 
+.social-section__inner--centered {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  text-align: center;
+}
+
+.social-section__inner--centered .social-section__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+}
+
+.social-section__inner--centered .social-section__content p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .social-section .button svg,
 .footer-social-link svg {
   width: 20px;
