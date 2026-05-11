@@ -1,0 +1,40 @@
+<section class="brand-cta section--tight">
+  <div class="page-width brand-cta__inner">
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.button_label != blank -%}
+      <a class="button button--dark" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+        {{ section.settings.button_label }}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand CTA",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Upgrade Your Build Today."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand CTA"
+    }
+  ]
+}
+{% endschema %}

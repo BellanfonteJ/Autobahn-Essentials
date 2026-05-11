@@ -1,0 +1,73 @@
+<section class="section">
+  <div class="page-width">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{{ 'templates.cart.cart' | t }}</div>
+        <h1>{{ 'templates.cart.cart' | t }}</h1>
+      </div>
+    </div>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="empty-state">
+        <p>{{ 'sections.cart.empty' | t }}</p>
+        <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a>
+      </div>
+    {%- else -%}
+      <form action="{{ routes.cart_url }}" method="post">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>{{ 'sections.cart.headings.product' | t }}</th>
+              <th>{{ 'sections.cart.headings.quantity' | t }}</th>
+              <th>{{ 'sections.cart.headings.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr>
+                <td>
+                  <div class="cart-item">
+                    {%- if item.image -%}
+                      {{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: item.image.alt | escape }}
+                    {%- endif -%}
+                    <div>
+                      <h3 class="product-card__title"><a href="{{ item.url }}">{{ item.product.title }}</a></h3>
+                      {%- unless item.product.has_only_default_variant -%}
+                        <p>{{ item.variant.title }}</p>
+                      {%- endunless -%}
+                      <a class="eyebrow" href="{{ item.url_to_remove }}">{{ 'sections.cart.remove' | t }}</a>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <input class="quantity__input" type="number" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="{{ 'products.product.quantity.label' | t }}">
+                </td>
+                <td>{{ item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <div class="cart-note">
+          <label class="form-label" for="CartNote">{{ 'sections.cart.note' | t }}</label>
+          <textarea class="field" id="CartNote" name="note" rows="4" placeholder="{{ 'sections.cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+        </div>
+
+        <div class="cart-footer">
+          <div>
+            <div class="eyebrow">{{ 'sections.cart.subtotal' | t }}</div>
+            <h2>{{ cart.total_price | money }}</h2>
+          </div>
+          <button class="button button--secondary" type="submit" name="update">{{ 'sections.cart.update' | t }}</button>
+          <button class="button" type="submit" name="checkout">{{ 'sections.cart.checkout' | t }}</button>
+        </div>
+      </form>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart"
+}
+{% endschema %}

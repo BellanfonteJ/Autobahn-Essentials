@@ -1,0 +1,88 @@
+{% render 'breadcrumbs' %}
+
+<section class="section">
+  <div class="page-width">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{{ collection.products_count }} {{ 'products.product.products' | t | default: 'products' }}</div>
+        <h1>{{ collection.title }}</h1>
+        {%- if collection.description != blank -%}
+          <div class="rte">{{ collection.description }}</div>
+        {%- endif -%}
+      </div>
+
+      <form method="get">
+        <label class="visually-hidden" for="SortBy">{{ 'collections.sorting.title' | t }}</label>
+        <select class="select" id="SortBy" name="sort_by" onchange="this.form.submit()">
+          {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name }}</option>
+          {%- endfor -%}
+        </select>
+      </form>
+    </div>
+
+    <div class="collection-tools">
+      <form class="collection-tools__search" action="{{ routes.search_url }}" method="get" data-vehicle-finder>
+        <input type="hidden" name="type" value="product">
+        <input type="hidden" name="q" value="">
+        <input class="field" type="text" name="vehicle_model" placeholder="Search this category by vehicle or part">
+        <select class="select" name="part_type">
+          <option value="">Part type</option>
+          <option>Downpipes</option>
+          <option>Turbo upgrade</option>
+          <option>Intercooler</option>
+          <option>Carbon fiber</option>
+          <option>Interior accessories</option>
+        </select>
+        <button class="button" type="submit">{{ 'general.search.submit' | t }}</button>
+      </form>
+
+      <div class="collection-filter-chips" aria-label="Collection filters">
+        <a href="{{ collection.url }}" class="filter-chip{% unless current_tags %} is-active{% endunless %}">All</a>
+        {%- for tag in collection.all_tags limit: 8 -%}
+          {%- if current_tags contains tag -%}
+            <span class="filter-chip is-active">{{ tag }}</span>
+          {%- else -%}
+            {{ tag | link_to_tag: tag | replace: '<a ', '<a class="filter-chip" ' }}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- paginate collection.products by section.settings.products_per_page -%}
+      {%- if collection.products.size > 0 -%}
+        <div class="product-grid">
+          {%- for product in collection.products -%}
+            {% render 'product-card', product: product %}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+            {{ paginate | default_pagination }}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <div class="empty-state">{{ 'collections.general.no_matches' | t }}</div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "label": "Products per page",
+      "default": 16
+    }
+  ]
+}
+{% endschema %}

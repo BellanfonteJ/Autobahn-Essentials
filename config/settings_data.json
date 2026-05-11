@@ -1,0 +1,18 @@
+{
+  "current": {
+    "color_background": "#000000",
+    "color_surface": "#111111",
+    "color_surface_strong": "#282828",
+    "color_text": "#ffffff",
+    "color_muted": "#8e8e8e",
+    "color_accent": "#e8432a",
+    "color_accent_contrast": "#ffffff",
+    "color_line": "#282828",
+    "enable_sticky_header": true,
+    "show_announcement": true,
+    "announcement_text": "Built for drivers. Backed by passion.",
+    "show_ticker": true,
+    "ticker_text": "Built for drivers. Backed by passion.",
+    "page_width": 1240
+  }
+}

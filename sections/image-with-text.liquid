@@ -1,0 +1,109 @@
+<section class="section">
+  <div class="page-width image-text">
+    <div class="image-text__media">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1500 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 50vw, 100vw' }}
+      {%- else -%}
+        <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" loading="lazy">
+      {%- endif -%}
+    </div>
+
+    <div class="image-text__content">
+      <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+      <h2>{{ section.settings.heading }}</h2>
+      <p>{{ section.settings.text }}</p>
+      <div class="feature-list">
+        {%- for block in section.blocks -%}
+          <div class="feature-list__item" {{ block.shopify_attributes }}>
+            {% render 'icon', icon: 'bolt' %}
+            <span>{{ block.settings.text }}</span>
+          </div>
+        {%- endfor -%}
+      </div>
+      {%- if section.settings.button_label != blank -%}
+        <a class="button" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Real builds. Real results."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Trusted By Enthusiasts"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Autobahn Essentials is a performance-driven brand dedicated to providing high quality OEM+ and aftermarket parts for European vehicles."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Confident, straightforward, performance-driven product pages."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Confident, straightforward, performance-driven product pages."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Clear categories for engine, turbo, exterior, and interior upgrades."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "A dark brand system with AE orange accents throughout."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

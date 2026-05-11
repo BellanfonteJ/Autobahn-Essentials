@@ -1,0 +1,10 @@
+{%- assign dropdown_label = label | default: 'Shop' -%}
+<details class="nav-dropdown">
+  <summary>
+    <span>{{ dropdown_label }}</span>
+    <span class="nav-dropdown__chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="nav-dropdown__menu">
+    {% render 'category-links' %}
+  </div>
+</details>

@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-fitment-autobahn"
+    },
+    "featured_collections": {
+      "type": "featured-collections"
+    }
+  },
+  "order": ["main", "featured_collections"]
+}

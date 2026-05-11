@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-about-autobahn"
+    },
+    "social": {
+      "type": "social-instagram"
+    }
+  },
+  "order": ["main", "social"]
+}

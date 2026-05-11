@@ -1,0 +1,42 @@
+{% render 'breadcrumbs' %}
+
+<section class="section">
+  <div class="page-width">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{{ shop.name }}</div>
+        <h1>{{ blog.title }}</h1>
+      </div>
+    </div>
+
+    {%- paginate blog.articles by 9 -%}
+      <div class="collection-grid">
+        {%- for article in blog.articles -%}
+          <article class="article-card">
+            {%- if article.image -%}
+              <a href="{{ article.url }}" class="collection-card__media">
+                {{ article.image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw' }}
+              </a>
+            {%- endif -%}
+            <div class="article-card__info">
+              <div class="eyebrow">{{ article.published_at | date: '%b %d, %Y' }}</div>
+              <h2 class="article-card__title"><a href="{{ article.url }}">{{ article.title }}</a></h2>
+              <p>{{ article.excerpt_or_content | strip_html | truncate: 150 }}</p>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+          {{ paginate | default_pagination }}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Blog"
+}
+{% endschema %}

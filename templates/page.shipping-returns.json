@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-shipping-returns-autobahn"
+    },
+    "cta": {
+      "type": "brand-cta"
+    }
+  },
+  "order": ["main", "cta"]
+}

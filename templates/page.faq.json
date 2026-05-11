@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-faq-autobahn"
+    },
+    "contact": {
+      "type": "brand-cta"
+    }
+  },
+  "order": ["main", "contact"]
+}

@@ -1,0 +1,223 @@
+{% render 'breadcrumbs' %}
+
+<section class="ae-page-hero" style="--ae-page-image: url({{ 'autobahn-hero.svg' | asset_url }});">
+  <div class="page-width ae-page-hero__inner">
+    <div>
+      <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+      <h1>{{ section.settings.heading }}</h1>
+      <p>{{ section.settings.text }}</p>
+      <div class="ae-page-actions">
+        <a class="button" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">{{ section.settings.primary_label }}</a>
+        <a class="button button--secondary" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.secondary_label }}</a>
+      </div>
+    </div>
+    <div class="ae-page-stats" aria-label="Build page highlights">
+      <div class="ae-page-stat"><strong>Turbo</strong><span>Power-focused upgrade paths</span></div>
+      <div class="ae-page-stat"><strong>OEM+</strong><span>Clean daily-driver setups</span></div>
+      <div class="ae-page-stat"><strong>Carbon</strong><span>Exterior styling and detail parts</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="page-width ae-page-content">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{{ section.settings.grid_eyebrow }}</div>
+        <h2>{{ section.settings.grid_heading }}</h2>
+      </div>
+      <p>{{ section.settings.grid_text }}</p>
+    </div>
+
+    <div class="ae-grid-3">
+      {%- for block in section.blocks -%}
+        <article class="ae-card ae-build-card" {{ block.shopify_attributes }}>
+          <div class="ae-build-card__media"{% if block.settings.image != blank %} style="--ae-build-image: url({{ block.settings.image | image_url: width: 900 }});"{% endif %}></div>
+          <div class="ae-build-card__body">
+            <div class="eyebrow">{{ block.settings.vehicle }}</div>
+            <h3>{{ block.settings.title }}</h3>
+            <p>{{ block.settings.text }}</p>
+            <div class="ae-meta-row">
+              <span class="ae-pill">{{ block.settings.part_1 }}</span>
+              <span class="ae-pill">{{ block.settings.part_2 }}</span>
+              <span class="ae-pill">{{ block.settings.part_3 }}</span>
+            </div>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+
+    <div class="ae-card ae-card--accent">
+      <div class="eyebrow">Submit a build</div>
+      <h2>{{ section.settings.submit_heading }}</h2>
+      <p>{{ section.settings.submit_text }}</p>
+      <a class="button" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.submit_label }}</a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Builds page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Real builds. Real results."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "AE Builds"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Hero text",
+      "default": "Customer cars, shop inspiration, and upgrade paths built around Autobahn Essentials performance parts."
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "Shop Build Parts"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "Follow Builds"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL",
+      "default": "https://www.instagram.com/autobahnessentials/"
+    },
+    {
+      "type": "text",
+      "id": "grid_eyebrow",
+      "label": "Grid eyebrow",
+      "default": "Build inspiration"
+    },
+    {
+      "type": "text",
+      "id": "grid_heading",
+      "label": "Grid heading",
+      "default": "Upgrade paths worth copying."
+    },
+    {
+      "type": "textarea",
+      "id": "grid_text",
+      "label": "Grid text",
+      "default": "Feature customer cars, product bundles, and platform-specific setups."
+    },
+    {
+      "type": "text",
+      "id": "submit_heading",
+      "label": "Submit heading",
+      "default": "Want your build featured?"
+    },
+    {
+      "type": "textarea",
+      "id": "submit_text",
+      "label": "Submit text",
+      "default": "Tag Autobahn Essentials on Instagram with your vehicle, parts list, and build goals."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Tag @autobahnessentials"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "build",
+      "name": "Build card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "vehicle",
+          "label": "Vehicle",
+          "default": "BMW 335i"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "N54 Street Power Setup"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "A clean street build focused on airflow, cooling, and reliable power delivery."
+        },
+        {
+          "type": "text",
+          "id": "part_1",
+          "label": "Part tag 1",
+          "default": "Downpipes"
+        },
+        {
+          "type": "text",
+          "id": "part_2",
+          "label": "Part tag 2",
+          "default": "Intercooler"
+        },
+        {
+          "type": "text",
+          "id": "part_3",
+          "label": "Part tag 3",
+          "default": "Turbo"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Builds page",
+      "blocks": [
+        {
+          "type": "build"
+        },
+        {
+          "type": "build",
+          "settings": {
+            "vehicle": "Audi S4",
+            "title": "OEM+ Daily Driver",
+            "text": "Balanced maintenance, subtle styling, and performance hardware for a car that stays ready.",
+            "part_1": "Maintenance",
+            "part_2": "Exterior",
+            "part_3": "Interior"
+          }
+        },
+        {
+          "type": "build",
+          "settings": {
+            "vehicle": "VW GTI",
+            "title": "Weekend Canyon Setup",
+            "text": "A sharper front end, cleaner cooling, and essentials for spirited weekend driving.",
+            "part_1": "Cooling",
+            "part_2": "Styling",
+            "part_3": "Garage"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

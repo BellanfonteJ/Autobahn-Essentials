@@ -1,0 +1,89 @@
+{
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
+  "general": {
+    "continue_shopping": "Continue shopping",
+    "pagination": {
+      "label": "Pagination"
+    },
+    "search": {
+      "search": "Search",
+      "title": "Search the garage",
+      "placeholder": "Search performance parts, turbo upgrades, styling...",
+      "submit": "Search",
+      "no_results": "No results found. Try a different product, vehicle, or category.",
+      "results_with_count": "{{ count }} results for \"{{ terms }}\""
+    }
+  },
+  "newsletter": {
+    "label": "Email address",
+    "button_label": "Join"
+  },
+  "sections": {
+    "header": {
+      "menu": "Open menu",
+      "navigation": "Main navigation"
+    },
+    "cart": {
+      "empty": "Your cart is ready for its first upgrade.",
+      "remove": "Remove",
+      "note": "Order notes",
+      "note_placeholder": "Add vehicle details, fitment questions, install notes, or delivery instructions.",
+      "subtotal": "Subtotal",
+      "update": "Update cart",
+      "checkout": "Checkout",
+      "headings": {
+        "product": "Product",
+        "quantity": "Quantity",
+        "total": "Total"
+      }
+    }
+  },
+  "templates": {
+    "cart": {
+      "cart": "Cart"
+    },
+    "404": {
+      "title": "Page not found",
+      "subtext": "That route is closed, but the shop is open."
+    }
+  },
+  "products": {
+    "product": {
+      "products": "products",
+      "add_to_cart": "Add to cart",
+      "quick_buy": "Quick buy",
+      "view_details": "View details",
+      "sold_out": "Sold out",
+      "in_stock": "In stock and ready to ship",
+      "low_stock": "Only {{ count }} left - order soon",
+      "back_in_stock": "Get notified when this is back",
+      "fitment_fallback": "Fitment varies by chassis, trim, and supporting modifications. Confirm compatibility before ordering or contact the AE crew with your vehicle details.",
+      "shipping_fallback": "Most in-stock items process quickly. Oversized, special-order, and freight items may require additional handling time.",
+      "tabs": {
+        "specs": "Specs",
+        "fitment": "Fitment",
+        "shipping": "Shipping"
+      },
+      "on_sale": "Sale",
+      "variant": "Variant",
+      "price": {
+        "from": "From {{ price }}"
+      },
+      "quantity": {
+        "label": "Quantity"
+      }
+    }
+  },
+  "collections": {
+    "general": {
+      "title": "Collections",
+      "view_all": "View collection",
+      "no_matches": "No products found in this collection."
+    },
+    "sorting": {
+      "title": "Sort by"
+    }
+  }
+}

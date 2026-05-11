@@ -1,0 +1,41 @@
+{%- assign related_collection = product.collections.first -%}
+
+{%- if related_collection.products.size > 1 -%}
+  <section class="section section--tight">
+    <div class="page-width">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+          <h2>{{ section.settings.heading }}</h2>
+        </div>
+      </div>
+      <div class="product-grid">
+        {%- for related_product in related_collection.products limit: 4 -%}
+          {%- unless related_product.id == product.id -%}
+            {% render 'product-card', product: related_product %}
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Related products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Complete the setup"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Recommended Gear"
+    }
+  ]
+}
+{% endschema %}

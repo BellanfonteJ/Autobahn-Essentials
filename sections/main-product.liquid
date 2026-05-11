@@ -1,0 +1,212 @@
+{% render 'breadcrumbs' %}
+
+<section class="section">
+  <div class="page-width product-page">
+    <div class="product-gallery">
+      <div class="product-gallery__main">
+        {%- if product.featured_media -%}
+          {%- assign featured_image = product.featured_media.preview_image -%}
+          <img
+            data-gallery-main
+            src="{{ featured_image | image_url: width: 1400 }}"
+            alt="{{ featured_image.alt | default: product.title | escape }}"
+            width="{{ featured_image.width }}"
+            height="{{ featured_image.height }}"
+            loading="eager"
+            sizes="(min-width: 990px) 58vw, 100vw"
+          >
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      {%- if product.media.size > 1 -%}
+        <div class="product-thumbs">
+          {%- for media in product.media limit: 5 -%}
+            {%- if media.media_type == 'image' -%}
+              {%- assign thumb_image = media.preview_image -%}
+              <button class="product-thumb-button" type="button" aria-label="{{ thumb_image.alt | default: product.title | escape }}">
+                <img
+                  src="{{ thumb_image | image_url: width: 240 }}"
+                  alt="{{ thumb_image.alt | default: product.title | escape }}"
+                  width="{{ thumb_image.width }}"
+                  height="{{ thumb_image.height }}"
+                  loading="lazy"
+                  data-gallery-thumb="{{ thumb_image | image_url: width: 1400 }}"
+                >
+              </button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="product-info">
+      {%- assign current_variant = product.selected_or_first_available_variant -%}
+      {%- if product.vendor != blank -%}
+        <div class="eyebrow">{{ product.vendor }}</div>
+      {%- endif -%}
+      <h1>{{ product.title }}</h1>
+      {% render 'price', product: product %}
+
+      <div class="stock-counter">
+        {%- if current_variant.available -%}
+          {%- if current_variant.inventory_management and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= section.settings.low_stock_threshold -%}
+            <span class="stock-counter__dot stock-counter__dot--hot"></span>
+            <span>{{ 'products.product.low_stock' | t: count: current_variant.inventory_quantity }}</span>
+          {%- else -%}
+            <span class="stock-counter__dot"></span>
+            <span>{{ 'products.product.in_stock' | t }}</span>
+          {%- endif -%}
+        {%- else -%}
+          <span class="stock-counter__dot stock-counter__dot--out"></span>
+          <span>{{ 'products.product.sold_out' | t }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- if product.description != blank -%}
+        <div class="rte">{{ product.description }}</div>
+      {%- endif -%}
+
+      {%- form 'product', product, class: 'product-form' -%}
+        {%- if product.has_only_default_variant -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        {%- else -%}
+          <div class="form-row">
+            <label class="form-label" for="ProductSelect-{{ section.id }}">{{ 'products.product.variant' | t }}</label>
+            <select class="select" id="ProductSelect-{{ section.id }}" name="id">
+              {%- for variant in product.variants -%}
+                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                  {{ variant.title }}{% unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}
+                </option>
+              {%- endfor -%}
+            </select>
+          </div>
+        {%- endif -%}
+
+        <div class="form-row">
+          <label class="form-label" for="Quantity-{{ section.id }}">{{ 'products.product.quantity.label' | t }}</label>
+          <input class="quantity__input" id="Quantity-{{ section.id }}" type="number" name="quantity" min="1" value="1">
+        </div>
+
+        <button class="button button--full" type="submit" name="add" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+          {%- if product.selected_or_first_available_variant.available -%}
+            {{ 'products.product.add_to_cart' | t }}
+          {%- else -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- endif -%}
+        </button>
+
+        {{ form | payment_button }}
+      {%- endform -%}
+
+      {%- unless current_variant.available -%}
+        {%- form 'contact', class: 'back-in-stock-form' -%}
+          <input type="hidden" name="contact[tags]" value="back-in-stock, {{ product.handle }}">
+          <input type="hidden" name="contact[body]" value="Back in stock request for {{ product.title | escape }}">
+          <label class="form-label" for="BackInStock-{{ section.id }}">{{ 'products.product.back_in_stock' | t }}</label>
+          <div class="search-form">
+            <input class="field" id="BackInStock-{{ section.id }}" type="email" name="contact[email]" placeholder="{{ 'newsletter.label' | t }}" required>
+            <button class="button" type="submit">{{ 'newsletter.button_label' | t }}</button>
+          </div>
+        {%- endform -%}
+      {%- endunless -%}
+
+      <div class="trust-row">
+        <div class="trust-pill">
+          {% render 'icon', icon: 'shield' %}
+          <span>{{ section.settings.trust_1 }}</span>
+        </div>
+        <div class="trust-pill">
+          {% render 'icon', icon: 'truck' %}
+          <span>{{ section.settings.trust_2 }}</span>
+        </div>
+        <div class="trust-pill">
+          {% render 'icon', icon: 'bolt' %}
+          <span>{{ section.settings.trust_3 }}</span>
+        </div>
+      </div>
+
+      <div class="product-tabs">
+        <details open>
+          <summary>{{ 'products.product.tabs.specs' | t }}</summary>
+          <div class="product-tabs__content">
+            <table class="spec-table">
+              <tbody>
+                <tr>
+                  <th>SKU</th>
+                  <td>{{ current_variant.sku | default: 'Contact for SKU' }}</td>
+                </tr>
+                <tr>
+                  <th>Category</th>
+                  <td>{{ product.type | default: 'Performance parts' }}</td>
+                </tr>
+                <tr>
+                  <th>Brand</th>
+                  <td>{{ product.vendor | default: shop.name }}</td>
+                </tr>
+                <tr>
+                  <th>Build Style</th>
+                  <td>{{ product.metafields.custom.build_style.value | default: 'OEM+ / Performance' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details>
+          <summary>{{ 'products.product.tabs.fitment' | t }}</summary>
+          <div class="product-tabs__content rte">
+            {%- if product.metafields.custom.fitment != blank -%}
+              {{ product.metafields.custom.fitment | metafield_tag }}
+            {%- else -%}
+              <p>{{ 'products.product.fitment_fallback' | t }}</p>
+            {%- endif -%}
+          </div>
+        </details>
+
+        <details>
+          <summary>{{ 'products.product.tabs.shipping' | t }}</summary>
+          <div class="product-tabs__content rte">
+            <p>{{ 'products.product.shipping_fallback' | t }}</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "trust_1",
+      "label": "Trust message 1",
+      "default": "Performance tested"
+    },
+    {
+      "type": "text",
+      "id": "trust_2",
+      "label": "Trust message 2",
+      "default": "Fast shipping"
+    },
+    {
+      "type": "text",
+      "id": "trust_3",
+      "label": "Trust message 3",
+      "default": "Euro focused"
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "label": "Low stock threshold",
+      "default": 8
+    }
+  ]
+}
+{% endschema %}

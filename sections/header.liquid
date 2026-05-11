@@ -1,0 +1,120 @@
+{%- if settings.show_announcement and settings.announcement_text != blank -%}
+  <div class="announcement-bar">
+    <div class="announcement-bar__inner page-width">
+      {%- if settings.announcement_link != blank -%}
+        <a href="{{ settings.announcement_link }}">{{ settings.announcement_text }}</a>
+      {%- else -%}
+        <span>{{ settings.announcement_text }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+<header class="site-header{% if settings.enable_sticky_header %} site-header--sticky{% endif %}">
+  <div class="site-header__inner page-width">
+    <button class="icon-button mobile-menu-trigger" type="button" data-menu-toggle aria-expanded="false" aria-controls="SiteNav">
+      <span class="visually-hidden">{{ 'sections.header.menu' | t }}</span>
+      {% render 'icon', icon: 'menu' %}
+    </button>
+
+    <nav id="SiteNav" class="site-nav" data-mobile-nav aria-label="{{ 'sections.header.navigation' | t }}">
+      {%- assign has_shop_dropdown = false -%}
+      {%- for link in section.settings.menu.links -%}
+        {%- assign link_title = link.title | downcase -%}
+        {%- if link_title contains 'shop' or link_title contains 'categor' -%}
+          {%- assign has_shop_dropdown = true -%}
+          {%- if link.links.size > 0 -%}
+            <details class="nav-dropdown">
+              <summary>
+                <span>{{ link.title }}</span>
+                <span class="nav-dropdown__chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="nav-dropdown__menu">
+                {%- for child_link in link.links -%}
+                  <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                {%- endfor -%}
+              </div>
+            </details>
+          {%- else -%}
+            {% render 'category-dropdown', label: link.title %}
+          {%- endif -%}
+        {%- else -%}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {%- endif -%}
+      {%- else -%}
+        <a href="{{ routes.root_url }}">Home</a>
+        {% render 'category-dropdown', label: 'Shop' %}
+        <a href="/pages/builds">Builds</a>
+        <a href="/pages/about-us">About Us</a>
+      {%- endfor -%}
+      {%- if section.settings.menu.links.size > 0 and has_shop_dropdown == false -%}
+        {% render 'category-dropdown', label: 'Shop' %}
+      {%- endif -%}
+    </nav>
+
+    <div class="header-logo">
+      <a href="{{ routes.root_url }}" class="site-logo">
+        {%- if settings.logo != blank -%}
+          {{ settings.logo | image_url: width: 420 | image_tag: loading: 'eager', alt: shop.name }}
+        {%- else -%}
+          <img src="{{ 'autobahn-essentials-logo.png' | asset_url }}" alt="{{ shop.name | default: 'Autobahn Essentials' | escape }}" width="940" height="430" loading="eager">
+        {%- endif -%}
+      </a>
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-button" type="button" data-search-toggle aria-expanded="false" aria-controls="HeaderSearch">
+        <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
+        {% render 'icon', icon: 'search' %}
+      </button>
+      <a class="icon-button" href="{{ routes.cart_url }}">
+        <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+        {% render 'icon', icon: 'cart' %}
+        {%- if cart.item_count > 0 -%}
+          <span class="cart-count">{{ cart.item_count }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+  </div>
+
+  <div id="HeaderSearch" class="search-drawer" data-search-drawer>
+    <div class="page-width">
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+        <input class="field" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+        <button class="button" type="submit">{{ 'general.search.submit' | t }}</button>
+      </form>
+    </div>
+  </div>
+</header>
+
+{%- if settings.show_ticker -%}
+  <div class="ticker-banner" role="region" aria-label="Autobahn Essentials parts ticker">
+    <div class="ticker-banner__track">
+      {%- for i in (1..2) -%}
+        <span>{{ settings.ticker_text }}</span>
+        <span>OEM+ Performance Parts</span>
+        <span>Turbo Upgrades</span>
+        <span>Downpipes</span>
+        <span>Intercoolers</span>
+        <span>Carbon Fiber Exterior</span>
+        <span>Interior Accessories</span>
+        <span>Euro Builds</span>
+        <span>Fast Shipping</span>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

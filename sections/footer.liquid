@@ -1,0 +1,103 @@
+<footer class="site-footer">
+  <div class="page-width">
+    <div class="site-footer__grid">
+      <div>
+        <a href="{{ routes.root_url }}" class="site-logo">
+          {%- if settings.logo != blank -%}
+            {{ settings.logo | image_url: width: 240 | image_tag: loading: 'lazy', alt: shop.name }}
+          {%- else -%}
+            <img src="{{ 'autobahn-essentials-logo.png' | asset_url }}" alt="{{ shop.name | default: 'Autobahn Essentials' | escape }}" width="940" height="430" loading="lazy">
+          {%- endif -%}
+        </a>
+        <p>{{ section.settings.text }}</p>
+        <a class="footer-social-link" href="https://www.instagram.com/autobahnessentials/" target="_blank" rel="noopener noreferrer">
+          {% render 'icon', icon: 'instagram' %}
+          <span>@autobahnessentials</span>
+        </a>
+        {%- form 'customer', class: 'newsletter-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input class="field" type="email" name="contact[email]" placeholder="{{ 'newsletter.label' | t }}" required>
+          <button class="button" type="submit">{{ 'newsletter.button_label' | t }}</button>
+        {%- endform -%}
+      </div>
+
+      {%- for block in section.blocks -%}
+        <div {{ block.shopify_attributes }}>
+          <h3>{{ block.settings.heading }}</h3>
+          <ul class="footer-links">
+            {%- for link in block.settings.menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.bottom_text }}</span>
+      <span>{{ powered_by_link }}</span>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Brand text",
+      "default": "Performance parts for Euro builds."
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bottom text",
+      "default": "Built for drivers. Backed by passion."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "link_list",
+        "settings": {
+          "heading": "Shop"
+        }
+      },
+      {
+        "type": "link_list",
+        "settings": {
+          "heading": "Support"
+        }
+      },
+      {
+        "type": "link_list",
+        "settings": {
+          "heading": "Company"
+        }
+      }
+    ]
+  }
+}
+{% endschema %}

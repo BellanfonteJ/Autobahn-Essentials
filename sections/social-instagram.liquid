@@ -1,0 +1,91 @@
+{%- liquid
+  assign instagram_url = section.settings.instagram_url
+  if instagram_url == blank
+    assign instagram_url = 'https://www.instagram.com/autobahnessentials/'
+  endif
+-%}
+
+<section class="social-section section">
+  <div class="page-width social-section__inner">
+    <div class="social-section__content">
+      <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+      <h2>{{ section.settings.heading }}</h2>
+      <p>{{ section.settings.text }}</p>
+      <a class="button" href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer">
+        {% render 'icon', icon: 'instagram' %}
+        {{ section.settings.button_label }}
+      </a>
+    </div>
+
+    <a class="social-card" href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Follow Autobahn Essentials on Instagram">
+      <div class="social-card__top">
+        {% render 'icon', icon: 'instagram' %}
+        <span>{{ section.settings.handle }}</span>
+      </div>
+      <div class="social-card__grid" aria-hidden="true">
+        <span>AE.</span>
+        <span>600HP</span>
+        <span>OEM+</span>
+        <span>EURO</span>
+      </div>
+      <div class="social-card__footer">
+        <span>{{ section.settings.footer_text }}</span>
+        {% render 'icon', icon: 'arrow' %}
+      </div>
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Instagram social",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Follow the builds"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "See Autobahn Essentials on Instagram"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Follow product drops, customer builds, install inspiration, and behind-the-scenes performance content."
+    },
+    {
+      "type": "text",
+      "id": "handle",
+      "label": "Handle",
+      "default": "@autobahnessentials"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Follow @autobahnessentials"
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Card footer text",
+      "default": "Builds, drops, reels, and real results"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram social"
+    }
+  ]
+}
+{% endschema %}

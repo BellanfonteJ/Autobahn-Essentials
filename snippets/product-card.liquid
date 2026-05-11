@@ -1,0 +1,44 @@
+{%- liquid
+  assign sizes = '(min-width: 990px) 25vw, (min-width: 640px) 50vw, 100vw'
+-%}
+
+<article class="product-card">
+  <a href="{{ product.url }}" class="product-card__media" aria-label="{{ product.title | escape }}">
+    {%- if product.featured_media -%}
+      {{ product.featured_media | image_url: width: 820 | image_tag: loading: 'lazy', sizes: sizes, class: 'product-card__image' }}
+      {%- if product.media[1] and product.media[1].media_type == 'image' -%}
+        {{ product.media[1] | image_url: width: 820 | image_tag: loading: 'lazy', sizes: sizes, class: 'product-card__image product-card__image--hover' }}
+      {%- endif -%}
+    {%- else -%}
+      <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" loading="lazy" class="product-card__image">
+    {%- endif -%}
+
+    {%- if product.metafields.custom.badge != blank -%}
+      <span class="product-card__badge">{{ product.metafields.custom.badge.value | default: product.metafields.custom.badge }}</span>
+    {%- elsif product.tags contains 'New' -%}
+      <span class="product-card__badge">New</span>
+    {%- elsif product.available == false -%}
+      <span class="product-card__badge">{{ 'products.product.sold_out' | t }}</span>
+    {%- elsif product.compare_at_price > product.price -%}
+      <span class="product-card__badge">{{ 'products.product.on_sale' | t }}</span>
+    {%- endif -%}
+  </a>
+
+  <div class="product-card__info">
+    {%- if product.vendor != blank -%}
+      <div class="product-card__vendor">{{ product.vendor }}</div>
+    {%- endif -%}
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+    {% render 'price', product: product %}
+    {%- if product.available -%}
+      {%- form 'product', product, class: 'product-card__quick-buy' -%}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <button class="button button--full" type="submit">{{ 'products.product.quick_buy' | t }}</button>
+      {%- endform -%}
+    {%- else -%}
+      <a class="button button--secondary button--full" href="{{ product.url }}">{{ 'products.product.view_details' | t }}</a>
+    {%- endif -%}
+  </div>
+</article>

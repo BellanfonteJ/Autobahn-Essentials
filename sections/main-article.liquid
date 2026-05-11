@@ -1,0 +1,24 @@
+{% render 'breadcrumbs' %}
+
+<article class="section">
+  <div class="page-width">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{{ article.published_at | date: '%b %d, %Y' }}</div>
+        <h1>{{ article.title }}</h1>
+      </div>
+    </div>
+    {%- if article.image -%}
+      <div class="image-text__media" style="margin-bottom:32px;">
+        {{ article.image | image_url: width: 1600 | image_tag: loading: 'eager', sizes: '100vw' }}
+      </div>
+    {%- endif -%}
+    <div class="rte">{{ article.content }}</div>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Article"
+}
+{% endschema %}

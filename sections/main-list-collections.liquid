@@ -1,0 +1,35 @@
+<section class="section">
+  <div class="page-width">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{{ shop.name }}</div>
+        <h1>{{ 'collections.general.title' | t }}</h1>
+      </div>
+    </div>
+    <div class="collection-grid">
+      {%- for collection in collections -%}
+        {%- unless collection.handle == 'frontpage' -%}
+          <a class="collection-card" href="{{ collection.url }}">
+            <div class="collection-card__media">
+              {%- if collection.featured_image -%}
+                {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy' }}
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+            <div class="collection-card__info">
+              <h2 class="collection-card__title">{{ collection.title }}</h2>
+              <span class="eyebrow">{{ collection.products_count }} {{ 'products.product.products' | t | default: 'products' }}</span>
+            </div>
+          </a>
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections list"
+}
+{% endschema %}

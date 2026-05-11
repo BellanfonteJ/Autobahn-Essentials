@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-contact-autobahn"
+    }
+  },
+  "order": ["main"]
+}

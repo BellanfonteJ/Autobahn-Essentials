@@ -1,0 +1,89 @@
+<section class="section section--tight">
+  <div class="page-width">
+    <div class="promo-tiles">
+      {%- for block in section.blocks -%}
+        <a class="promo-tile" href="{{ block.settings.link | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw' }}
+          {%- endif -%}
+          <span class="eyebrow">{{ block.settings.eyebrow }}</span>
+          <h3>{{ block.settings.heading }}</h3>
+          <p>{{ block.settings.text }}</p>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Promo tiles",
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Build path"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "600HP Build"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Shop proven upgrade stacks for serious Euro builds."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo tiles",
+      "blocks": [
+        {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Product drop",
+            "heading": "New Turbo Upgrades",
+            "text": "Upgraded performance built to last."
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Build feature",
+            "heading": "600HP Build",
+            "text": "Explore parts for high-output street setups."
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "OEM+ essentials",
+            "heading": "Daily Driver Ready",
+            "text": "Clean upgrades for fit, finish, and reliability."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

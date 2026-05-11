@@ -1,0 +1,131 @@
+{% render 'breadcrumbs' %}
+
+<section class="ae-page-hero" style="--ae-page-image: url({{ 'autobahn-hero.svg' | asset_url }});">
+  <div class="page-width ae-page-hero__inner">
+    <div>
+      <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+      <h1>{{ section.settings.heading }}</h1>
+      <p>{{ section.settings.text }}</p>
+    </div>
+    <div class="ae-page-stats" aria-label="Shipping highlights">
+      <div class="ae-page-stat"><strong>Fast</strong><span>Quick processing on stocked items</span></div>
+      <div class="ae-page-stat"><strong>Tracked</strong><span>Shipment updates when available</span></div>
+      <div class="ae-page-stat"><strong>Clear</strong><span>Return expectations before install</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="page-width ae-page-content">
+    <div class="ae-grid-3">
+      <div class="ae-card ae-card--accent">
+        <div class="eyebrow">Processing</div>
+        <h3>{{ section.settings.processing_heading }}</h3>
+        <p>{{ section.settings.processing_text }}</p>
+      </div>
+      <div class="ae-card ae-card--accent">
+        <div class="eyebrow">Tracking</div>
+        <h3>{{ section.settings.tracking_heading }}</h3>
+        <p>{{ section.settings.tracking_text }}</p>
+      </div>
+      <div class="ae-card ae-card--accent">
+        <div class="eyebrow">Returns</div>
+        <h3>{{ section.settings.returns_heading }}</h3>
+        <p>{{ section.settings.returns_text }}</p>
+      </div>
+    </div>
+
+    <div class="ae-split">
+      <div>
+        <div class="eyebrow">Policy notes</div>
+        <h2>{{ section.settings.policy_heading }}</h2>
+      </div>
+      <div>
+        <div class="ae-policy-row">
+          <strong>Before install</strong>
+          <p>Inspect every item before installation, test fitting, paint, coating, modification, or road use.</p>
+        </div>
+        <div class="ae-policy-row">
+          <strong>Packaging</strong>
+          <p>Keep original packaging, labels, hardware, and documentation until the part is confirmed correct.</p>
+        </div>
+        <div class="ae-policy-row">
+          <strong>Fitment</strong>
+          <p>Vehicle-specific parts should be checked against year, make, model, chassis, engine, and existing modifications.</p>
+        </div>
+        <div class="ae-policy-row">
+          <strong>Support</strong>
+          <p>Include your order number, vehicle details, photos, and a clear description when contacting support.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shipping returns page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Fast Parts. Clear Support."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Hero text",
+      "default": "Shipping, tracking, and return expectations for Autobahn Essentials orders."
+    },
+    {
+      "type": "text",
+      "id": "processing_heading",
+      "label": "Processing heading",
+      "default": "Order processing"
+    },
+    {
+      "type": "textarea",
+      "id": "processing_text",
+      "label": "Processing text",
+      "default": "In-stock items are prepared as quickly as possible. Special-order items may require additional handling time."
+    },
+    {
+      "type": "text",
+      "id": "tracking_heading",
+      "label": "Tracking heading",
+      "default": "Tracked delivery"
+    },
+    {
+      "type": "textarea",
+      "id": "tracking_text",
+      "label": "Tracking text",
+      "default": "Tracking details are shared when available so customers can follow shipment progress."
+    },
+    {
+      "type": "text",
+      "id": "returns_heading",
+      "label": "Returns heading",
+      "default": "Return-ready details"
+    },
+    {
+      "type": "textarea",
+      "id": "returns_text",
+      "label": "Returns text",
+      "default": "Uninstalled, unused items in original condition are easiest to review for return eligibility."
+    },
+    {
+      "type": "text",
+      "id": "policy_heading",
+      "label": "Policy heading",
+      "default": "Check everything before the wrench turns."
+    }
+  ]
+}
+{% endschema %}

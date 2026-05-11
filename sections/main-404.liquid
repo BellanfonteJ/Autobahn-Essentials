@@ -1,0 +1,16 @@
+<section class="section">
+  <div class="page-width">
+    <div class="empty-state">
+      <div class="eyebrow">404</div>
+      <h1>{{ 'templates.404.title' | t }}</h1>
+      <p>{{ 'templates.404.subtext' | t }}</p>
+      <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "404"
+}
+{% endschema %}

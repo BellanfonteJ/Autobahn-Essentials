@@ -1,0 +1,53 @@
+<section class="section">
+  <div class="page-width">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{{ 'general.search.search' | t }}</div>
+        <h1>{{ 'general.search.title' | t }}</h1>
+      </div>
+    </div>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+      <input class="field" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+      <button class="button" type="submit">{{ 'general.search.submit' | t }}</button>
+    </form>
+
+    {%- if search.performed -%}
+      <div class="section-heading section--tight">
+        <p>{{ 'general.search.results_with_count' | t: count: search.results_count, terms: search.terms }}</p>
+      </div>
+
+      {%- paginate search.results by 12 -%}
+        <div class="search-grid">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item %}
+            {%- else -%}
+              <article class="article-card">
+                <div class="article-card__info">
+                  <div class="eyebrow">{{ item.object_type }}</div>
+                  <h3 class="article-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                  <p>{{ item.content | strip_html | truncate: 120 }}</p>
+                </div>
+              </article>
+            {%- endif -%}
+          {%- else -%}
+            <div class="empty-state">{{ 'general.search.no_results' | t }}</div>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+            {{ paginate | default_pagination }}
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search"
+}
+{% endschema %}

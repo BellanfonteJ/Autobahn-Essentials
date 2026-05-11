@@ -1,0 +1,101 @@
+<section class="section">
+  <div class="page-width">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.button_label != blank -%}
+        <a class="button button--secondary" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+    </div>
+
+    <div class="product-grid">
+      {%- assign featured_collection = section.settings.collection -%}
+      {%- for product in featured_collection.products limit: section.settings.products_to_show -%}
+        {% render 'product-card', product: product %}
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <article class="product-card">
+            <div class="product-card__media">
+              {%- if i == 3 -%}
+                <span class="product-card__badge">Sale</span>
+              {%- endif -%}
+              <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" loading="lazy">
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__vendor">Autobahn</div>
+              <h3 class="product-card__title">
+                {%- case i -%}
+                  {%- when 1 -%}N54 High Flow Downpipes
+                  {%- when 2 -%}Upgraded Turbocharger
+                  {%- when 3 -%}FMIC Upgrade Kit
+                  {%- else -%}Carbon Fiber Splitter
+                {%- endcase -%}
+              </h3>
+              <div class="price">
+                {%- case i -%}
+                  {%- when 1 -%}<span>$329.99</span>
+                  {%- when 2 -%}<span>$1,499.99</span>
+                  {%- when 3 -%}<span class="price__sale">$599.99</span><s>$699.99</s>
+                  {%- else -%}<span>$249.99</span>
+                {%- endcase -%}
+              </div>
+              <a class="button button--full" href="{{ routes.all_products_collection_url }}">{{ 'products.product.quick_buy' | t }}</a>
+            </div>
+          </article>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Best sellers"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Popular Upgrades"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 12,
+      "step": 4,
+      "label": "Products to show",
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured products"
+    }
+  ]
+}
+{% endschema %}

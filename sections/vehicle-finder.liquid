@@ -1,0 +1,79 @@
+<section class="vehicle-finder section--tight">
+  <div class="page-width">
+    <div class="vehicle-finder__shell">
+      <div>
+        <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+
+      <form class="vehicle-finder__form" action="{{ routes.search_url }}" method="get" data-vehicle-finder>
+        <input type="hidden" name="type" value="product">
+        <input type="hidden" name="q" value="">
+
+        <label class="visually-hidden" for="FinderYear-{{ section.id }}">Year</label>
+        <input class="field" id="FinderYear-{{ section.id }}" type="text" name="vehicle_year" placeholder="Year">
+
+        <label class="visually-hidden" for="FinderMake-{{ section.id }}">Make</label>
+        <select class="select" id="FinderMake-{{ section.id }}" name="vehicle_make">
+          <option value="">Make</option>
+          <option>BMW</option>
+          <option>Audi</option>
+          <option>Volkswagen</option>
+          <option>Mercedes-Benz</option>
+          <option>Porsche</option>
+          <option>Mini</option>
+        </select>
+
+        <label class="visually-hidden" for="FinderModel-{{ section.id }}">Model</label>
+        <input class="field" id="FinderModel-{{ section.id }}" type="text" name="vehicle_model" placeholder="Model">
+
+        <label class="visually-hidden" for="FinderPart-{{ section.id }}">Part type</label>
+        <select class="select" id="FinderPart-{{ section.id }}" name="part_type">
+          <option value="">Part type</option>
+          <option>Downpipes</option>
+          <option>Turbo upgrade</option>
+          <option>Intercooler</option>
+          <option>Engine performance</option>
+          <option>Exterior styling</option>
+          <option>Interior accessories</option>
+        </select>
+
+        <button class="button" type="submit">
+          {{ section.settings.button_label }}
+          {% render 'icon', icon: 'search' %}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vehicle finder",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Find your fit"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Search by vehicle, category, or upgrade path"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Find Parts"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vehicle finder"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,142 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-autobahn"
+    },
+    "vehicle_finder": {
+      "type": "vehicle-finder"
+    },
+    "spec_strip": {
+      "type": "spec-strip",
+      "blocks": {
+        "fitment": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Performance Tested",
+            "text": "Every part selected for real-world performance and quality."
+          }
+        },
+        "performance": {
+          "type": "item",
+          "settings": {
+            "icon": "bolt",
+            "heading": "Enthusiast Owned",
+            "text": "Built by car people, for car people."
+          }
+        },
+        "dispatch": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "heading": "Euro Focused",
+            "text": "Specializing in BMW, Audi, VW, and more."
+          }
+        },
+        "garage": {
+          "type": "item",
+          "settings": {
+            "icon": "star",
+            "heading": "Fast Shipping",
+            "text": "Quick processing and reliable delivery."
+          }
+        }
+      },
+      "block_order": ["fitment", "performance", "dispatch", "garage"]
+    },
+    "featured_products": {
+      "type": "featured-products"
+    },
+    "promo_tiles": {
+      "type": "promo-tiles",
+      "blocks": {
+        "turbo": {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Product drop",
+            "heading": "New Turbo Upgrades",
+            "text": "Upgraded performance built to last."
+          }
+        },
+        "build": {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "Build feature",
+            "heading": "600HP Build",
+            "text": "Explore parts for high-output street setups."
+          }
+        },
+        "daily": {
+          "type": "tile",
+          "settings": {
+            "eyebrow": "OEM+ essentials",
+            "heading": "Daily Driver Ready",
+            "text": "Clean upgrades for fit, finish, and reliability."
+          }
+        }
+      },
+      "block_order": ["turbo", "build", "daily"]
+    },
+    "brand_cta": {
+      "type": "brand-cta"
+    },
+    "featured_collections": {
+      "type": "featured-collections",
+      "blocks": {
+        "performance": {
+          "type": "collection",
+          "settings": {
+            "title": "Engine Performance"
+          }
+        },
+        "detailing": {
+          "type": "collection",
+          "settings": {
+            "title": "Turbo Upgrades"
+          }
+        },
+        "maintenance": {
+          "type": "collection",
+          "settings": {
+            "title": "Exterior Styling"
+          }
+        },
+        "garage": {
+          "type": "collection",
+          "settings": {
+            "title": "Interior Accessories"
+          }
+        }
+      },
+      "block_order": ["performance", "detailing", "maintenance", "garage"]
+    },
+    "image_text": {
+      "type": "image-with-text",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "text": "Confident, straightforward, performance-driven product pages."
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "text": "Clear categories for engine, turbo, exterior, and interior upgrades."
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "text": "A dark brand system with AE orange accents throughout."
+          }
+        }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3"]
+    },
+    "instagram": {
+      "type": "social-instagram"
+    }
+  },
+  "order": ["hero", "vehicle_finder", "spec_strip", "featured_collections", "promo_tiles", "featured_products", "brand_cta", "image_text", "instagram"]
+}
