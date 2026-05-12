@@ -1,5 +1,11 @@
 ## Changelog
 
+### May 11th 11:01PM PST - Show mobile header icons
+
+- Adjusted the mobile header grid so the logo, menu trigger, and action icons all have room to display.
+- Restored the header action icon buttons on mobile layouts.
+- Tightened mobile logo and icon sizing for narrow screens down to 360px.
+
 ### May 11th 10:59PM PST - Tidy product descriptions
 
 - Moved the product trust module directly under the cart controls and above the description.
@@ -17,6 +23,12 @@
 - Moved product pages to an image-first layout with the main image centered above the product details.
 - Kept preview thumbnails centered directly under the main product image.
 - Moved the product description below the media and paired the price with the add-to-cart action at the top of the details panel.
+
+### May 11th 10:40PM PST - Fix product image rendering
+
+- Switched product card, product gallery, cart, and cart drawer images to contained rendering so product photos no longer crop.
+- Added padded media surfaces and subtle image shadows for cleaner product presentation.
+- Updated product thumbnail buttons to keep preview images centered and fully visible.
 
 ### May 11th 5:46PM PST - Smooth hero-to-carbon transition
 
