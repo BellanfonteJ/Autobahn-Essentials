@@ -1,36 +1,36 @@
 ## Changelog
 
-### 2026-05-11 5:30PM PST - Remove homepage vehicle finder
+### May 11th 5:30PM PST - Remove homepage vehicle finder
 
 - Removed the redundant homepage vehicle finder section now that My Garage handles saved vehicle fitment.
 - Kept the dedicated Fitment Guide page and collection/search fitment forms available for deeper searches.
 - Let the homepage move from hero stats directly into the trust/spec strip for a cleaner first scroll.
 
-### 2026-05-11 5:29PM PST - Clean up My Garage drawer
+### May 11th 5:29PM PST - Clean up My Garage drawer
 
 - Replaced repeated My Garage placeholders with clear Year, Make, Model, Trim / Engine, and Chassis fields.
 - Added Trim / Engine to the saved garage data so more complete vehicle details can display and persist.
 - Updated the drawer layout so the expanded vehicle form fits cleanly across desktop and mobile.
 
-### 2026-05-11 5:15PM PST - Restore fallback images
+### May 11th 5:15PM PST - Restore fallback images
 
 - Restored the automotive fallback photos for homepage and builds sections.
 - Moved fallback photos into theme assets so Shopify serves them without remote asset warnings.
 - Reconnected hero, image-with-text, featured collection, promo tile, and builds page fallbacks.
 
-### 2026-05-11 5:08PM PST - Mobile browsing optimization
+### May 11th 5:08PM PST - Mobile browsing optimization
 
 - Added My Garage saved vehicle fitment with dynamic product and product-card badges.
 - Improved mobile header, navigation, search drawer, and vehicle finder behavior.
 - Expanded product pages with responsive gallery thumbnails, fitment details, shipping tabs, sticky add-to-cart, and back-in-stock capture.
 - Added self-hosted storefront fonts and Shopify Theme Check tooling.
 
-### 2026-05-11 1:50AM PST - Trust copy update
+### May 11th 1:50AM PST - Trust copy update
 
 - Reworked the homepage image-with-text section to focus on part quality, shipping speed, secure checkout, and fitment-minded support.
 - <img width="639" height="418" alt="image" src="https://github.com/user-attachments/assets/4222e07a-d3fc-411f-a5a5-3f7ed7ff6bb2" />
 
-### 2026-05-11 1:45AM PST - Small wiring update
+### May 11th 1:45AM PST - Small wiring update
 
 - Wired homepage CTAs and promo tiles to concrete shop, builds, search, and Instagram destinations.
 - Improved header search, mobile nav, and cart drawer button behavior in `assets/theme.js`.
