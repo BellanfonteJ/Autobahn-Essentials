@@ -1,5 +1,11 @@
 ## Changelog
 
+### May 11th 10:59PM PST - Tidy product descriptions
+
+- Moved the product trust module directly under the cart controls and above the description.
+- Centered product description text and uploaded description images.
+- Added duplicate-block cleanup for repeated product description content.
+
 ### May 11th 10:54PM PST - Move product trust badges below description
 
 - Added product-page handling for descriptions that start with guarantee, stock, shipping, or trust-badge content.

@@ -131,6 +131,21 @@
         {{ form | payment_button }}
       {%- endform -%}
 
+      <div class="trust-row">
+        <div class="trust-pill">
+          {% render 'icon', icon: 'shield' %}
+          <span>{{ section.settings.trust_1 }}</span>
+        </div>
+        <div class="trust-pill">
+          {% render 'icon', icon: 'truck' %}
+          <span>{{ section.settings.trust_2 }}</span>
+        </div>
+        <div class="trust-pill">
+          {% render 'icon', icon: 'bolt' %}
+          <span>{{ section.settings.trust_3 }}</span>
+        </div>
+      </div>
+
       {%- if product.description != blank -%}
         <div class="rte product-description" data-product-description>{{ product.description }}</div>
       {%- endif -%}
@@ -146,21 +161,6 @@
           </div>
         {%- endform -%}
       {%- endunless -%}
-
-      <div class="trust-row">
-        <div class="trust-pill">
-          {% render 'icon', icon: 'shield' %}
-          <span>{{ section.settings.trust_1 }}</span>
-        </div>
-        <div class="trust-pill">
-          {% render 'icon', icon: 'truck' %}
-          <span>{{ section.settings.trust_2 }}</span>
-        </div>
-        <div class="trust-pill">
-          {% render 'icon', icon: 'bolt' %}
-          <span>{{ section.settings.trust_3 }}</span>
-        </div>
-      </div>
 
       <div class="product-tabs">
         <details open>

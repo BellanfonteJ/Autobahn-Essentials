@@ -1594,6 +1594,15 @@ select option:hover {
 .product-description {
   max-width: 760px;
   margin: 26px auto 0;
+  text-align: center;
+}
+
+.product-description img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .product-description__trust {

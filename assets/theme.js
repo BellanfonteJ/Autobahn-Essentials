@@ -66,6 +66,36 @@ const getProductDescriptionSignal = (element) => {
   return normalizeText(`${element.textContent || ''} ${imageSignals}`);
 };
 
+const getProductDescriptionBlockSignature = (element) => {
+  if (!(element instanceof HTMLElement)) return '';
+
+  const imageSources = Array.from(element.querySelectorAll('img'))
+    .map((image) => image.src)
+    .filter(Boolean)
+    .join('|');
+  const signal = getProductDescriptionSignal(element);
+
+  if (!signal && !imageSources) return '';
+  return `${element.tagName.toLowerCase()}|${signal}|${imageSources}`;
+};
+
+const removeDuplicateProductDescriptionBlocks = (description) => {
+  const seen = new Set();
+
+  Array.from(description.children).forEach((child) => {
+    if (isEmptyProductDescriptionElement(child)) return;
+
+    const signature = getProductDescriptionBlockSignature(child);
+    if (!signature || signature.length < 12) return;
+
+    if (seen.has(signature)) {
+      child.remove();
+    } else {
+      seen.add(signature);
+    }
+  });
+};
+
 const isEmptyProductDescriptionElement = (element) => (
   element instanceof HTMLElement
   && !element.querySelector('img')
@@ -80,6 +110,8 @@ const isTrustProductDescriptionElement = (element) => {
 
 const moveProductDescriptionTrustCluster = () => {
   document.querySelectorAll('[data-product-description]').forEach((description) => {
+    removeDuplicateProductDescriptionBlocks(description);
+
     const children = Array.from(description.children);
     if (children.length < 2) return;
 
