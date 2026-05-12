@@ -2,6 +2,22 @@
 
 ### May 12th
 
+#### 1:07AM PST - Add PR #15 changelog entry
+
+Source: Push by slimeraps
+
+- Added changelog coverage for the latest shop dropdown navigation pull request.
+- Kept the new entry in the grouped May 12th format with source attribution.
+- Confirmed the changelog update against the latest remote main history before pushing.
+
+#### 1:03AM PST - Update shop dropdown navigation
+
+Source: Pull request by BellanfonteJ, merged by BellanfonteJ
+
+- Replaced the shop dropdown category links with BMW, Audi, VW, and Accessories collection links.
+- Hid duplicate top-level BMW, Audi, and VW menu links when the shop dropdown is present.
+- Improved desktop dropdown behavior so hover and keyboard focus open the menu reliably.
+
 #### 12:51AM PST - Prune My Garage options to sold fitments
 
 Source: Push by slimeraps
