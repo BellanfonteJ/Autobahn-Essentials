@@ -1,5 +1,23 @@
 ## Changelog
 
+### May 11th 11:09PM PST - Separate hero texture and remove floating cart
+
+- Stopped the homepage hero image from extending into the carbon-texture section below it.
+- Removed the carbon texture overlay from the hero image fade so the top image stays clean.
+- Removed the floating product add-to-cart bar and kept the static product form button under the images.
+
+### May 11th 11:01PM PST - Show mobile header icons
+
+- Adjusted the mobile header grid so the logo, menu trigger, and action icons all have room to display.
+- Restored the header action icon buttons on mobile layouts.
+- Tightened mobile logo and icon sizing for narrow screens down to 360px.
+
+### May 11th 10:59PM PST - Tidy product descriptions
+
+- Moved the product trust module directly under the cart controls and above the description.
+- Centered product description text and uploaded description images.
+- Added duplicate-block cleanup for repeated product description content.
+
 ### May 11th 10:54PM PST - Move product trust badges below description
 
 - Added product-page handling for descriptions that start with guarantee, stock, shipping, or trust-badge content.
@@ -11,6 +29,12 @@
 - Moved product pages to an image-first layout with the main image centered above the product details.
 - Kept preview thumbnails centered directly under the main product image.
 - Moved the product description below the media and paired the price with the add-to-cart action at the top of the details panel.
+
+### May 11th 10:40PM PST - Fix product image rendering
+
+- Switched product card, product gallery, cart, and cart drawer images to contained rendering so product photos no longer crop.
+- Added padded media surfaces and subtle image shadows for cleaner product presentation.
+- Updated product thumbnail buttons to keep preview images centered and fully visible.
 
 ### May 11th 5:46PM PST - Smooth hero-to-carbon transition
 

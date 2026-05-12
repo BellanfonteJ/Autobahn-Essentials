@@ -66,6 +66,36 @@ const getProductDescriptionSignal = (element) => {
   return normalizeText(`${element.textContent || ''} ${imageSignals}`);
 };
 
+const getProductDescriptionBlockSignature = (element) => {
+  if (!(element instanceof HTMLElement)) return '';
+
+  const imageSources = Array.from(element.querySelectorAll('img'))
+    .map((image) => image.src)
+    .filter(Boolean)
+    .join('|');
+  const signal = getProductDescriptionSignal(element);
+
+  if (!signal && !imageSources) return '';
+  return `${element.tagName.toLowerCase()}|${signal}|${imageSources}`;
+};
+
+const removeDuplicateProductDescriptionBlocks = (description) => {
+  const seen = new Set();
+
+  Array.from(description.children).forEach((child) => {
+    if (isEmptyProductDescriptionElement(child)) return;
+
+    const signature = getProductDescriptionBlockSignature(child);
+    if (!signature || signature.length < 12) return;
+
+    if (seen.has(signature)) {
+      child.remove();
+    } else {
+      seen.add(signature);
+    }
+  });
+};
+
 const isEmptyProductDescriptionElement = (element) => (
   element instanceof HTMLElement
   && !element.querySelector('img')
@@ -80,6 +110,8 @@ const isTrustProductDescriptionElement = (element) => {
 
 const moveProductDescriptionTrustCluster = () => {
   document.querySelectorAll('[data-product-description]').forEach((description) => {
+    removeDuplicateProductDescriptionBlocks(description);
+
     const children = Array.from(description.children);
     if (children.length < 2) return;
 
@@ -666,24 +698,5 @@ if (backToTop) {
   window.addEventListener('scroll', toggleBackToTop, { passive: true });
   backToTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-}
-// sticky atc bar
-const stickyAtc = document.getElementById('sticky-atc');
-const mainAtcBtn = document.querySelector('[data-atc-main]');
-
-if (stickyAtc && mainAtcBtn) {
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      stickyAtc.classList.toggle('is-visible', !entry.isIntersecting);
-      stickyAtc.setAttribute('aria-hidden', String(entry.isIntersecting));
-    },
-    { threshold: 0, rootMargin: '-92px 0px 0px 0px' } // offset for sticky header height
-  );
-  observer.observe(mainAtcBtn);
-
-  // wire the sticky btn to submit the main product form
-  document.getElementById('sticky-atc-btn')?.addEventListener('click', () => {
-    document.querySelector('[data-product-form]')?.requestSubmit();
   });
 }
