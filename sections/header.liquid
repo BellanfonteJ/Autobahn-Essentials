@@ -30,24 +30,12 @@
     <nav id="SiteNav" class="site-nav" data-mobile-nav aria-label="{{ 'sections.header.navigation' | t }}">
       {%- assign has_shop_dropdown = false -%}
       {%- for link in section.settings.menu.links -%}
-        {%- assign link_title = link.title | downcase -%}
-        {%- if link_title contains 'shop' or link_title contains 'categor' -%}
+        {%- assign link_title = link.title | downcase | strip -%}
+        {%- if link_title == 'bmw' or link_title == 'audi' or link_title == 'vw' or link_title == 'volkswagen' -%}
+          {%- continue -%}
+        {%- elsif link_title contains 'shop' or link_title contains 'categor' -%}
           {%- assign has_shop_dropdown = true -%}
-          {%- if link.links.size > 0 -%}
-            <details class="nav-dropdown">
-              <summary>
-                <span>{{ link.title }}</span>
-                <span class="nav-dropdown__chevron" aria-hidden="true"></span>
-              </summary>
-              <div class="nav-dropdown__menu">
-                {%- for child_link in link.links -%}
-                  <a href="{{ child_link.url }}">{{ child_link.title }}</a>
-                {%- endfor -%}
-              </div>
-            </details>
-          {%- else -%}
-            {% render 'category-dropdown', label: link.title %}
-          {%- endif -%}
+          {% render 'category-dropdown', label: link.title %}
         {%- else -%}
           <a href="{{ link.url }}">{{ link.title }}</a>
         {%- endif -%}

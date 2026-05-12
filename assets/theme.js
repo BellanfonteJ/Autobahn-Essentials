@@ -925,8 +925,30 @@ document.querySelectorAll('[data-vehicle-clear]').forEach((btn) => {
 renderSavedVehicleChips();
 
 document.querySelectorAll('.nav-dropdown').forEach((dropdown) => {
+  const summary = dropdown.querySelector('summary');
+  const desktopQuery = window.matchMedia('(min-width: 991px)');
+
+  dropdown.addEventListener('mouseenter', () => {
+    if (desktopQuery.matches) {
+      dropdown.setAttribute('open', '');
+    }
+  });
+
+  dropdown.addEventListener('focusin', () => {
+    if (desktopQuery.matches) {
+      dropdown.setAttribute('open', '');
+    }
+  });
+
+  summary?.addEventListener('click', (event) => {
+    if (desktopQuery.matches) {
+      event.preventDefault();
+      dropdown.setAttribute('open', '');
+    }
+  });
+
   dropdown.addEventListener('mouseleave', () => {
-    if (window.matchMedia('(min-width: 991px)').matches) {
+    if (desktopQuery.matches) {
       dropdown.removeAttribute('open');
     }
   });
