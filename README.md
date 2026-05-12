@@ -4,10 +4,14 @@
 
 #### 12:48PM PST - Fix mobile header and hero layout
 
+Source: Pull request by BellanfonteJ
+
 - Centered the mobile header logo independently from uneven header controls.
 - Improved mobile hero image positioning, height, and overlay readability.
 
 #### 12:28PM PST - Add fullscreen product gallery
+
+Source: Pull request by BellanfonteJ
 
 - Added a click-to-open fullscreen product image gallery with previous and next controls.
 - Added image count, keyboard navigation, Escape close, and swipe support.
@@ -15,20 +19,28 @@
 
 #### 12:02PM PST - Add product image cursor dot
 
+Source: Pull request by BellanfonteJ
+
 - Replaced the default desktop cursor over product images with a small white custom cursor dot.
 - Preserved the existing product image magnifier behavior while sharing the same hover tracking.
 
 #### 11:47AM PST - Fix desktop hero typewriter overflow
+
+Source: Pull request by BellanfonteJ
 
 - Removed the desktop width cap from the animated hero typewriter line.
 - Added a small reveal buffer so the italic Performance line and pulsing period are not clipped.
 
 #### 11:39AM PST - Fix hero typewriter clipping
 
+Source: Pull request by BellanfonteJ
+
 - Switched the hero slogan typewriter reveal from width animation to clip-path masking.
 - Prevented the Performance line from clipping before the full word finishes typing.
 
 #### 11:31AM PST - Add hero slogan typewriter
+
+Source: Pull request by BellanfonteJ
 
 - Added a one-time typewriter animation for the homepage hero slogan.
 - Added a subtle pulsing final period after the slogan finishes typing.
@@ -36,26 +48,36 @@
 
 #### 11:17AM PST - Update header nav order
 
+Source: Pull request by BellanfonteJ
+
 - Updated the header navigation order to Home, Shop, Contacts.
 - Renamed the header Contact label to Contacts while preserving the existing destination URL.
 
 #### 11:03AM PST - Add product image hover scale
+
+Source: Pull request by BellanfonteJ
 
 - Added a subtle desktop-only hover scale to product gallery images.
 - Kept product images steady on touch devices and reduced-motion setups.
 
 #### 10:51AM PST - Remove product image zoom cursor
 
+Source: Pull request by BellanfonteJ
+
 - Removed the browser zoom cursor from product gallery images.
 - Let custom gallery hover effects control the product image interaction state without competing cursor styles.
 
 #### 10:37AM PST - Add product gallery hover magnifier
+
+Source: Pull request by BellanfonteJ
 
 - Added a desktop hover magnifier lens to product gallery images.
 - Kept the magnifier aligned to the rendered image area so contained product photos zoom accurately.
 - Disabled the magnifier on touch and smaller screens where hover zoom would get in the way.
 
 #### 10:21AM PST - Add product image magnifier cursor
+
+Source: Pull request by BellanfonteJ
 
 - Added a zoom-style cursor affordance to desktop product gallery images.
 - Made product photos feel interactive before the full hover magnifier behavior was added.
@@ -74,6 +96,8 @@
 
 #### 1:03AM PST - Update shop dropdown navigation
 
+Source: Pull request by BellanfonteJ
+
 - Replaced the shop dropdown category links with BMW, Audi, VW, and Accessories collection links.
 - Hid duplicate top-level BMW, Audi, and VW menu links when the shop dropdown is present.
 - Improved desktop dropdown behavior so hover and keyboard focus open the menu reliably.
@@ -91,6 +115,8 @@
 - Added product descriptions and SEO descriptions to product-card fitment text so collection, search, and badge matching can use the same fitment language already present in the product list.
 
 #### 12:20AM PST - Fix mobile header and home nav visibility
+
+Source: Pull request by BellanfonteJ
 
 - Restored homepage navigation visibility in the header.
 - Rebalanced the mobile header grid so the menu trigger, centered logo, and action icons fit cleanly.
