@@ -959,6 +959,81 @@ select option:hover {
   font-style: italic;
 }
 
+.hero h1 .hero-typewriter__line {
+  position: relative;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+}
+
+.hero h1 .hero-typewriter__reserve {
+  display: inline-block;
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+}
+
+.hero h1 .hero-typewriter__typing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: aeHeroTypewriter var(--hero-heading-duration) steps(var(--hero-heading-chars), end) forwards;
+}
+
+.hero h1 .hero-typewriter__typing--accent {
+  animation-delay: var(--hero-accent-delay);
+  animation-duration: var(--hero-accent-duration);
+  animation-timing-function: steps(var(--hero-accent-chars), end);
+}
+
+.hero h1 .hero-typewriter__period {
+  display: inline-block;
+  transform-origin: center;
+  animation: aeHeroPeriodPulse 1.45s ease-in-out var(--hero-period-delay) infinite both;
+}
+
+@keyframes aeHeroTypewriter {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes aeHeroPeriodPulse {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 .hero-typewriter__typing {
+    width: auto;
+    overflow: visible;
+    animation: none;
+  }
+
+  .hero h1 .hero-typewriter__period {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
 .hero__copy {
   max-width: 620px;
   margin: 0 0 30px;

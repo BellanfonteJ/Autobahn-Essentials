@@ -2,6 +2,14 @@
 
 ### May 12th
 
+#### 11:31AM PST - Add hero slogan typewriter
+
+Source: Push by slimeraps
+
+- Added a one-time typewriter animation for the homepage hero slogan.
+- Added a subtle pulsing final period after the slogan finishes typing.
+- Preserved the hero layout and added reduced-motion fallbacks.
+
 #### 11:17AM PST - Update header nav order
 
 Source: Push by slimeraps
