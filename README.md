@@ -4,14 +4,10 @@
 
 #### 12:48PM PST - Fix mobile header and hero layout
 
-Source: Push by slimeraps
-
 - Centered the mobile header logo independently from uneven header controls.
 - Improved mobile hero image positioning, height, and overlay readability.
 
 #### 12:28PM PST - Add fullscreen product gallery
-
-Source: Push by slimeraps
 
 - Added a click-to-open fullscreen product image gallery with previous and next controls.
 - Added image count, keyboard navigation, Escape close, and swipe support.
@@ -19,28 +15,20 @@ Source: Push by slimeraps
 
 #### 12:02PM PST - Add product image cursor dot
 
-Source: Push by slimeraps
-
 - Replaced the default desktop cursor over product images with a small white custom cursor dot.
 - Preserved the existing product image magnifier behavior while sharing the same hover tracking.
 
 #### 11:47AM PST - Fix desktop hero typewriter overflow
-
-Source: Push by slimeraps
 
 - Removed the desktop width cap from the animated hero typewriter line.
 - Added a small reveal buffer so the italic Performance line and pulsing period are not clipped.
 
 #### 11:39AM PST - Fix hero typewriter clipping
 
-Source: Push by slimeraps
-
 - Switched the hero slogan typewriter reveal from width animation to clip-path masking.
 - Prevented the Performance line from clipping before the full word finishes typing.
 
 #### 11:31AM PST - Add hero slogan typewriter
-
-Source: Push by slimeraps
 
 - Added a one-time typewriter animation for the homepage hero slogan.
 - Added a subtle pulsing final period after the slogan finishes typing.
@@ -48,14 +36,31 @@ Source: Push by slimeraps
 
 #### 11:17AM PST - Update header nav order
 
-Source: Push by slimeraps
-
 - Updated the header navigation order to Home, Shop, Contacts.
 - Renamed the header Contact label to Contacts while preserving the existing destination URL.
 
-#### 1:18AM PST - Tune header action visibility by page
+#### 11:03AM PST - Add product image hover scale
 
-Source: Push by slimeraps
+- Added a subtle desktop-only hover scale to product gallery images.
+- Kept product images steady on touch devices and reduced-motion setups.
+
+#### 10:51AM PST - Remove product image zoom cursor
+
+- Removed the browser zoom cursor from product gallery images.
+- Let custom gallery hover effects control the product image interaction state without competing cursor styles.
+
+#### 10:37AM PST - Add product gallery hover magnifier
+
+- Added a desktop hover magnifier lens to product gallery images.
+- Kept the magnifier aligned to the rendered image area so contained product photos zoom accurately.
+- Disabled the magnifier on touch and smaller screens where hover zoom would get in the way.
+
+#### 10:21AM PST - Add product image magnifier cursor
+
+- Added a zoom-style cursor affordance to desktop product gallery images.
+- Made product photos feel interactive before the full hover magnifier behavior was added.
+
+#### 1:18AM PST - Tune header action visibility by page
 
 - Kept Cart, My Garage, and Search visible on the homepage header.
 - Kept only Cart visible by default on product pages.
@@ -63,15 +68,11 @@ Source: Push by slimeraps
 
 #### 1:12AM PST - Extend homepage hero fade
 
-Source: Push by slimeraps
-
 - Extended the homepage hero image lower behind the first carbon-texture section.
 - Added a layered fade so the car image blends into the graphite carbon background instead of ending at a hard horizontal cutoff.
 - Let the spec-strip modules sit over the blended transition while preserving the carbon texture below.
 
 #### 1:03AM PST - Update shop dropdown navigation
-
-Source: Pull request by BellanfonteJ, merged by BellanfonteJ
 
 - Replaced the shop dropdown category links with BMW, Audi, VW, and Accessories collection links.
 - Hid duplicate top-level BMW, Audi, and VW menu links when the shop dropdown is present.
@@ -79,15 +80,11 @@ Source: Pull request by BellanfonteJ, merged by BellanfonteJ
 
 #### 12:51AM PST - Prune My Garage options to sold fitments
 
-Source: Push by slimeraps
-
 - Removed unsupported My Garage makes that are not represented in the product export.
 - Pruned the vehicle catalog to BMW, Audi, and Volkswagen model/chassis families with parts in the current product list.
 - Kept fitment aliases aligned with the remaining sold platforms so garage filtering and product search stay consistent.
 
 #### 12:31AM PST - Strengthen My Garage product fitment matching
-
-Source: Push by slimeraps
 
 - Expanded the My Garage vehicle catalog with BMW, Audi, and Volkswagen platforms found in the product export.
 - Added chassis, platform-family, and engine aliases so product titles and descriptions like F3X, F8X, G2X, N63TU3, S58, and 2.0T match saved garage vehicles more reliably.
@@ -95,15 +92,11 @@ Source: Push by slimeraps
 
 #### 12:20AM PST - Fix mobile header and home nav visibility
 
-Source: Pull request by BellanfonteJ, merged by slimeraps
-
 - Restored homepage navigation visibility in the header.
 - Rebalanced the mobile header grid so the menu trigger, centered logo, and action icons fit cleanly.
 - Tightened small-screen logo and icon sizing to keep header controls visible on narrow devices.
 
 #### 12:06AM PST - Add guided My Garage vehicle options
-
-Source: Push by slimeraps
 
 - Replaced typed My Garage year, model, trim / engine, and chassis fields with guided dropdowns.
 - Added a shared vehicle catalog so My Garage, homepage search, and fitment search use the same vehicle options.
@@ -113,15 +106,11 @@ Source: Push by slimeraps
 
 #### 11:55PM PST - Lock ticker above header
 
-Source: Push by slimeraps
-
 - Replaced the static announcement text with the scrolling parts ticker.
 - Locked the ticker in the announcement-bar slot above the header.
 - Kept the main header sticky below the ticker on desktop and mobile.
 
 #### 11:52PM PST - Add My Garage fitment filtering
-
-Source: Push by slimeraps
 
 - Added collection and search controls to show only parts that fit the saved My Garage vehicle.
 - Prioritized matching and universal-fit products ahead of other product cards when a garage is saved.
@@ -129,20 +118,14 @@ Source: Push by slimeraps
 
 #### 11:46PM PST - Pin ticker to header bottom
 
-Source: Push by slimeraps
-
 - Made the scrolling header ticker persistent instead of only appearing after scroll.
 - Raised the ticker so it sits against the bottom edge of the compact header on desktop and mobile.
 
 #### 11:32PM PST - Tighten header ticker position
 
-Source: Push by slimeraps
-
 - Moved the header ticker higher into the scrolled header area to reduce the gap above the hero.
 
 #### 11:30PM PST - Move ticker into header
-
-Source: Push by slimeraps
 
 - Moved the scrolling parts ticker from the bottom of the viewport to the top header area.
 - Hid the ticker into the header while the page is at the top and revealed it after scrolling.
@@ -150,14 +133,10 @@ Source: Push by slimeraps
 
 #### 11:17PM PST - Slide mobile menu from left
 
-Source: Pull request by BellanfonteJ, merged by slimeraps
-
 - Changed the mobile navigation drawer to open from the left side of the screen.
 - Flipped the drawer border and shadow so the mobile menu depth matches the new slide direction.
 
 #### 11:17PM PST - Add interactive homepage spec modules
-
-Source: Push by slimeraps
 
 - Removed the homepage hero stat cards for OEM+, Euro, and Fast.
 - Made the homepage spec modules compact by default with descriptions hidden.
@@ -165,15 +144,11 @@ Source: Push by slimeraps
 
 #### 11:09PM PST - Separate hero texture and remove floating cart
 
-Source: Push by slimeraps
-
 - Stopped the homepage hero image from extending into the carbon-texture section below it.
 - Removed the carbon texture overlay from the hero image fade so the top image stays clean.
 - Removed the floating product add-to-cart bar and kept the static product form button under the images.
 
 #### 11:01PM PST - Show mobile header icons
-
-Source: Pull request by BellanfonteJ
 
 - Adjusted the mobile header grid so the logo, menu trigger, and action icons all have room to display.
 - Restored the header action icon buttons on mobile layouts.
@@ -181,15 +156,11 @@ Source: Pull request by BellanfonteJ
 
 #### 10:59PM PST - Tidy product descriptions
 
-Source: Push by slimeraps
-
 - Moved the product trust module directly under the cart controls and above the description.
 - Centered product description text and uploaded description images.
 - Added duplicate-block cleanup for repeated product description content.
 
 #### 10:54PM PST - Move product trust badges below description
-
-Source: Push by slimeraps
 
 - Added product-page handling for descriptions that start with guarantee, stock, shipping, or trust-badge content.
 - Moved that leading trust cluster to the bottom of the product description so product copy appears first.
@@ -197,15 +168,11 @@ Source: Push by slimeraps
 
 #### 10:48PM PST - Center product media and purchase panel
 
-Source: Push by slimeraps
-
 - Moved product pages to an image-first layout with the main image centered above the product details.
 - Kept preview thumbnails centered directly under the main product image.
 - Moved the product description below the media and paired the price with the add-to-cart action at the top of the details panel.
 
 #### 10:40PM PST - Fix product image rendering
-
-Source: Pull request by BellanfonteJ
 
 - Switched product card, product gallery, cart, and cart drawer images to contained rendering so product photos no longer crop.
 - Added padded media surfaces and subtle image shadows for cleaner product presentation.
@@ -213,15 +180,11 @@ Source: Pull request by BellanfonteJ
 
 #### 5:46PM PST - Smooth hero-to-carbon transition
 
-Source: Push by slimeraps
-
 - Extended the hero image below the hero boundary so the upper modules sit over the same visual field.
 - Reduced the lower hero fade opacity to avoid a hard black cutoff.
 - Lightened the spec-strip carbon layer so it blends into the hero instead of forming a dark band.
 
 #### 5:43PM PST - Remove black bands behind hero modules
-
-Source: Push by slimeraps
 
 - Removed the solid black hero/spec-strip backgrounds behind the stat and trust modules.
 - Softened the hero image fade so the image carries farther behind the upper modules.
@@ -229,15 +192,11 @@ Source: Push by slimeraps
 
 #### 5:39PM PST - Add graphite texture and red edge lighting
 
-Source: Push by slimeraps
-
 - Reworked the default background and surface colors from flat black to layered graphite tones.
 - Added subtle carbon-fiber and brushed-metal texture layers across page and section backgrounds.
 - Added restrained red edge lighting, border accents, and soft active-state glows to cards, buttons, drawers, and key panels.
 
 #### 5:30PM PST - Remove homepage vehicle finder
-
-Source: Push by slimeraps
 
 - Removed the redundant homepage vehicle finder section now that My Garage handles saved vehicle fitment.
 - Kept the dedicated Fitment Guide page and collection/search fitment forms available for deeper searches.
@@ -245,23 +204,17 @@ Source: Push by slimeraps
 
 #### 5:29PM PST - Clean up My Garage drawer
 
-Source: Push by slimeraps
-
 - Replaced repeated My Garage placeholders with clear Year, Make, Model, Trim / Engine, and Chassis fields.
 - Added Trim / Engine to the saved garage data so more complete vehicle details can display and persist.
 - Updated the drawer layout so the expanded vehicle form fits cleanly across desktop and mobile.
 
 #### 5:15PM PST - Restore fallback images
 
-Source: Push by slimeraps
-
 - Restored the automotive fallback photos for homepage and builds sections.
 - Moved fallback photos into theme assets so Shopify serves them without remote asset warnings.
 - Reconnected hero, image-with-text, featured collection, promo tile, and builds page fallbacks.
 
 #### 5:08PM PST - Mobile browsing optimization
-
-Source: Pull request by BellanfonteJ, merged by slimeraps
 
 - Added My Garage saved vehicle fitment with dynamic product and product-card badges.
 - Improved mobile header, navigation, search drawer, and vehicle finder behavior.
@@ -270,14 +223,10 @@ Source: Pull request by BellanfonteJ, merged by slimeraps
 
 #### 1:50AM PST - Trust copy update
 
-Source: Push by slimeraps
-
 - Reworked the homepage image-with-text section to focus on part quality, shipping speed, secure checkout, and fitment-minded support.
 - <img width="639" height="418" alt="image" src="https://github.com/user-attachments/assets/4222e07a-d3fc-411f-a5a5-3f7ed7ff6bb2" />
 
 #### 1:45AM PST - Small wiring update
-
-Source: Push by slimeraps
 
 - Wired homepage CTAs and promo tiles to concrete shop, builds, search, and Instagram destinations.
 - Improved header search, mobile nav, and cart drawer button behavior in `assets/theme.js`.
