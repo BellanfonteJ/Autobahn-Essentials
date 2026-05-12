@@ -2,6 +2,13 @@
 
 ### May 12th
 
+#### 12:48PM PST - Fix mobile header and hero layout
+
+Source: Push by slimeraps
+
+- Centered the mobile header logo independently from uneven header controls.
+- Improved mobile hero image positioning, height, and overlay readability.
+
 #### 12:28PM PST - Add fullscreen product gallery
 
 Source: Push by slimeraps
