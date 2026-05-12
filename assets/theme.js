@@ -10,6 +10,61 @@ const garageForm = document.querySelector('[data-garage-form]');
 const garageStorageKey = 'autobahn:garage';
 const garageFitOnlyStorageKey = 'autobahn:garageFitOnly';
 
+const initScrollReveal = () => {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const revealSelectors = [
+    '.main-content > .shopify-section > .section',
+    '.main-content > .shopify-section > .section--tight',
+    '.main-content > .shopify-section > .ae-page-hero',
+    '.section-heading',
+    '.collection-card',
+    '.product-card',
+    '.promo-tile',
+    '.build-card',
+    '.ae-page-card',
+    '.feature-list__item',
+    '.trust-pill',
+  ];
+  const revealItems = Array.from(document.querySelectorAll(revealSelectors.join(',')))
+    .filter((element) => !element.closest('.site-header, .site-footer, .garage-drawer, .search-drawer, .cart-drawer, .product-gallery-lightbox, .popup-newsletter'));
+
+  if (!revealItems.length) return;
+
+  revealItems.forEach((element, index) => {
+    const group = element.parentElement;
+    const siblings = group
+      ? Array.from(group.children).filter((child) => revealItems.includes(child))
+      : [];
+    const siblingIndex = siblings.indexOf(element);
+    const delayIndex = siblingIndex >= 0 ? siblingIndex % 6 : index % 6;
+
+    element.style.setProperty('--scroll-reveal-delay', `${delayIndex * 70}ms`);
+    element.classList.add('scroll-reveal');
+  });
+
+  const reveal = (element) => {
+    element.classList.add('is-scroll-revealed');
+  };
+
+  if (reducedMotion || !('IntersectionObserver' in window)) {
+    revealItems.forEach(reveal);
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      reveal(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, {
+    rootMargin: '0px 0px -12% 0px',
+    threshold: 0.12,
+  });
+
+  revealItems.forEach((element) => observer.observe(element));
+};
+
 const closeMobileMenu = () => {
   if (!menuToggle || !mobileNav) return;
   mobileNav.classList.remove('is-open');
@@ -1356,6 +1411,8 @@ if (cartDrawer) {
     }
   });
 }
+
+initScrollReveal();
 
 const stickyHeader = document.querySelector('.site-header--sticky');
 if (stickyHeader) {

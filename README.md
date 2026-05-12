@@ -2,6 +2,12 @@
 
 ### May 12th
 
+#### 4:30PM PST - Add scroll reveal animations
+
+- Added one-time scroll reveal animations for sections, cards, promo tiles, product cards, and supporting content.
+- Revealed items stay visible after passing them and respect reduced-motion preferences.
+- Keep tag `3.2` as the rollback point before this animation change.
+
 #### 4:25PM PST - Update homepage CTA copy
 
 - Changed the homepage brand CTA heading from "Upgrade Your Build Today." to "Grab Your Essentials."
