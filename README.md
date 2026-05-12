@@ -2,6 +2,14 @@
 
 ### May 12th
 
+#### 12:51AM PST - Prune My Garage options to sold fitments
+
+Source: Push by slimeraps
+
+- Removed unsupported My Garage makes that are not represented in the product export.
+- Pruned the vehicle catalog to BMW, Audi, and Volkswagen model/chassis families with parts in the current product list.
+- Kept fitment aliases aligned with the remaining sold platforms so garage filtering and product search stay consistent.
+
 #### 12:37AM PST - Audit recent changelog coverage
 
 Source: Push by slimeraps
