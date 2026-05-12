@@ -1,21 +1,3 @@
-# Autobahn Essentials V1.0 Shopify Theme
-
-Autobahn Essentials V1.0 is a custom Shopify Online Store 2.0 theme for a premium automotive parts storefront. It is built around fast mobile browsing, confident product discovery, vehicle fitment support, and a dark performance-focused brand system.
-
-## V1.0 Highlights
-
-- Mobile-optimized header, navigation, search, product grids, filter chips, and product cards
-- My Garage vehicle fitment with saved Year, Make, Model, and Chassis
-- Dynamic fitment badges on product cards and product pages
-- Product photo previews with responsive image switching and active thumbnail states
-- Vehicle/part finder for year, make, model, chassis, and part type search
-- Product detail specs, fitment, shipping tabs, stock counter, sticky add-to-cart, and back-in-stock request form
-- Quick buy product cards with rollover image support and product badges
-- Homepage sections for hero, trust/spec strip, featured products, featured collections, promo tiles, image-with-text merchandising, brand CTA, and Instagram/social content
-- Branded custom page templates for About, Builds, Fitment Guide, Contact, Shipping & Returns, and FAQ
-- Collection search toolbar, tag filter chips, breadcrumbs, cart notes, pagination, and back-to-top button
-- Self-hosted storefront fonts and Theme Check clean Liquid/CSS/JS
-
 ## My Garage Fitment
 
 Shoppers can save their vehicle from the header garage button or from supported fitment search forms. The saved vehicle stays in the browser and updates fitment badges across browsing and product pages.
@@ -37,32 +19,6 @@ Supported custom metafields:
 - `custom.vehicle_model`
 - `custom.chassis`
 - `custom.years`
-
-## Development
-
-Install dependencies:
-
-```sh
-corepack pnpm install
-```
-
-Run Shopify Theme Check:
-
-```sh
-corepack pnpm run theme:check
-```
-
-Start a Shopify theme preview after connecting a store:
-
-```sh
-corepack pnpm run theme:dev -- --store=your-store.myshopify.com
-```
-
-Package the theme:
-
-```sh
-corepack pnpm run theme:package
-```
 
 ## Changelog
 
