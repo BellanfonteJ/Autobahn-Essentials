@@ -2,6 +2,12 @@
 
 ### May 12th
 
+#### 4:02PM PST - Add VW product export tags
+
+- Added `VW` and `Volkswagen` tags to 35 clear Volkswagen product handles in `products_export_1.csv`.
+- Verified all detected VW product candidates have VW collection tags so `/collections/vw` can pick them up after the product export is imported.
+- Created a backup export before changing the CSV.
+
 #### 2:45PM PST - Add Builds header navigation
 
 Source: Push by slimeraps
