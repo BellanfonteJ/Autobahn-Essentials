@@ -978,9 +978,9 @@ select option:hover {
   top: 0;
   left: 0;
   display: inline-block;
-  width: 0;
+  width: max-content;
   max-width: 100%;
-  overflow: hidden;
+  clip-path: inset(0 100% 0 0);
   white-space: nowrap;
   animation: aeHeroTypewriter var(--hero-heading-duration) steps(var(--hero-heading-chars), end) forwards;
 }
@@ -999,11 +999,11 @@ select option:hover {
 
 @keyframes aeHeroTypewriter {
   from {
-    width: 0;
+    clip-path: inset(0 100% 0 0);
   }
 
   to {
-    width: 100%;
+    clip-path: inset(0 0 0 0);
   }
 }
 
@@ -1022,8 +1022,7 @@ select option:hover {
 
 @media (prefers-reduced-motion: reduce) {
   .hero h1 .hero-typewriter__typing {
-    width: auto;
-    overflow: visible;
+    clip-path: none;
     animation: none;
   }
 

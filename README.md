@@ -2,6 +2,13 @@
 
 ### May 12th
 
+#### 11:39AM PST - Fix hero typewriter clipping
+
+Source: Push by slimeraps
+
+- Switched the hero slogan typewriter reveal from width animation to clip-path masking.
+- Prevented the Performance line from clipping before the full word finishes typing.
+
 #### 11:31AM PST - Add hero slogan typewriter
 
 Source: Push by slimeraps
