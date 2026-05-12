@@ -1,23 +1,23 @@
 ## Changelog
 
-### 2026-05-11 16:15 PST - Restore fallback images
+### 2026-05-11 5:15PM PST - Restore fallback images
 
 - Restored the automotive fallback photos that were lost during the PR #10 merge cleanup.
 - Moved fallback photos into theme assets so Shopify serves them without remote asset warnings.
 - Reconnected hero, image-with-text, featured collection, promo tile, and builds page fallbacks.
 
-### 2026-05-11 16:08 PST - PR #10 merge and Theme Check fix
+### 2026-05-11 5:08PM PST - PR #10 merge and Theme Check fix
 
 - Resolved the PR #10 merge conflicts against the latest `main` branch.
 - Kept the My Garage fitment updates aligned with the saved vehicle finder chip UI.
 - Fixed fallback image markup so Shopify Theme Check passes with no offenses.
 
-### 2026-05-11 00:50 PST - Trust copy update
+### 2026-05-11 1:50AM PST - Trust copy update
 
 - Reworked the homepage image-with-text section to focus on part quality, shipping speed, secure checkout, and fitment-minded support.
 - <img width="639" height="418" alt="image" src="https://github.com/user-attachments/assets/4222e07a-d3fc-411f-a5a5-3f7ed7ff6bb2" />
 
-### 2026-05-11 00:45 PST - Small wiring update
+### 2026-05-11 1:45AM PST - Small wiring update
 
 - Wired homepage CTAs and promo tiles to concrete shop, builds, search, and Instagram destinations.
 - Improved header search, mobile nav, and cart drawer button behavior in `assets/theme.js`.
