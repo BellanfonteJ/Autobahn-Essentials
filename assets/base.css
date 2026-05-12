@@ -1451,8 +1451,11 @@ select option:hover {
 }
 
 .product-gallery__main {
+  --magnifier-size: 200px;
+  --magnifier-zoom: 2.3;
   display: grid;
   place-items: center;
+  position: relative;
   width: min(100%, 840px);
   aspect-ratio: 1 / 1;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1466,6 +1469,58 @@ select option:hover {
   cursor: zoom-in;
 }
 
+.product-gallery__magnifier {
+  box-sizing: border-box;
+  position: absolute;
+  top: var(--magnifier-y, 50%);
+  left: var(--magnifier-x, 50%);
+  z-index: 3;
+  width: var(--magnifier-size);
+  height: var(--magnifier-size);
+  border: 5px solid rgba(10, 10, 10, 0.92);
+  border-radius: 50%;
+  background-color: #101010;
+  background-image: var(--magnifier-image);
+  background-repeat: no-repeat;
+  background-size: var(--magnifier-bg-size, 230% auto);
+  background-position: var(--magnifier-bg-position, center);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.48), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0) scale(0.98);
+  transition: opacity 120ms ease, transform 120ms ease;
+  visibility: hidden;
+  will-change: left, top, background-position, opacity, transform;
+}
+
+.product-gallery__magnifier::before,
+.product-gallery__magnifier::after {
+  content: "";
+  position: absolute;
+  background: rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}
+
+.product-gallery__magnifier::before {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+}
+
+.product-gallery__magnifier::after {
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+}
+
+.product-gallery__main.is-magnifying .product-gallery__magnifier {
+  opacity: 1;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  visibility: visible;
+}
+
 .product-gallery__main img {
   width: 100%;
   height: 100%;
@@ -1473,6 +1528,17 @@ select option:hover {
   object-position: center;
   filter: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.28));
   cursor: zoom-in;
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 989px) {
+  .product-gallery__main,
+  .product-gallery__main img {
+    cursor: default;
+  }
+
+  .product-gallery__magnifier {
+    display: none;
+  }
 }
 
 .product-thumbs {
