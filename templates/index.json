@@ -28,14 +28,6 @@
         "stat_label_3": "Shipping"
       }
     },
-    "vehicle_finder": {
-      "type": "vehicle-finder",
-      "settings": {
-        "eyebrow": "Find your fit",
-        "heading": "Search by vehicle, category, or upgrade path",
-        "button_label": "Find Parts"
-      }
-    },
     "spec_strip": {
       "type": "spec-strip",
       "blocks": {
@@ -246,7 +238,6 @@
   },
   "order": [
     "hero",
-    "vehicle_finder",
     "spec_strip",
     "featured_collections",
     "promo_tiles",
