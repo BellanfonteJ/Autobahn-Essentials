@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2026-05-12 - Restore fallback images
+
+- Restored the automotive fallback photos that were lost during the PR #10 merge cleanup.
+- Moved fallback photos into theme assets so Shopify serves them without remote asset warnings.
+- Reconnected hero, image-with-text, featured collection, promo tile, and builds page fallbacks.
+
 ### 2026-05-11 - PR #10 merge and Theme Check fix
 
 - Resolved the PR #10 merge conflicts against the latest `main` branch.

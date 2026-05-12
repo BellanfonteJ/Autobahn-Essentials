@@ -36,15 +36,15 @@
       <p>{{ section.settings.grid_text }}</p>
     </div>
 
-    {%- assign build_placeholders = 'photo-1494976388531-d1058494cdd8,photo-1583121274602-3e2820c69888,photo-1555215695-3004980ad54e,photo-1503376780353-7e6692767b70,photo-1605559424843-9e4c228bf1c2,photo-1606664515524-ed2f786a0bd6' | split: ',' -%}
+    {%- assign build_fallback_images = 'fallback-build-1.jpg,fallback-promo-3.jpg,fallback-promo-2.jpg,fallback-image-text-euro-car.jpg,fallback-collection-4.jpg,fallback-collection-3.jpg' | split: ',' -%}
     <div class="ae-grid-3">
       {%- for block in section.blocks -%}
         <article class="ae-card ae-build-card" {{ block.shopify_attributes }}>
           {%- if block.settings.image != blank -%}
             <div class="ae-build-card__media" style="--ae-build-image: url({{ block.settings.image | image_url: width: 900 }});"></div>
           {%- else -%}
-            {%- assign placeholder_index = forloop.index0 | modulo: build_placeholders.size -%}
-            <div class="ae-build-card__media" style="--ae-build-image: url(https://images.unsplash.com/{{ build_placeholders[placeholder_index] }}?w=900&q=80&auto=format&fit=crop);"></div>
+            {%- assign placeholder_index = forloop.index0 | modulo: build_fallback_images.size -%}
+            <div class="ae-build-card__media" style="--ae-build-image: url({{ build_fallback_images[placeholder_index] | asset_url }});"></div>
           {%- endif -%}
           <div class="ae-build-card__body">
             <div class="eyebrow">{{ block.settings.vehicle }}</div>

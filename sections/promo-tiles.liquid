@@ -1,3 +1,4 @@
+{%- assign promo_fallback_images = 'fallback-collection-6.jpg,fallback-promo-2.jpg,fallback-promo-3.jpg,fallback-collection-4.jpg,fallback-collection-5.jpg,fallback-collection-3.jpg' | split: ',' -%}
 <section class="section section--tight">
   <div class="page-width">
     <div class="promo-tiles">
@@ -6,7 +7,8 @@
           {%- if block.settings.image != blank -%}
             {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 33vw, (min-width: 641px) 50vw, 100vw' }}
           {%- else -%}
-            <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" width="1800" height="1000" loading="lazy">
+            {%- assign placeholder_index = forloop.index0 | modulo: promo_fallback_images.size -%}
+            <img src="{{ promo_fallback_images[placeholder_index] | asset_url }}" alt="" width="900" height="600" loading="lazy" decoding="async" sizes="(min-width: 990px) 33vw, (min-width: 641px) 50vw, 100vw">
           {%- endif -%}
           <span class="eyebrow">{{ block.settings.eyebrow }}</span>
           <h3>{{ block.settings.heading }}</h3>

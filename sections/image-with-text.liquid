@@ -4,7 +4,7 @@
       {%- if section.settings.image != blank -%}
         {{ section.settings.image | image_url: width: 1500 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 50vw, 100vw' }}
       {%- else -%}
-        <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" width="1800" height="1000" loading="lazy">
+        <img src="{{ 'fallback-image-text-euro-car.jpg' | asset_url }}" alt="Modified euro car" width="1500" height="1000" loading="lazy" decoding="async" sizes="(min-width: 990px) 50vw, 100vw">
       {%- endif -%}
     </div>
 

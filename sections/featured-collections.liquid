@@ -7,6 +7,7 @@
       </div>
     </div>
 
+    {%- assign collection_fallback_images = 'fallback-collection-1.jpg,fallback-collection-2.jpg,fallback-collection-3.jpg,fallback-collection-4.jpg,fallback-collection-5.jpg,fallback-collection-6.jpg' | split: ',' -%}
     <div class="collection-grid">
       {%- for block in section.blocks -%}
         {%- assign collection = block.settings.collection -%}
@@ -17,7 +18,8 @@
             {%- elsif block.settings.image != blank -%}
               {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw' }}
             {%- else -%}
-              <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" width="1800" height="1000" loading="lazy">
+              {%- assign placeholder_index = forloop.index0 | modulo: collection_fallback_images.size -%}
+              <img src="{{ collection_fallback_images[placeholder_index] | asset_url }}" alt="" width="900" height="600" loading="lazy" decoding="async" sizes="(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw">
             {%- endif -%}
           </div>
           <div class="collection-card__info">
