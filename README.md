@@ -2,6 +2,13 @@
 
 ### May 11th
 
+#### 11:46PM PST - Pin ticker to header bottom
+
+Source: Push by slimeraps
+
+- Made the scrolling header ticker persistent instead of only appearing after scroll.
+- Raised the ticker so it sits against the bottom edge of the compact header on desktop and mobile.
+
 #### 11:32PM PST - Tighten header ticker position
 
 Source: Push by slimeraps
