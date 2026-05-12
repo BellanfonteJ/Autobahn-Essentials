@@ -1596,6 +1596,17 @@ select option:hover {
   margin: 26px auto 0;
 }
 
+.product-description__trust {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.product-description__trust img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}
+
 .trust-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

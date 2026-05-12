@@ -132,7 +132,7 @@
       {%- endform -%}
 
       {%- if product.description != blank -%}
-        <div class="rte product-description">{{ product.description }}</div>
+        <div class="rte product-description" data-product-description>{{ product.description }}</div>
       {%- endif -%}
 
       {%- unless current_variant.available -%}

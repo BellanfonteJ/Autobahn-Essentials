@@ -45,6 +45,73 @@ const readGarage = () => {
 
 const normalizeText = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
+const productDescriptionTrustTerms = [
+  'guarantee',
+  'money back',
+  'warranty',
+  'in stock',
+  'same day',
+  'shipping',
+  'norton',
+  'secured',
+  'secure',
+  'motorsports',
+];
+
+const getProductDescriptionSignal = (element) => {
+  const imageSignals = Array.from(element.querySelectorAll('img'))
+    .map((image) => [image.alt, image.title, image.src].filter(Boolean).join(' '))
+    .join(' ');
+
+  return normalizeText(`${element.textContent || ''} ${imageSignals}`);
+};
+
+const isEmptyProductDescriptionElement = (element) => (
+  element instanceof HTMLElement
+  && !element.querySelector('img')
+  && !getProductDescriptionSignal(element)
+);
+
+const isTrustProductDescriptionElement = (element) => {
+  if (!(element instanceof HTMLElement)) return false;
+  const signal = getProductDescriptionSignal(element);
+  return productDescriptionTrustTerms.some((term) => sourceHasTerm(signal, term));
+};
+
+const moveProductDescriptionTrustCluster = () => {
+  document.querySelectorAll('[data-product-description]').forEach((description) => {
+    const children = Array.from(description.children);
+    if (children.length < 2) return;
+
+    const firstContentIndex = children.findIndex((child) => !isEmptyProductDescriptionElement(child));
+    if (firstContentIndex < 0 || !isTrustProductDescriptionElement(children[firstContentIndex])) return;
+
+    const cluster = [];
+    for (let i = firstContentIndex; i < children.length; i += 1) {
+      const child = children[i];
+      const isTrustContent = isTrustProductDescriptionElement(child);
+      const isFollowUpTrustImage = cluster.length > 0 && child.querySelector('img');
+
+      if (isEmptyProductDescriptionElement(child) || isTrustContent || isFollowUpTrustImage) {
+        cluster.push(child);
+      } else {
+        break;
+      }
+    }
+
+    const hasRemainingDescription = children
+      .slice(firstContentIndex + cluster.length)
+      .some((child) => !isEmptyProductDescriptionElement(child));
+
+    if (!cluster.length || !hasRemainingDescription) return;
+
+    const trustGroup = document.createElement('div');
+    trustGroup.className = 'product-description__trust';
+    cluster.forEach((child) => trustGroup.appendChild(child));
+    description.appendChild(trustGroup);
+  });
+};
+
 const makeAliases = {
   bmw: ['bmw'],
   audi: ['audi'],
@@ -266,6 +333,7 @@ if (garageToggle && garageDrawer) {
 }
 
 updateGarageUI(readGarage());
+moveProductDescriptionTrustCluster();
 
 if (searchToggle && searchDrawer) {
   searchToggle.addEventListener('click', (event) => {

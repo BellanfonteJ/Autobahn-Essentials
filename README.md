@@ -1,5 +1,11 @@
 ## Changelog
 
+### May 11th 10:54PM PST - Move product trust badges below description
+
+- Added product-page handling for descriptions that start with guarantee, stock, shipping, or trust-badge content.
+- Moved that leading trust cluster to the bottom of the product description so product copy appears first.
+- Kept uploaded badge images centered and responsive after they move.
+
 ### May 11th 10:48PM PST - Center product media and purchase panel
 
 - Moved product pages to an image-first layout with the main image centered above the product details.
