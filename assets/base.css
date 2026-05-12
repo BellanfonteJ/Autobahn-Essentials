@@ -912,7 +912,7 @@ select option:hover {
   min-height: min(82vh, 820px);
   display: flex;
   align-items: end;
-  overflow: hidden;
+  overflow: visible;
   border-bottom: 0;
   background: transparent;
 }
@@ -931,7 +931,9 @@ select option:hover {
 
 .hero__media {
   position: absolute;
-  inset: 0;
+  inset: 0 0 -260px;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .hero__media img {
@@ -945,8 +947,10 @@ select option:hover {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.68) 44%, rgba(0, 0, 0, 0.12) 100%),
-    linear-gradient(180deg, transparent 64%, rgba(0, 0, 0, 0.42) 100%);
+    linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.62) 44%, rgba(0, 0, 0, 0.08) 100%),
+    linear-gradient(180deg, transparent 58%, rgba(0, 0, 0, 0.18) 76%, rgba(8, 9, 10, 0.62) 100%),
+    var(--ae-carbon-texture);
+  background-blend-mode: normal, normal, soft-light;
 }
 
 .hero__content {
@@ -1026,7 +1030,7 @@ select option:hover {
   border-top: 0;
   border-bottom: 0;
   background:
-    linear-gradient(180deg, rgba(5, 5, 5, 0.16), rgba(8, 8, 8, 0.28)),
+    linear-gradient(180deg, rgba(8, 9, 10, 0.02), rgba(8, 9, 10, 0.14)),
     var(--ae-carbon-texture);
   background-blend-mode: normal, soft-light;
 }

@@ -1,5 +1,11 @@
 ## Changelog
 
+### May 11th 5:46PM PST - Smooth hero-to-carbon transition
+
+- Extended the hero image below the hero boundary so the upper modules sit over the same visual field.
+- Reduced the lower hero fade opacity to avoid a hard black cutoff.
+- Lightened the spec-strip carbon layer so it blends into the hero instead of forming a dark band.
+
 ### May 11th 5:43PM PST - Remove black bands behind hero modules
 
 - Removed the solid black hero/spec-strip backgrounds behind the stat and trust modules.
