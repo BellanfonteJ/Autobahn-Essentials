@@ -1,5 +1,15 @@
 ## Changelog
 
+### May 12th
+
+#### 12:06AM PST - Add guided My Garage vehicle options
+
+Source: Push by slimeraps
+
+- Replaced typed My Garage year, model, trim / engine, and chassis fields with guided dropdowns.
+- Added a shared vehicle catalog so My Garage, homepage search, and fitment search use the same vehicle options.
+- Added trim / engine to the fitment search forms and included trim in saved-garage fitment matching.
+
 ### May 11th
 
 #### 11:55PM PST - Lock ticker above header

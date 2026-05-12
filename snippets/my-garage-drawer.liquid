@@ -16,16 +16,14 @@
 
     <form class="garage-form" data-garage-form>
       <label class="visually-hidden" for="GarageYear">Year</label>
-      <input
-        class="field"
+      <select
+        class="select"
         id="GarageYear"
-        type="text"
         name="vehicle_year"
-        inputmode="numeric"
-        autocomplete="off"
-        placeholder="Year"
         data-garage-input="year"
       >
+        <option value="">Year</option>
+      </select>
 
       <label class="visually-hidden" for="GarageMake">Make</label>
       <select class="select" id="GarageMake" name="vehicle_make" data-garage-input="make">
@@ -39,37 +37,34 @@
       </select>
 
       <label class="visually-hidden" for="GarageModel">Model</label>
-      <input
-        class="field"
+      <select
+        class="select"
         id="GarageModel"
-        type="text"
         name="vehicle_model"
-        autocomplete="off"
-        placeholder="Model"
         data-garage-input="model"
       >
+        <option value="">Model</option>
+      </select>
 
       <label class="visually-hidden" for="GarageTrim">Trim / Engine</label>
-      <input
-        class="field"
+      <select
+        class="select"
         id="GarageTrim"
-        type="text"
         name="vehicle_trim"
-        autocomplete="off"
-        placeholder="Trim / Engine"
         data-garage-input="trim"
       >
+        <option value="">Trim / Engine</option>
+      </select>
 
       <label class="visually-hidden" for="GarageChassis">Chassis</label>
-      <input
-        class="field"
+      <select
+        class="select"
         id="GarageChassis"
-        type="text"
         name="vehicle_chassis"
-        autocomplete="off"
-        placeholder="Chassis"
         data-garage-input="chassis"
       >
+        <option value="">Chassis</option>
+      </select>
 
       <button class="button" type="submit">Save Vehicle</button>
       <button class="button button--secondary" type="button" data-garage-clear>Clear</button>
