@@ -963,7 +963,9 @@ select option:hover {
   position: relative;
   display: block;
   width: max-content;
-  max-width: 100%;
+  max-width: none;
+  padding-right: 0.16em;
+  margin-right: -0.16em;
 }
 
 .hero h1 .hero-typewriter__reserve {
@@ -979,7 +981,8 @@ select option:hover {
   left: 0;
   display: inline-block;
   width: max-content;
-  max-width: 100%;
+  max-width: none;
+  padding-right: 0.16em;
   clip-path: inset(0 100% 0 0);
   white-space: nowrap;
   animation: aeHeroTypewriter var(--hero-heading-duration) steps(var(--hero-heading-chars), end) forwards;
@@ -1003,7 +1006,7 @@ select option:hover {
   }
 
   to {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(0 -0.16em 0 0);
   }
 }
 
