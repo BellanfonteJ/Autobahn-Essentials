@@ -2,6 +2,14 @@
 
 ### May 12th
 
+#### 1:12AM PST - Extend homepage hero fade
+
+Source: Push by slimeraps
+
+- Extended the homepage hero image lower behind the first carbon-texture section.
+- Added a layered fade so the car image blends into the graphite carbon background instead of ending at a hard horizontal cutoff.
+- Let the spec-strip modules sit over the blended transition while preserving the carbon texture below.
+
 #### 1:07AM PST - Add PR #15 changelog entry
 
 Source: Push by slimeraps
