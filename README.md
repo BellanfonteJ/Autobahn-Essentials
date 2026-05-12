@@ -2,6 +2,12 @@
 
 ### May 12th
 
+#### 4:18PM PST - Update category card imagery
+
+- Replaced the Engine Performance card image with an Audi performance engine bay.
+- Replaced the Turbo Upgrades card image with a close-up turbocharger shot.
+- Replaced the Interior Accessories card image with a BMW red-leather interior while leaving the Exterior Styling image unchanged.
+
 #### 4:02PM PST - Add VW product export tags
 
 - Added `VW` and `Volkswagen` tags to 35 clear Volkswagen product handles in `products_export_1.csv`.
