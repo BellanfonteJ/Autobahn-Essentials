@@ -11,6 +11,8 @@ const garageStorageKey = 'autobahn:garage';
 const garageFitOnlyStorageKey = 'autobahn:garageFitOnly';
 
 const initScrollReveal = () => {
+  if (!document.body.classList.contains('template-index')) return;
+
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const revealSelectors = [
     '.main-content > .shopify-section > .section',
