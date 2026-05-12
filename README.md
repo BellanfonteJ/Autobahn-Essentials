@@ -4,13 +4,13 @@
 
 #### 11:32PM PST - Tighten header ticker position
 
-Source: Codex direct edit
+Source: Push by slimeraps
 
 - Moved the header ticker higher into the scrolled header area to reduce the gap above the hero.
 
 #### 11:30PM PST - Move ticker into header
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Moved the scrolling parts ticker from the bottom of the viewport to the top header area.
 - Hid the ticker into the header while the page is at the top and revealed it after scrolling.
@@ -25,7 +25,7 @@ Source: Pull request by BellanfonteJ, merged by slimeraps
 
 #### 11:17PM PST - Add interactive homepage spec modules
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Removed the homepage hero stat cards for OEM+, Euro, and Fast.
 - Made the homepage spec modules compact by default with descriptions hidden.
@@ -33,7 +33,7 @@ Source: Codex direct push
 
 #### 11:09PM PST - Separate hero texture and remove floating cart
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Stopped the homepage hero image from extending into the carbon-texture section below it.
 - Removed the carbon texture overlay from the hero image fade so the top image stays clean.
@@ -49,7 +49,7 @@ Source: Pull request by BellanfonteJ
 
 #### 10:59PM PST - Tidy product descriptions
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Moved the product trust module directly under the cart controls and above the description.
 - Centered product description text and uploaded description images.
@@ -57,7 +57,7 @@ Source: Codex direct push
 
 #### 10:54PM PST - Move product trust badges below description
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Added product-page handling for descriptions that start with guarantee, stock, shipping, or trust-badge content.
 - Moved that leading trust cluster to the bottom of the product description so product copy appears first.
@@ -65,7 +65,7 @@ Source: Codex direct push
 
 #### 10:48PM PST - Center product media and purchase panel
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Moved product pages to an image-first layout with the main image centered above the product details.
 - Kept preview thumbnails centered directly under the main product image.
@@ -81,7 +81,7 @@ Source: Pull request by BellanfonteJ
 
 #### 5:46PM PST - Smooth hero-to-carbon transition
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Extended the hero image below the hero boundary so the upper modules sit over the same visual field.
 - Reduced the lower hero fade opacity to avoid a hard black cutoff.
@@ -89,7 +89,7 @@ Source: Codex direct push
 
 #### 5:43PM PST - Remove black bands behind hero modules
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Removed the solid black hero/spec-strip backgrounds behind the stat and trust modules.
 - Softened the hero image fade so the image carries farther behind the upper modules.
@@ -97,7 +97,7 @@ Source: Codex direct push
 
 #### 5:39PM PST - Add graphite texture and red edge lighting
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Reworked the default background and surface colors from flat black to layered graphite tones.
 - Added subtle carbon-fiber and brushed-metal texture layers across page and section backgrounds.
@@ -105,7 +105,7 @@ Source: Codex direct push
 
 #### 5:30PM PST - Remove homepage vehicle finder
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Removed the redundant homepage vehicle finder section now that My Garage handles saved vehicle fitment.
 - Kept the dedicated Fitment Guide page and collection/search fitment forms available for deeper searches.
@@ -113,7 +113,7 @@ Source: Codex direct push
 
 #### 5:29PM PST - Clean up My Garage drawer
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Replaced repeated My Garage placeholders with clear Year, Make, Model, Trim / Engine, and Chassis fields.
 - Added Trim / Engine to the saved garage data so more complete vehicle details can display and persist.
@@ -121,7 +121,7 @@ Source: Codex direct push
 
 #### 5:15PM PST - Restore fallback images
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Restored the automotive fallback photos for homepage and builds sections.
 - Moved fallback photos into theme assets so Shopify serves them without remote asset warnings.
@@ -138,14 +138,14 @@ Source: Pull request by BellanfonteJ, merged by slimeraps
 
 #### 1:50AM PST - Trust copy update
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Reworked the homepage image-with-text section to focus on part quality, shipping speed, secure checkout, and fitment-minded support.
 - <img width="639" height="418" alt="image" src="https://github.com/user-attachments/assets/4222e07a-d3fc-411f-a5a5-3f7ed7ff6bb2" />
 
 #### 1:45AM PST - Small wiring update
 
-Source: Codex direct push
+Source: Push by slimeraps
 
 - Wired homepage CTAs and promo tiles to concrete shop, builds, search, and Instagram destinations.
 - Improved header search, mobile nav, and cart drawer button behavior in `assets/theme.js`.
