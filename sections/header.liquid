@@ -64,6 +64,11 @@
     </div>
 
     <div class="header-actions">
+      <button class="icon-button garage-toggle" type="button" data-garage-toggle aria-expanded="false" aria-controls="MyGarage">
+        <span class="visually-hidden">{{ 'sections.header.garage' | t }}</span>
+        {% render 'icon', icon: 'garage' %}
+        <span class="garage-toggle__indicator" data-garage-indicator hidden></span>
+      </button>
       <button class="icon-button" type="button" data-search-toggle aria-expanded="false" aria-controls="HeaderSearch">
         <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
         {% render 'icon', icon: 'search' %}
@@ -88,6 +93,8 @@
       </form>
     </div>
   </div>
+
+  {% render 'my-garage-drawer' %}
 </header>
 
 {%- if settings.show_ticker -%}

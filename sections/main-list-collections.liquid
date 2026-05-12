@@ -12,7 +12,7 @@
           <a class="collection-card" href="{{ collection.url }}">
             <div class="collection-card__media">
               {%- if collection.featured_image -%}
-                {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy' }}
+                {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw' }}
               {%- else -%}
                 {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
               {%- endif -%}

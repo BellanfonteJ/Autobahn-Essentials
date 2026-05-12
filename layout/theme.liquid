@@ -13,10 +13,6 @@
       <link rel="icon" type="image/png" href="{{ 'favicon-ae.png' | asset_url }}">
     {%- endif -%}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-
     <title>
       {{ page_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
@@ -31,6 +27,22 @@
     {{ content_for_header }}
 
     <style>
+      @font-face {
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: 800 900;
+        font-display: swap;
+        src: url("{{ 'montserrat-latin-800-900.woff2' | asset_url }}") format("woff2");
+      }
+
+      @font-face {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 400 900;
+        font-display: swap;
+        src: url("{{ 'roboto-latin-400-900.woff2' | asset_url }}") format("woff2");
+      }
+
       :root {
         --color-background: {{ settings.color_background }};
         --color-surface: {{ settings.color_surface }};

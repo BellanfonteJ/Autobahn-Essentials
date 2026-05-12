@@ -1,0 +1,50 @@
+{%- liquid
+  assign badge_context = context | default: 'card'
+  assign product_tags = product.tags | join: ' '
+  assign fitment_source = product.title | append: ' ' | append: product.type | append: ' ' | append: product_tags
+  assign fitment_metafield = product.metafields.custom.fitment.value | default: product.metafields.custom.fitment
+  assign fitment_notes = product.metafields.custom.fitment_notes.value | default: product.metafields.custom.fitment_notes
+  assign fitment_make = product.metafields.custom.vehicle_make.value | default: product.metafields.custom.vehicle_make
+  assign fitment_model = product.metafields.custom.vehicle_model.value | default: product.metafields.custom.vehicle_model
+  assign fitment_chassis = product.metafields.custom.chassis.value | default: product.metafields.custom.chassis
+  assign fitment_years = product.metafields.custom.years.value | default: product.metafields.custom.years
+
+  if fitment_metafield != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_metafield
+  endif
+
+  if fitment_notes != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_notes
+  endif
+
+  if fitment_make != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_make
+  endif
+
+  if fitment_model != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_model
+  endif
+
+  if fitment_chassis != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_chassis
+  endif
+
+  if fitment_years != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_years
+  endif
+-%}
+
+<button
+  class="fitment-badge fitment-badge--{{ badge_context }}"
+  type="button"
+  data-fitment-badge
+  data-garage-open
+  data-fitment-text="{{ fitment_source | strip_html | downcase | escape }}"
+  data-fitment-default="{{ 'products.product.fitment_check' | t | escape }}"
+  data-fitment-match-template="{{ 'products.product.fitment_match' | t: vehicle: '[vehicle]' | escape }}"
+  data-fitment-check-template="{{ 'products.product.fitment_check_vehicle' | t: vehicle: '[vehicle]' | escape }}"
+  data-fitment-universal="{{ 'products.product.fitment_universal' | t | escape }}"
+>
+  {% render 'icon', icon: 'garage' %}
+  <span data-fitment-badge-text>{{ 'products.product.fitment_check' | t }}</span>
+</button>
