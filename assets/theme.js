@@ -910,6 +910,7 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
   const main = gallery.querySelector('.product-gallery__main');
   const target = gallery.querySelector('[data-gallery-main]');
   const magnifier = gallery.querySelector('[data-gallery-magnifier]');
+  const cursorDot = gallery.querySelector('[data-gallery-cursor-dot]');
   const hoverZoomQuery = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 990px)');
 
   if (!main || !target) return;
@@ -924,10 +925,11 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
 
   const hideMagnifier = () => {
     main.classList.remove('is-magnifying');
+    main.classList.remove('is-cursor-dot-active');
   };
 
   const moveMagnifier = (event) => {
-    if (!magnifier || !hoverZoomQuery.matches) {
+    if (!magnifier || !cursorDot || !hoverZoomQuery.matches) {
       hideMagnifier();
       return;
     }
@@ -958,8 +960,11 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
     magnifier.style.setProperty('--magnifier-y', `${y}px`);
     magnifier.style.setProperty('--magnifier-bg-size', `${imageRect.width * zoom}px ${imageRect.height * zoom}px`);
     magnifier.style.setProperty('--magnifier-bg-position', `${backgroundX}px ${backgroundY}px`);
+    cursorDot.style.setProperty('--cursor-dot-x', `${x}px`);
+    cursorDot.style.setProperty('--cursor-dot-y', `${y}px`);
     updateMagnifierImage();
     main.classList.add('is-magnifying');
+    main.classList.add('is-cursor-dot-active');
   };
 
   main.addEventListener('pointermove', moveMagnifier);
