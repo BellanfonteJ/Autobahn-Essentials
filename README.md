@@ -2,7 +2,15 @@
 
 ### May 12th
 
-#### 12:25AM PST - Strengthen My Garage product fitment matching
+#### 12:37AM PST - Audit recent changelog coverage
+
+Source: Push by slimeraps
+
+- Checked the latest remote main history against the changelog.
+- Added missing changelog-maintenance entries for recent day-grouping and source-credit updates.
+- Corrected the My Garage fitment matching entry to the pushed commit time.
+
+#### 12:31AM PST - Strengthen My Garage product fitment matching
 
 Source: Push by slimeraps
 
@@ -51,6 +59,22 @@ Source: Push by slimeraps
 - Made the scrolling header ticker persistent instead of only appearing after scroll.
 - Raised the ticker so it sits against the bottom edge of the compact header on desktop and mobile.
 
+#### 11:40PM PST - Credit changelog pushes to slimeraps
+
+Source: Push by slimeraps
+
+- Updated changelog source labels so Codex direct pushes are credited as pushes by slimeraps.
+- Kept pull request entries credited to the pull request author and merger.
+- Preserved the grouped day format while cleaning up source wording.
+
+#### 11:35PM PST - Group changelog by day and source
+
+Source: Push by slimeraps
+
+- Grouped changelog entries under named day headings.
+- Added source lines to distinguish direct pushes from pull request changes.
+- Tightened the header ticker position as part of the same push.
+
 #### 11:32PM PST - Tighten header ticker position
 
 Source: Push by slimeraps
@@ -87,6 +111,14 @@ Source: Push by slimeraps
 - Stopped the homepage hero image from extending into the carbon-texture section below it.
 - Removed the carbon texture overlay from the hero image fade so the top image stays clean.
 - Removed the floating product add-to-cart bar and kept the static product form button under the images.
+
+#### 11:03PM PST - Backfill recent merge changelog entries
+
+Source: Push by slimeraps
+
+- Added missing changelog coverage for the product image rendering pull request.
+- Added missing changelog coverage for the mobile header icon pull request.
+- Kept the product description cleanup entries in the same timestamp format.
 
 #### 11:01PM PST - Show mobile header icons
 
