@@ -100,6 +100,7 @@
     "year": "Year",
     "make": "Make",
     "model": "Model",
+    "trim": "Trim / Engine",
     "chassis": "Chassis",
     "save": "Save Vehicle",
     "clear": "Clear",

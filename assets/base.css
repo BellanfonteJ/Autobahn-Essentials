@@ -816,7 +816,7 @@ summary:focus-visible {
 
 .garage-form {
   display: grid;
-  grid-template-columns: 0.78fr 1fr 1fr 0.88fr auto auto auto;
+  grid-template-columns: 0.68fr 0.95fr 0.95fr 1fr 0.9fr auto auto auto;
   gap: 10px;
   align-items: center;
 }

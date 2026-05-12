@@ -28,6 +28,7 @@ const cleanGarage = (garage = {}) => {
     year: String(source.year || '').trim(),
     make: String(source.make || '').trim(),
     model: String(source.model || '').trim(),
+    trim: String(source.trim || '').trim(),
     chassis: String(source.chassis || '').trim(),
   };
 };
@@ -56,7 +57,7 @@ const makeAliases = {
 const formatGarageVehicle = (garage) => {
   const clean = cleanGarage(garage);
   if (clean.make && clean.chassis) return `${clean.make} ${clean.chassis}`;
-  return [clean.year, clean.make, clean.model].filter(Boolean).join(' ') || clean.chassis;
+  return [clean.year, clean.make, clean.model, clean.trim].filter(Boolean).join(' ') || clean.chassis;
 };
 
 function renderSavedVehicleChips(garage = readGarage()) {
@@ -137,6 +138,7 @@ const setGarageFormValues = (form, garage, force = false) => {
     year: 'vehicle_year',
     make: 'vehicle_make',
     model: 'vehicle_model',
+    trim: 'vehicle_trim',
     chassis: 'vehicle_chassis',
   };
 
@@ -152,6 +154,7 @@ const getGarageFromForm = (form) => cleanGarage({
   year: form.querySelector('[name="vehicle_year"]')?.value,
   make: form.querySelector('[name="vehicle_make"]')?.value,
   model: form.querySelector('[name="vehicle_model"]')?.value,
+  trim: form.querySelector('[name="vehicle_trim"]')?.value,
   chassis: form.querySelector('[name="vehicle_chassis"]')?.value,
 });
 
