@@ -5,6 +5,8 @@
         <a class="promo-tile" href="{{ block.settings.link | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
           {%- if block.settings.image != blank -%}
             {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 33vw, (min-width: 641px) 50vw, 100vw' }}
+          {%- else -%}
+            <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" width="1800" height="1000" loading="lazy">
           {%- endif -%}
           <span class="eyebrow">{{ block.settings.eyebrow }}</span>
           <h3>{{ block.settings.heading }}</h3>

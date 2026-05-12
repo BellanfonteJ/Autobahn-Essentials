@@ -1,9 +1,11 @@
 <section class="hero">
-  {%- if section.settings.image != blank -%}
-    <div class="hero__media">
+  <div class="hero__media">
+    {%- if section.settings.image != blank -%}
       {{ section.settings.image | image_url: width: 2400 | image_tag: loading: 'eager', sizes: '100vw' }}
-    </div>
-  {%- endif -%}
+    {%- else -%}
+      <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" width="1800" height="1000" loading="eager">
+    {%- endif -%}
+  </div>
 
   <div class="hero__content">
     {%- if section.settings.eyebrow != blank -%}
@@ -24,7 +26,7 @@
         </a>
       {%- endif -%}
       {%- if section.settings.secondary_label != blank -%}
-        <a class="button button--secondary" href="{{ section.settings.secondary_link | default: '/pages/about' }}">
+        <a class="button button--secondary" href="{{ section.settings.secondary_link | default: '/pages/builds' }}">
           {{ section.settings.secondary_label }}
         </a>
       {%- endif -%}

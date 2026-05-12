@@ -6,46 +6,54 @@
         <h2>{{ section.settings.heading }}</h2>
       </div>
 
-      <form class="vehicle-finder__form" action="{{ routes.search_url }}" method="get" data-vehicle-finder data-garage-save>
-        <input type="hidden" name="type" value="product">
-        <input type="hidden" name="q" value="">
+      <div class="vehicle-finder__right">
+        <div class="vehicle-finder__saved" data-vehicle-saved hidden>
+          <span class="eyebrow">Your vehicle</span>
+          <span class="vehicle-finder__saved-text" data-vehicle-saved-text></span>
+          <button type="button" class="vehicle-finder__clear" data-vehicle-clear>Clear</button>
+        </div>
 
-        <label class="visually-hidden" for="FinderYear-{{ section.id }}">Year</label>
-        <input class="field" id="FinderYear-{{ section.id }}" type="text" name="vehicle_year" placeholder="Year">
+        <form class="vehicle-finder__form" action="{{ routes.search_url }}" method="get" data-vehicle-finder data-garage-save>
+          <input type="hidden" name="type" value="product">
+          <input type="hidden" name="q" value="">
 
-        <label class="visually-hidden" for="FinderMake-{{ section.id }}">Make</label>
-        <select class="select" id="FinderMake-{{ section.id }}" name="vehicle_make">
-          <option value="">Make</option>
-          <option>BMW</option>
-          <option>Audi</option>
-          <option>Volkswagen</option>
-          <option>Mercedes-Benz</option>
-          <option>Porsche</option>
-          <option>Mini</option>
-        </select>
+          <label class="visually-hidden" for="FinderYear-{{ section.id }}">Year</label>
+          <input class="field" id="FinderYear-{{ section.id }}" type="text" name="vehicle_year" placeholder="Year">
 
-        <label class="visually-hidden" for="FinderModel-{{ section.id }}">Model</label>
-        <input class="field" id="FinderModel-{{ section.id }}" type="text" name="vehicle_model" placeholder="Model">
+          <label class="visually-hidden" for="FinderMake-{{ section.id }}">Make</label>
+          <select class="select" id="FinderMake-{{ section.id }}" name="vehicle_make">
+            <option value="">Make</option>
+            <option>BMW</option>
+            <option>Audi</option>
+            <option>Volkswagen</option>
+            <option>Mercedes-Benz</option>
+            <option>Porsche</option>
+            <option>Mini</option>
+          </select>
 
-        <label class="visually-hidden" for="FinderChassis-{{ section.id }}">Chassis</label>
-        <input class="field" id="FinderChassis-{{ section.id }}" type="text" name="vehicle_chassis" placeholder="Chassis">
+          <label class="visually-hidden" for="FinderModel-{{ section.id }}">Model</label>
+          <input class="field" id="FinderModel-{{ section.id }}" type="text" name="vehicle_model" placeholder="Model">
 
-        <label class="visually-hidden" for="FinderPart-{{ section.id }}">Part type</label>
-        <select class="select" id="FinderPart-{{ section.id }}" name="part_type">
-          <option value="">Part type</option>
-          <option>Downpipes</option>
-          <option>Turbo upgrade</option>
-          <option>Intercooler</option>
-          <option>Engine performance</option>
-          <option>Exterior styling</option>
-          <option>Interior accessories</option>
-        </select>
+          <label class="visually-hidden" for="FinderChassis-{{ section.id }}">Chassis</label>
+          <input class="field" id="FinderChassis-{{ section.id }}" type="text" name="vehicle_chassis" placeholder="Chassis">
 
-        <button class="button" type="submit">
-          {{ section.settings.button_label }}
-          {% render 'icon', icon: 'search' %}
-        </button>
-      </form>
+          <label class="visually-hidden" for="FinderPart-{{ section.id }}">Part type</label>
+          <select class="select" id="FinderPart-{{ section.id }}" name="part_type">
+            <option value="">Part type</option>
+            <option>Downpipes</option>
+            <option>Turbo upgrade</option>
+            <option>Intercooler</option>
+            <option>Engine performance</option>
+            <option>Exterior styling</option>
+            <option>Interior accessories</option>
+          </select>
+
+          <button class="button" type="submit">
+            {{ section.settings.button_label }}
+            {% render 'icon', icon: 'search' %}
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </section>

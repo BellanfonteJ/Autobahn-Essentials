@@ -1,5 +1,12 @@
 {% render 'breadcrumbs' %}
 
+{%- liquid
+  assign instagram_url = section.settings.instagram_url
+  if instagram_url == blank
+    assign instagram_url = 'https://www.instagram.com/autobahnessentials/'
+  endif
+-%}
+
 <section class="ae-page-hero" style="--ae-page-image: url({{ 'autobahn-hero.svg' | asset_url }});">
   <div class="page-width ae-page-hero__inner">
     <div>
@@ -8,7 +15,7 @@
       <p>{{ section.settings.text }}</p>
       <div class="ae-page-actions">
         <a class="button" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">{{ section.settings.primary_label }}</a>
-        <a class="button button--secondary" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.secondary_label }}</a>
+        <a class="button button--secondary" href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.secondary_label }}</a>
       </div>
     </div>
     <div class="ae-page-stats" aria-label="Build page highlights">
@@ -29,10 +36,16 @@
       <p>{{ section.settings.grid_text }}</p>
     </div>
 
+    {%- assign build_placeholders = 'photo-1494976388531-d1058494cdd8,photo-1583121274602-3e2820c69888,photo-1555215695-3004980ad54e,photo-1503376780353-7e6692767b70,photo-1605559424843-9e4c228bf1c2,photo-1606664515524-ed2f786a0bd6' | split: ',' -%}
     <div class="ae-grid-3">
       {%- for block in section.blocks -%}
         <article class="ae-card ae-build-card" {{ block.shopify_attributes }}>
-          <div class="ae-build-card__media"{% if block.settings.image != blank %} style="--ae-build-image: url({{ block.settings.image | image_url: width: 900 }});"{% endif %}></div>
+          {%- if block.settings.image != blank -%}
+            <div class="ae-build-card__media" style="--ae-build-image: url({{ block.settings.image | image_url: width: 900 }});"></div>
+          {%- else -%}
+            {%- assign placeholder_index = forloop.index0 | modulo: build_placeholders.size -%}
+            <div class="ae-build-card__media" style="--ae-build-image: url(https://images.unsplash.com/{{ build_placeholders[placeholder_index] }}?w=900&q=80&auto=format&fit=crop);"></div>
+          {%- endif -%}
           <div class="ae-build-card__body">
             <div class="eyebrow">{{ block.settings.vehicle }}</div>
             <h3>{{ block.settings.title }}</h3>
@@ -51,7 +64,7 @@
       <div class="eyebrow">Submit a build</div>
       <h2>{{ section.settings.submit_heading }}</h2>
       <p>{{ section.settings.submit_text }}</p>
-      <a class="button" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.submit_label }}</a>
+      <a class="button" href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer">{{ section.settings.submit_label }}</a>
     </div>
   </div>
 </section>

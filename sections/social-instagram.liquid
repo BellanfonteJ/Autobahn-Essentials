@@ -6,7 +6,7 @@
 -%}
 
 <section class="social-section section">
-  <div class="page-width social-section__inner">
+  <div class="page-width social-section__inner social-section__inner--centered">
     <div class="social-section__content">
       <div class="eyebrow">{{ section.settings.eyebrow }}</div>
       <h2>{{ section.settings.heading }}</h2>
@@ -16,23 +16,6 @@
         {{ section.settings.button_label }}
       </a>
     </div>
-
-    <a class="social-card" href="{{ instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Follow Autobahn Essentials on Instagram">
-      <div class="social-card__top">
-        {% render 'icon', icon: 'instagram' %}
-        <span>{{ section.settings.handle }}</span>
-      </div>
-      <div class="social-card__grid" aria-hidden="true">
-        <span>AE.</span>
-        <span>600HP</span>
-        <span>OEM+</span>
-        <span>EURO</span>
-      </div>
-      <div class="social-card__footer">
-        <span>{{ section.settings.footer_text }}</span>
-        {% render 'icon', icon: 'arrow' %}
-      </div>
-    </a>
   </div>
 </section>
 

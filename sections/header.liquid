@@ -73,11 +73,13 @@
         <span class="visually-hidden">{{ 'general.search.search' | t }}</span>
         {% render 'icon', icon: 'search' %}
       </button>
-      <a class="icon-button" href="{{ routes.cart_url }}">
+      <a class="icon-button" href="{{ routes.cart_url }}" data-cart-drawer-open aria-controls="CartDrawer" aria-expanded="false">
         <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
         {% render 'icon', icon: 'cart' %}
         {%- if cart.item_count > 0 -%}
-          <span class="cart-count">{{ cart.item_count }}</span>
+          <span class="cart-count" data-cart-count>{{ cart.item_count }}</span>
+        {%- else -%}
+          <span class="cart-count" data-cart-count hidden>0</span>
         {%- endif -%}
       </a>
     </div>

@@ -43,26 +43,39 @@ Supported custom metafields:
 Install dependencies:
 
 ```sh
-node .tools/pnpm-js/bin/pnpm.mjs install
+corepack pnpm install
 ```
 
 Run Shopify Theme Check:
 
 ```sh
-node .tools/pnpm-js/bin/pnpm.mjs run theme:check
+corepack pnpm run theme:check
 ```
 
 Start a Shopify theme preview after connecting a store:
 
 ```sh
-node .tools/pnpm-js/bin/pnpm.mjs run theme:dev -- --store=your-store.myshopify.com
+corepack pnpm run theme:dev -- --store=your-store.myshopify.com
 ```
 
 Package the theme:
 
 ```sh
-node .tools/pnpm-js/bin/pnpm.mjs run theme:package
+corepack pnpm run theme:package
 ```
+
+## Changelog
+
+### 2026-05-11 - Trust copy update
+
+- Reworked the homepage image-with-text section to focus on part quality, shipping speed, secure checkout, and fitment-minded support.
+- <img width="639" height="418" alt="image" src="https://github.com/user-attachments/assets/4222e07a-d3fc-411f-a5a5-3f7ed7ff6bb2" />
+
+### 2026-05-11 - Small wiring update
+
+- Wired homepage CTAs and promo tiles to concrete shop, builds, search, and Instagram destinations.
+- Improved header search, mobile nav, and cart drawer button behavior in `assets/theme.js`.
+- Added safe fallback handling for builds-page Instagram links.
 
 ## Upload to Shopify
 

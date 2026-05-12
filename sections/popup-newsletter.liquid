@@ -1,0 +1,205 @@
+{%- if section.settings.enabled -%}
+  <div
+    class="popup-newsletter"
+    data-popup-newsletter
+    data-popup-delay="{{ section.settings.delay_seconds | default: 3 }}"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="PopupNewsletterHeading"
+    hidden
+  >
+    <div class="popup-newsletter__backdrop" data-popup-close></div>
+
+    <div class="popup-newsletter__panel" role="document">
+      <button
+        type="button"
+        class="popup-newsletter__close"
+        data-popup-close
+        aria-label="Close"
+      >
+        {% render 'icon', icon: 'close' %}
+      </button>
+
+      <div class="popup-newsletter__body">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="eyebrow popup-newsletter__eyebrow">{{ section.settings.eyebrow }}</div>
+        {%- endif -%}
+
+        <h2 id="PopupNewsletterHeading" class="popup-newsletter__heading">
+          {{ section.settings.heading }}
+        </h2>
+
+        {%- if section.settings.subheading != blank -%}
+          <p class="popup-newsletter__subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+
+        <div class="popup-newsletter__form-wrap" data-popup-form-wrap>
+          {%- form 'customer', class: 'popup-newsletter__form', novalidate: 'novalidate' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter, popup-discount">
+            <label class="visually-hidden" for="PopupNewsletterEmail">Email</label>
+            <div class="popup-newsletter__row">
+              <input
+                id="PopupNewsletterEmail"
+                type="email"
+                name="contact[email]"
+                placeholder="{{ section.settings.placeholder | default: 'you@example.com' }}"
+                autocomplete="email"
+                required
+              >
+              <button type="submit" class="button popup-newsletter__submit">
+                {{ section.settings.button_label | default: 'Get my code' }}
+              </button>
+            </div>
+
+            {%- if form.errors -%}
+              <p class="popup-newsletter__error">
+                {{ form.errors | default_errors }}
+              </p>
+            {%- endif -%}
+
+            {%- if form.posted_successfully? -%}
+              <p class="popup-newsletter__success" data-popup-success>
+                {{ section.settings.success_message | default: 'Thanks! Check your inbox for your code.' }}
+              </p>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+
+        {%- if section.settings.fine_print != blank -%}
+          <p class="popup-newsletter__fine-print">{{ section.settings.fine_print }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var popup = document.querySelector('[data-popup-newsletter]');
+      if (!popup) return;
+
+      var STORAGE_KEY = 'ae:popup-newsletter:dismissed';
+      var SUCCESS_KEY = 'ae:popup-newsletter:signed-up';
+
+      function isDismissed() {
+        try { return localStorage.getItem(STORAGE_KEY) === '1'; } catch (e) { return false; }
+      }
+      function markDismissed() {
+        try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+      }
+      function isSignedUp() {
+        try { return localStorage.getItem(SUCCESS_KEY) === '1'; } catch (e) { return false; }
+      }
+      function markSignedUp() {
+        try { localStorage.setItem(SUCCESS_KEY, '1'); } catch (e) {}
+      }
+
+      function open() {
+        popup.hidden = false;
+        popup.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('is-popup-open');
+        var input = popup.querySelector('input[type="email"]');
+        if (input) setTimeout(function () { input.focus(); }, 50);
+      }
+
+      function close() {
+        popup.setAttribute('aria-hidden', 'true');
+        popup.hidden = true;
+        document.body.classList.remove('is-popup-open');
+        markDismissed();
+      }
+
+      popup.addEventListener('click', function (evt) {
+        if (evt.target.closest('[data-popup-close]')) close();
+      });
+
+      document.addEventListener('keydown', function (evt) {
+        if (evt.key === 'Escape' && !popup.hidden) close();
+      });
+
+      // if Shopify reloaded with the success state, persist & show briefly
+      var success = popup.querySelector('[data-popup-success]');
+      var urlParams = new URLSearchParams(window.location.search);
+      if (success || urlParams.get('customer_posted') === 'true') {
+        markSignedUp();
+        open();
+        return;
+      }
+
+      if (isDismissed() || isSignedUp()) return;
+
+      var delay = parseInt(popup.getAttribute('data-popup-delay'), 10) || 0;
+      setTimeout(open, delay * 1000);
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Newsletter popup",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable popup",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "delay_seconds",
+      "label": "Delay before showing (seconds)",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Welcome"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get 10% off your first order"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Join the list — we'll email you a code, plus drop alerts and build inspiration."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "you@example.com"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Get my code"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks! Check your inbox for your code."
+    },
+    {
+      "type": "textarea",
+      "id": "fine_print",
+      "label": "Fine print",
+      "default": "One discount per customer. Unsubscribe anytime."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter popup"
+    }
+  ]
+}
+{% endschema %}
