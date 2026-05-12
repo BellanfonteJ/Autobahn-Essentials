@@ -157,29 +157,61 @@ const makeAliases = {
 const yearRange = (start, end) => Array.from({ length: end - start + 1 }, (_, index) => String(start + index));
 
 const garageVehicleCatalog = [
+  { make: 'BMW', model: '1 Series', chassis: 'E82', years: yearRange(2008, 2013), trims: ['128i', '135i', '1M', 'N54', 'N55'] },
   { make: 'BMW', model: '2 Series', chassis: 'F22', years: yearRange(2014, 2021), trims: ['228i', '230i', 'M235i', 'M240i'] },
+  { make: 'BMW', model: 'M2', chassis: 'F87', years: yearRange(2016, 2021), trims: ['N55', 'S55', 'Competition', 'CS'] },
+  { make: 'BMW', model: 'M2', chassis: 'G87', years: yearRange(2023, 2026), trims: ['S58'] },
   { make: 'BMW', model: '3 Series', chassis: 'E46', years: yearRange(1999, 2006), trims: ['323i', '325i', '328i', '330i'] },
   { make: 'BMW', model: '3 Series', chassis: 'E90', years: yearRange(2006, 2013), trims: ['325i', '328i', '330i', '335i'] },
+  { make: 'BMW', model: '3 Series', chassis: 'E92', years: yearRange(2007, 2013), trims: ['328i', '335i', 'N54', 'N55'] },
   { make: 'BMW', model: '3 Series', chassis: 'F30', years: yearRange(2012, 2019), trims: ['320i', '328i', '330i', '335i', '340i'] },
   { make: 'BMW', model: '3 Series', chassis: 'G20', years: yearRange(2019, 2026), trims: ['330i', 'M340i'] },
   { make: 'BMW', model: 'M3', chassis: 'E46', years: yearRange(2001, 2006), trims: ['S54', 'Competition'] },
   { make: 'BMW', model: 'M3', chassis: 'E90', years: yearRange(2008, 2013), trims: ['S65', 'Competition'] },
   { make: 'BMW', model: 'M3', chassis: 'F80', years: yearRange(2015, 2018), trims: ['S55', 'Competition', 'CS'] },
   { make: 'BMW', model: 'M3', chassis: 'G80', years: yearRange(2021, 2026), trims: ['S58', 'Competition', 'CS'] },
+  { make: 'BMW', model: '4 Series', chassis: 'F32', years: yearRange(2014, 2020), trims: ['428i', '430i', '435i', '440i'] },
+  { make: 'BMW', model: '4 Series', chassis: 'G22', years: yearRange(2021, 2026), trims: ['430i', 'M440i'] },
   { make: 'BMW', model: 'M4', chassis: 'F82', years: yearRange(2015, 2020), trims: ['S55', 'Competition', 'CS', 'GTS'] },
+  { make: 'BMW', model: 'M4', chassis: 'F83', years: yearRange(2015, 2020), trims: ['S55', 'Competition', 'CS'] },
   { make: 'BMW', model: 'M4', chassis: 'G82', years: yearRange(2021, 2026), trims: ['S58', 'Competition', 'CS'] },
+  { make: 'BMW', model: 'M4', chassis: 'G83', years: yearRange(2021, 2026), trims: ['S58', 'Competition'] },
   { make: 'BMW', model: '5 Series', chassis: 'F10', years: yearRange(2011, 2016), trims: ['528i', '535i', '550i'] },
   { make: 'BMW', model: '5 Series', chassis: 'G30', years: yearRange(2017, 2023), trims: ['530i', '540i', 'M550i'] },
+  { make: 'BMW', model: 'M5', chassis: 'F90', years: yearRange(2018, 2023), trims: ['S63', 'Competition', 'CS'] },
+  { make: 'BMW', model: '6 Series', chassis: 'F06', years: yearRange(2012, 2019), trims: ['640i', '650i', 'M6', 'N55', 'N63', 'S63'] },
+  { make: 'BMW', model: '6 Series', chassis: 'F12', years: yearRange(2012, 2018), trims: ['640i', '650i', 'M6', 'N55', 'N63', 'S63'] },
+  { make: 'BMW', model: '6 Series', chassis: 'F13', years: yearRange(2012, 2018), trims: ['640i', '650i', 'M6', 'N55', 'N63', 'S63'] },
+  { make: 'BMW', model: '7 Series', chassis: 'F01', years: yearRange(2009, 2015), trims: ['740i', '750i', 'N54', 'N55', 'N63'] },
+  { make: 'BMW', model: '7 Series', chassis: 'G11', years: yearRange(2016, 2022), trims: ['740i', '750i', 'N63'] },
+  { make: 'BMW', model: 'X3', chassis: 'F25', years: yearRange(2011, 2017), trims: ['28i', '35i', 'N20', 'N55'] },
+  { make: 'BMW', model: 'X4', chassis: 'F26', years: yearRange(2015, 2018), trims: ['28i', '35i', 'N20', 'N55'] },
   { make: 'Audi', model: 'A3', chassis: '8V', years: yearRange(2015, 2020), trims: ['1.8T', '2.0T'] },
+  { make: 'Audi', model: 'A3', chassis: '8P', years: yearRange(2006, 2013), trims: ['2.0T'] },
   { make: 'Audi', model: 'A4', chassis: 'B8', years: yearRange(2009, 2016), trims: ['2.0T'] },
   { make: 'Audi', model: 'A4', chassis: 'B9', years: yearRange(2017, 2024), trims: ['2.0T', '45 TFSI'] },
   { make: 'Audi', model: 'S4', chassis: 'B8', years: yearRange(2010, 2016), trims: ['3.0T'] },
   { make: 'Audi', model: 'S4', chassis: 'B9', years: yearRange(2018, 2024), trims: ['3.0T'] },
   { make: 'Audi', model: 'A5', chassis: 'B9', years: yearRange(2018, 2024), trims: ['2.0T'] },
   { make: 'Audi', model: 'S5', chassis: 'B9', years: yearRange(2018, 2024), trims: ['3.0T'] },
+  { make: 'Audi', model: 'S6', chassis: 'C7', years: yearRange(2013, 2018), trims: ['4.0T'] },
+  { make: 'Audi', model: 'S7', chassis: 'C7', years: yearRange(2013, 2018), trims: ['4.0T'] },
+  { make: 'Audi', model: 'RS7', chassis: 'C7', years: yearRange(2014, 2018), trims: ['4.0T'] },
+  { make: 'Audi', model: 'RS6', chassis: 'C8', years: yearRange(2021, 2026), trims: ['4.0T'] },
+  { make: 'Audi', model: 'RS7', chassis: 'C8', years: yearRange(2021, 2026), trims: ['4.0T'] },
+  { make: 'Audi', model: 'Q5', chassis: 'B8', years: yearRange(2009, 2017), trims: ['2.0T', '3.0T'] },
+  { make: 'Audi', model: 'SQ5', chassis: 'B8', years: yearRange(2014, 2017), trims: ['3.0T'] },
+  { make: 'Audi', model: 'A8', chassis: 'D4', years: yearRange(2011, 2018), trims: ['4.0T'] },
+  { make: 'Audi', model: 'A8', chassis: 'D5', years: yearRange(2019, 2026), trims: ['4.0T'] },
+  { make: 'Audi', model: 'S8', chassis: 'D4', years: yearRange(2013, 2018), trims: ['4.0T'] },
+  { make: 'Audi', model: 'S8', chassis: 'D5', years: yearRange(2020, 2026), trims: ['4.0T'] },
+  { make: 'Volkswagen', model: 'GTI', chassis: 'MK5', years: yearRange(2006, 2009), trims: ['2.0T'] },
   { make: 'Volkswagen', model: 'GTI', chassis: 'MK6', years: yearRange(2010, 2014), trims: ['2.0T'] },
   { make: 'Volkswagen', model: 'GTI', chassis: 'MK7', years: yearRange(2015, 2021), trims: ['2.0T', 'Performance Pack'] },
   { make: 'Volkswagen', model: 'GTI', chassis: 'MK8', years: yearRange(2022, 2026), trims: ['2.0T'] },
+  { make: 'Volkswagen', model: 'GLI', chassis: 'MK6', years: yearRange(2012, 2018), trims: ['2.0T'] },
+  { make: 'Volkswagen', model: 'GLI', chassis: 'MK7', years: yearRange(2019, 2026), trims: ['2.0T'] },
+  { make: 'Volkswagen', model: 'Golf', chassis: 'MK7', years: yearRange(2015, 2021), trims: ['1.8T', '2.0T'] },
   { make: 'Volkswagen', model: 'Golf R', chassis: 'MK7', years: yearRange(2015, 2019), trims: ['2.0T'] },
   { make: 'Volkswagen', model: 'Golf R', chassis: 'MK8', years: yearRange(2022, 2026), trims: ['2.0T'] },
   { make: 'Volkswagen', model: 'Jetta', chassis: 'MK7', years: yearRange(2019, 2026), trims: ['1.4T', '1.5T', 'GLI'] },
@@ -221,6 +253,83 @@ const garageCascadeClears = {
   chassis: ['trim'],
 };
 
+const fitmentTermAliases = {
+  '1 series': ['1 series', '135i', '1m'],
+  '2 series': ['2 series', '228i', '230i', '235i', '240i', 'm235i', 'm240i'],
+  '3 series': ['3 series', '320i', '328i', '330i', '335i', '340i', 'm340i'],
+  '4 series': ['4 series', '428i', '430i', '435i', '440i'],
+  '5 series': ['5 series', '528i', '535i', '540i', '550i', 'm550i'],
+  '6 series': ['6 series', '640i', '650i'],
+  '7 series': ['7 series', '740i', '750i'],
+  'c class': ['c class', 'c250', 'c300', 'c350', 'c43'],
+  'e class': ['e class', 'e350', 'e550', 'e63'],
+  e82: ['e82', 'e88', '135i', '1m'],
+  e90: ['e90', 'e9x'],
+  e92: ['e92', 'e9x'],
+  f01: ['f01', 'f02', '750i'],
+  f06: ['f06', '650i', 'm6'],
+  f10: ['f10', 'f11', 'f18', '550i'],
+  f12: ['f12', '650i', 'm6'],
+  f13: ['f13', '650i', 'm6'],
+  f22: ['f22', 'f23', 'm235i', 'm240i', '235i', '240i'],
+  f25: ['f25', 'x3'],
+  f26: ['f26', 'x4'],
+  f30: ['f30', 'f3x'],
+  f32: ['f32', 'f3x'],
+  f80: ['f80', 'f8x'],
+  f82: ['f82', 'f8x'],
+  f83: ['f83', 'f8x'],
+  f87: ['f87', 'm2', 'm2c', 'm2 competition'],
+  f90: ['f90', 'm5'],
+  g11: ['g11', 'g12', '750i'],
+  g20: ['g20', 'g2x', 'm340i'],
+  g22: ['g22', 'g2x', 'm440i'],
+  g30: ['g30', 'g31', 'm550i'],
+  g80: ['g80', 'g8x'],
+  g82: ['g82', 'g8x'],
+  g83: ['g83', 'g8x'],
+  g87: ['g87', 'm2'],
+  '8p': ['8p', 'a3'],
+  '8v': ['8v', 'a3', 's3'],
+  b8: ['b8', 'b8 5'],
+  b9: ['b9'],
+  c7: ['c7', 's6', 's7', 'rs7'],
+  c8: ['c8', 'rs6', 'rs7'],
+  d4: ['d4', 'a8', 's8'],
+  d5: ['d5', 'a8', 's8'],
+  mk5: ['mk5', 'gti'],
+  mk6: ['mk6', 'mk6 5', 'gti', 'gli'],
+  mk7: ['mk7', 'mqb', 'gti', 'gli', 'golf r'],
+  mk8: ['mk8', 'mqb', 'gti', 'golf r'],
+  n20: ['n20', 'n26'],
+  n54: ['n54'],
+  n55: ['n55'],
+  n63: ['n63', 'n63tu', 'n63r', 'n63b', 'n63t3', 'n63tu2', 'n63tu3'],
+  s55: ['s55'],
+  s58: ['s58'],
+  s63: ['s63'],
+  '135i': ['135i', 'n54', 'n55'],
+  '235i': ['235i', 'm235i', 'n55'],
+  m235i: ['m235i', '235i', 'n55'],
+  '240i': ['240i', 'm240i', 'b58'],
+  m240i: ['m240i', '240i', 'b58'],
+  '335i': ['335i', 'n54', 'n55'],
+  '340i': ['340i', 'b58'],
+  m340i: ['m340i', '340i', 'b58'],
+  '435i': ['435i', 'n55'],
+  '440i': ['440i', 'b58'],
+  m440i: ['m440i', '440i', 'b58'],
+  '535i': ['535i', 'n54', 'n55'],
+  '550i': ['550i', 'n63', 'n63tu'],
+  m550i: ['m550i', 'm550', 'n63', 'n63r', 'n63tu3'],
+  '650i': ['650i', 'n63', 'n63tu'],
+  '750i': ['750i', 'n63', 'n63tu', 'n63r', 'n63tu3'],
+  '1 8t': ['1 8t', '1.8t'],
+  '2 0t': ['2 0t', '2.0t', 'ea888'],
+  '3 0t': ['3 0t', '3.0t'],
+  '4 0t': ['4 0t', '4.0t'],
+};
+
 const formatGarageVehicle = (garage) => {
   const clean = cleanGarage(garage);
   if (clean.make && clean.chassis) return `${clean.make} ${clean.chassis}`;
@@ -253,6 +362,18 @@ const sourceHasAnyTerm = (source, terms) => terms.some((term) => sourceHasTerm(s
 
 const getMakeTerms = (make) => makeAliases[normalizeText(make)] || [make];
 
+const getFitmentTerms = (...terms) => {
+  const output = [];
+
+  terms.filter(Boolean).forEach((term) => {
+    const normalized = normalizeText(term);
+    output.push(term);
+    (fitmentTermAliases[normalized] || []).forEach((alias) => output.push(alias));
+  });
+
+  return Array.from(new Set(output.filter(Boolean)));
+};
+
 const isUniversalFitment = (source) => [
   'universal',
   'all vehicles',
@@ -269,9 +390,9 @@ const getFitmentState = (source, garage) => {
   if (!normalizedSource) return 'empty';
 
   const isUniversal = isUniversalFitment(normalizedSource);
-  const chassisMatch = clean.chassis && sourceHasTerm(normalizedSource, clean.chassis);
+  const chassisMatch = clean.chassis && sourceHasAnyTerm(normalizedSource, getFitmentTerms(clean.chassis));
   const modelMatch = clean.model && sourceHasTerm(normalizedSource, clean.model);
-  const trimMatch = clean.trim && sourceHasTerm(normalizedSource, clean.trim);
+  const trimMatch = clean.trim && sourceHasAnyTerm(normalizedSource, getFitmentTerms(clean.trim));
   const makeMatch = clean.make && sourceHasAnyTerm(normalizedSource, getMakeTerms(clean.make));
   const yearMatch = clean.year && sourceHasTerm(normalizedSource, clean.year);
   const isFit = savedVehicle && (chassisMatch || (makeMatch && (modelMatch || yearMatch || trimMatch)));
@@ -522,6 +643,27 @@ const getGarageFromForm = (form) => cleanGarage({
   chassis: form.querySelector('[name="vehicle_chassis"]')?.value,
 });
 
+const getVehicleSearchValues = (payload) => {
+  const garage = cleanGarage({
+    year: payload.vehicle_year,
+    make: payload.vehicle_make,
+    model: payload.vehicle_model,
+    trim: payload.vehicle_trim,
+    chassis: payload.vehicle_chassis,
+  });
+  const visibleTerms = [
+    garage.year,
+    garage.make,
+    garage.model,
+    garage.chassis,
+    garage.trim,
+    payload.part_type,
+  ];
+  const expandedTerms = getFitmentTerms(garage.model, garage.chassis, garage.trim);
+
+  return Array.from(new Set([...visibleTerms, ...expandedTerms].filter(Boolean)));
+};
+
 const updateGarageUI = (garage) => {
   const clean = cleanGarage(garage);
   const savedVehicle = hasGarage(clean);
@@ -762,11 +904,7 @@ document.querySelectorAll('[data-vehicle-finder]').forEach((form) => {
       payload[field.name] = field.value.trim();
     });
     if (query) {
-      const values = Object.entries(payload)
-        .filter(([key]) => key !== 'part_type' || payload[key])
-        .map(([, v]) => v)
-        .filter(Boolean);
-      query.value = values.join(' ');
+      query.value = getVehicleSearchValues(payload).join(' ');
     }
   });
 });

@@ -1,7 +1,8 @@
 {%- liquid
   assign sizes = '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw'
   assign product_tags = product.tags | join: ' '
-  assign fitment_source = product.title | append: ' ' | append: product.type | append: ' ' | append: product_tags
+  assign fitment_source = product.title | append: ' ' | append: product.type | append: ' ' | append: product_tags | append: ' ' | append: product.description
+  assign seo_description = product.metafields.global.description_tag.value | default: product.metafields.global.description_tag
   assign fitment_metafield = product.metafields.custom.fitment.value | default: product.metafields.custom.fitment
   assign fitment_notes = product.metafields.custom.fitment_notes.value | default: product.metafields.custom.fitment_notes
   assign fitment_make = product.metafields.custom.vehicle_make.value | default: product.metafields.custom.vehicle_make
@@ -11,6 +12,10 @@
 
   if fitment_metafield != blank
     assign fitment_source = fitment_source | append: ' ' | append: fitment_metafield
+  endif
+
+  if seo_description != blank
+    assign fitment_source = fitment_source | append: ' ' | append: seo_description
   endif
 
   if fitment_notes != blank

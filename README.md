@@ -2,6 +2,22 @@
 
 ### May 12th
 
+#### 12:25AM PST - Strengthen My Garage product fitment matching
+
+Source: Push by slimeraps
+
+- Expanded the My Garage vehicle catalog with BMW, Audi, and Volkswagen platforms found in the product export.
+- Added chassis, platform-family, and engine aliases so product titles and descriptions like F3X, F8X, G2X, N63TU3, S58, and 2.0T match saved garage vehicles more reliably.
+- Added product descriptions and SEO descriptions to product-card fitment text so collection, search, and badge matching can use the same fitment language already present in the product list.
+
+#### 12:20AM PST - Fix mobile header and home nav visibility
+
+Source: Pull request by BellanfonteJ, merged by slimeraps
+
+- Restored homepage navigation visibility in the header.
+- Rebalanced the mobile header grid so the menu trigger, centered logo, and action icons fit cleanly.
+- Tightened small-screen logo and icon sizing to keep header controls visible on narrow devices.
+
 #### 12:06AM PST - Add guided My Garage vehicle options
 
 Source: Push by slimeraps
