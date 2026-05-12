@@ -1,5 +1,17 @@
 ## Changelog
 
+### 2026-05-11 5:30PM PST - Remove homepage vehicle finder
+
+- Removed the redundant homepage vehicle finder section now that My Garage handles saved vehicle fitment.
+- Kept the dedicated Fitment Guide page and collection/search fitment forms available for deeper searches.
+- Let the homepage move from hero stats directly into the trust/spec strip for a cleaner first scroll.
+
+### 2026-05-11 5:29PM PST - Clean up My Garage drawer
+
+- Replaced repeated My Garage placeholders with clear Year, Make, Model, Trim / Engine, and Chassis fields.
+- Added Trim / Engine to the saved garage data so more complete vehicle details can display and persist.
+- Updated the drawer layout so the expanded vehicle form fits cleanly across desktop and mobile.
+
 ### 2026-05-11 5:15PM PST - Restore fallback images
 
 - Restored the automotive fallback photos for homepage and builds sections.
