@@ -1,8 +1,8 @@
 {
   "current": {
-    "color_background": "#000000",
-    "color_surface": "#111111",
-    "color_surface_strong": "#282828",
+    "color_background": "#08090A",
+    "color_surface": "#151515",
+    "color_surface_strong": "#262422",
     "color_text": "#ffffff",
     "color_muted": "#8e8e8e",
     "color_accent": "#e8432a",

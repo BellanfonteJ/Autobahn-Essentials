@@ -2,6 +2,20 @@
   box-sizing: border-box;
 }
 
+:root {
+  --ae-graphite: #08090a;
+  --ae-graphite-soft: #111214;
+  --ae-metal: #181715;
+  --ae-red-edge: rgba(232, 67, 42, 0.42);
+  --ae-red-glow: rgba(232, 67, 42, 0.18);
+  --ae-carbon-texture:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 9px);
+  --ae-brushed-texture:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 18px);
+}
+
 html {
   background: var(--color-background);
   color-scheme: dark;
@@ -15,9 +29,10 @@ body {
   margin: 0;
   color: var(--color-text);
   background:
-    radial-gradient(circle at 18% 0%, rgba(232, 67, 42, 0.18), transparent 30rem),
-    radial-gradient(circle at 88% 18rem, rgba(255, 255, 255, 0.05), transparent 22rem),
-    linear-gradient(180deg, #000000 0%, var(--color-background) 28rem);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 240px),
+    linear-gradient(135deg, rgba(232, 67, 42, 0.075), transparent 22rem),
+    var(--ae-carbon-texture),
+    linear-gradient(180deg, #070808 0%, var(--color-background) 32rem, #0b0a09 100%);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
@@ -84,6 +99,10 @@ summary:focus-visible {
 
 .main-content {
   min-height: 55vh;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22rem),
+    var(--ae-brushed-texture);
+  background-size: auto, auto;
 }
 
 .page-width {
@@ -178,6 +197,10 @@ summary:focus-visible {
 
 .section {
   padding: clamp(48px, 8vw, 96px) 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(0, 0, 0, 0.035)),
+    var(--ae-carbon-texture);
+  background-blend-mode: normal, soft-light;
 }
 
 .section--tight {
@@ -3153,6 +3176,145 @@ select option:hover,
 .ae-card--accent,
 .ae-form-status {
   border-left: 3px solid var(--color-accent);
+}
+
+/* Material depth and restrained shop-light accents */
+.site-header {
+  background:
+    linear-gradient(180deg, rgba(18, 18, 18, 0.96), rgba(7, 8, 8, 0.92)),
+    var(--ae-brushed-texture);
+  border-bottom-color: rgba(232, 67, 42, 0.24);
+  box-shadow:
+    0 1px 0 rgba(232, 67, 42, 0.22),
+    0 10px 42px rgba(0, 0, 0, 0.42);
+}
+
+.site-header.is-scrolled {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 17, 0.98), rgba(7, 8, 8, 0.96)),
+    var(--ae-brushed-texture);
+  box-shadow:
+    0 1px 0 rgba(232, 67, 42, 0.26),
+    0 6px 24px rgba(0, 0, 0, 0.56);
+}
+
+.search-drawer,
+.garage-drawer {
+  background:
+    linear-gradient(135deg, rgba(232, 67, 42, 0.11), transparent 36%),
+    var(--ae-carbon-texture),
+    linear-gradient(180deg, rgba(19, 19, 18, 0.98), rgba(8, 8, 8, 0.98));
+  border-top-color: rgba(232, 67, 42, 0.28);
+}
+
+.product-card,
+.collection-card,
+.article-card,
+.promo-tile,
+.image-text__media,
+.product-gallery__main,
+.product-info,
+.social-card,
+.ae-card,
+.ae-faq-list details,
+.hero-stat,
+.spec-item,
+.cart-drawer__panel,
+.popup-newsletter__panel {
+  border-color: rgba(255, 255, 255, 0.13);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.058), rgba(255, 255, 255, 0.012)),
+    var(--ae-brushed-texture),
+    var(--color-surface);
+  box-shadow:
+    inset 1px 0 0 rgba(232, 67, 42, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 14px 42px rgba(0, 0, 0, 0.25);
+}
+
+.product-card:hover,
+.collection-card:hover,
+.article-card:hover,
+.promo-tile:hover,
+.social-card:hover,
+.social-card:focus-visible,
+.ae-build-card:hover,
+.ae-card:focus-within {
+  border-color: rgba(232, 67, 42, 0.38);
+  box-shadow:
+    inset 1px 0 0 rgba(232, 67, 42, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 0 1px rgba(232, 67, 42, 0.1),
+    0 22px 58px rgba(0, 0, 0, 0.34),
+    0 0 34px rgba(232, 67, 42, 0.08);
+}
+
+.button,
+.shopify-payment-button__button {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 12px 30px rgba(232, 67, 42, 0.2);
+}
+
+.button:hover,
+.button:focus-visible,
+.shopify-payment-button__button:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 18px 40px rgba(232, 67, 42, 0.3),
+    0 0 0 1px rgba(232, 67, 42, 0.2);
+}
+
+.button--secondary,
+.icon-button,
+.back-to-top,
+.field,
+.select,
+.quantity__input,
+.filter-chip,
+.fitment-badge {
+  border-color: rgba(255, 255, 255, 0.17);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    rgba(18, 18, 18, 0.84);
+  box-shadow: inset 1px 0 0 rgba(232, 67, 42, 0.07);
+}
+
+.button--secondary:hover,
+.button--secondary:focus-visible,
+.icon-button:hover,
+.icon-button:focus-visible,
+.back-to-top:hover,
+.back-to-top:focus-visible,
+.field:focus,
+.select:focus,
+.quantity__input:focus,
+.filter-chip:hover,
+.fitment-badge:hover,
+.fitment-badge:focus-visible {
+  border-color: rgba(232, 67, 42, 0.44);
+  box-shadow:
+    inset 1px 0 0 rgba(232, 67, 42, 0.28),
+    0 0 0 3px rgba(232, 67, 42, 0.11);
+}
+
+.ae-page-stat,
+.ae-card--accent,
+.ae-form-status,
+.product-tabs details[open],
+.fitment-badge.is-check {
+  border-color: rgba(232, 67, 42, 0.34);
+  box-shadow:
+    inset 2px 0 0 rgba(232, 67, 42, 0.42),
+    0 16px 44px rgba(0, 0, 0, 0.26);
+}
+
+.hero-stat,
+.spec-item {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.012)),
+    var(--ae-carbon-texture),
+    rgba(18, 18, 18, 0.9);
 }
 
 @media (max-width: 640px) {

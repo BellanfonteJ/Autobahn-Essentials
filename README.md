@@ -1,5 +1,11 @@
 ## Changelog
 
+### May 11th 5:39PM PST - Add graphite texture and red edge lighting
+
+- Reworked the default background and surface colors from flat black to layered graphite tones.
+- Added subtle carbon-fiber and brushed-metal texture layers across page and section backgrounds.
+- Added restrained red edge lighting, border accents, and soft active-state glows to cards, buttons, drawers, and key panels.
+
 ### May 11th 5:30PM PST - Remove homepage vehicle finder
 
 - Removed the redundant homepage vehicle finder section now that My Garage handles saved vehicle fitment.

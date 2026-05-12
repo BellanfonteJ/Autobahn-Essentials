@@ -58,19 +58,19 @@
         "type": "color",
         "id": "color_background",
         "label": "Background",
-        "default": "#000000"
+        "default": "#08090A"
       },
       {
         "type": "color",
         "id": "color_surface",
         "label": "Surface",
-        "default": "#111111"
+        "default": "#151515"
       },
       {
         "type": "color",
         "id": "color_surface_strong",
         "label": "Strong surface",
-        "default": "#282828"
+        "default": "#262422"
       },
       {
         "type": "color",
