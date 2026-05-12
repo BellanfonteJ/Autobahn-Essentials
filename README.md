@@ -2,6 +2,13 @@
 
 ### May 12th
 
+#### 2:45PM PST - Add Builds header navigation
+
+Source: Push by slimeraps
+
+- Added Builds to the header navigation.
+- Updated the header navigation order to Home, Shop, Builds, Contacts.
+
 #### 12:48PM PST - Fix mobile header and hero layout
 
 Source: Push by slimeraps
