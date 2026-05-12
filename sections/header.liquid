@@ -30,6 +30,7 @@
     <nav id="SiteNav" class="site-nav" data-mobile-nav aria-label="{{ 'sections.header.navigation' | t }}">
       {%- if section.settings.menu.links.size > 0 -%}
         {%- assign has_home_link = false -%}
+        {%- assign has_builds_link = false -%}
         {%- assign has_contacts_link = false -%}
 
         {%- for link in section.settings.menu.links -%}
@@ -47,6 +48,18 @@
 
         {%- for link in section.settings.menu.links -%}
           {%- assign link_title = link.title | downcase | strip -%}
+          {%- if link_title == 'builds' or link_title contains 'build' -%}
+            {%- assign has_builds_link = true -%}
+            <a href="{{ link.url }}">Builds</a>
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- unless has_builds_link -%}
+          <a href="/pages/builds">Builds</a>
+        {%- endunless -%}
+
+        {%- for link in section.settings.menu.links -%}
+          {%- assign link_title = link.title | downcase | strip -%}
           {%- if link_title contains 'contact' -%}
             {%- assign has_contacts_link = true -%}
             <a href="{{ link.url }}">Contacts</a>
@@ -58,7 +71,7 @@
 
         {%- for link in section.settings.menu.links -%}
           {%- assign link_title = link.title | downcase | strip -%}
-          {%- if link_title == 'home' or link_title contains 'contact' or link_title contains 'shop' or link_title contains 'categor' or link_title == 'bmw' or link_title == 'audi' or link_title == 'vw' or link_title == 'volkswagen' -%}
+          {%- if link_title == 'home' or link_title contains 'contact' or link_title contains 'build' or link_title contains 'shop' or link_title contains 'categor' or link_title == 'bmw' or link_title == 'audi' or link_title == 'vw' or link_title == 'volkswagen' -%}
             {%- continue -%}
           {%- endif -%}
           <a href="{{ link.url }}">{{ link.title }}</a>
@@ -66,6 +79,7 @@
       {%- else -%}
         <a href="{{ routes.root_url }}">Home</a>
         {% render 'category-dropdown', label: 'Shop' %}
+        <a href="/pages/builds">Builds</a>
         <a href="/pages/contact">Contacts</a>
       {%- endif -%}
     </nav>
