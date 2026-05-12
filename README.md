@@ -22,6 +22,12 @@ Supported custom metafields:
 
 ## Changelog
 
+### 2026-05-11 - PR #10 merge and Theme Check fix
+
+- Resolved the PR #10 merge conflicts against the latest `main` branch.
+- Kept the My Garage fitment updates aligned with the saved vehicle finder chip UI.
+- Fixed fallback image markup so Shopify Theme Check passes with no offenses.
+
 ### 2026-05-11 - Trust copy update
 
 - Reworked the homepage image-with-text section to focus on part quality, shipping speed, secure checkout, and fitment-minded support.
