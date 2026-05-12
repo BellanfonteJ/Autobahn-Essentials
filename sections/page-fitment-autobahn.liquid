@@ -22,7 +22,9 @@
       <form class="ae-fitment-form" action="{{ routes.search_url }}" method="get" role="search" data-vehicle-finder data-garage-save>
         <input type="hidden" name="type" value="product">
         <input type="hidden" name="q" value="">
-        <input class="field" type="text" name="vehicle_year" placeholder="Year">
+        <select class="select" name="vehicle_year">
+          <option value="">Year</option>
+        </select>
         <select class="select" name="vehicle_make">
           <option value="">Make</option>
           <option>BMW</option>
@@ -32,8 +34,15 @@
           <option>Porsche</option>
           <option>Mini</option>
         </select>
-        <input class="field" type="text" name="vehicle_model" placeholder="Model">
-        <input class="field" type="text" name="vehicle_chassis" placeholder="Chassis">
+        <select class="select" name="vehicle_model">
+          <option value="">Model</option>
+        </select>
+        <select class="select" name="vehicle_chassis">
+          <option value="">Chassis</option>
+        </select>
+        <select class="select" name="vehicle_trim">
+          <option value="">Trim / Engine</option>
+        </select>
         <select class="select" name="part_type">
           <option value="">Part type</option>
           <option>Downpipes</option>

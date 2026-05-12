@@ -272,7 +272,7 @@ summary:focus-visible {
 
 .vehicle-finder__form {
   display: grid;
-  grid-template-columns: 0.72fr 1fr 1fr 0.9fr 1.15fr auto;
+  grid-template-columns: 0.72fr 1fr 1fr 0.9fr 1.1fr 1.15fr auto;
   gap: 10px;
 }
 
@@ -2176,7 +2176,7 @@ select option:hover {
 }
 
 .ae-fitment-form {
-  grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) auto;
   align-items: end;
 }
 

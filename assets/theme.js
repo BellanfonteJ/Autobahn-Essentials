@@ -154,6 +154,73 @@ const makeAliases = {
   mini: ['mini'],
 };
 
+const yearRange = (start, end) => Array.from({ length: end - start + 1 }, (_, index) => String(start + index));
+
+const garageVehicleCatalog = [
+  { make: 'BMW', model: '2 Series', chassis: 'F22', years: yearRange(2014, 2021), trims: ['228i', '230i', 'M235i', 'M240i'] },
+  { make: 'BMW', model: '3 Series', chassis: 'E46', years: yearRange(1999, 2006), trims: ['323i', '325i', '328i', '330i'] },
+  { make: 'BMW', model: '3 Series', chassis: 'E90', years: yearRange(2006, 2013), trims: ['325i', '328i', '330i', '335i'] },
+  { make: 'BMW', model: '3 Series', chassis: 'F30', years: yearRange(2012, 2019), trims: ['320i', '328i', '330i', '335i', '340i'] },
+  { make: 'BMW', model: '3 Series', chassis: 'G20', years: yearRange(2019, 2026), trims: ['330i', 'M340i'] },
+  { make: 'BMW', model: 'M3', chassis: 'E46', years: yearRange(2001, 2006), trims: ['S54', 'Competition'] },
+  { make: 'BMW', model: 'M3', chassis: 'E90', years: yearRange(2008, 2013), trims: ['S65', 'Competition'] },
+  { make: 'BMW', model: 'M3', chassis: 'F80', years: yearRange(2015, 2018), trims: ['S55', 'Competition', 'CS'] },
+  { make: 'BMW', model: 'M3', chassis: 'G80', years: yearRange(2021, 2026), trims: ['S58', 'Competition', 'CS'] },
+  { make: 'BMW', model: 'M4', chassis: 'F82', years: yearRange(2015, 2020), trims: ['S55', 'Competition', 'CS', 'GTS'] },
+  { make: 'BMW', model: 'M4', chassis: 'G82', years: yearRange(2021, 2026), trims: ['S58', 'Competition', 'CS'] },
+  { make: 'BMW', model: '5 Series', chassis: 'F10', years: yearRange(2011, 2016), trims: ['528i', '535i', '550i'] },
+  { make: 'BMW', model: '5 Series', chassis: 'G30', years: yearRange(2017, 2023), trims: ['530i', '540i', 'M550i'] },
+  { make: 'Audi', model: 'A3', chassis: '8V', years: yearRange(2015, 2020), trims: ['1.8T', '2.0T'] },
+  { make: 'Audi', model: 'A4', chassis: 'B8', years: yearRange(2009, 2016), trims: ['2.0T'] },
+  { make: 'Audi', model: 'A4', chassis: 'B9', years: yearRange(2017, 2024), trims: ['2.0T', '45 TFSI'] },
+  { make: 'Audi', model: 'S4', chassis: 'B8', years: yearRange(2010, 2016), trims: ['3.0T'] },
+  { make: 'Audi', model: 'S4', chassis: 'B9', years: yearRange(2018, 2024), trims: ['3.0T'] },
+  { make: 'Audi', model: 'A5', chassis: 'B9', years: yearRange(2018, 2024), trims: ['2.0T'] },
+  { make: 'Audi', model: 'S5', chassis: 'B9', years: yearRange(2018, 2024), trims: ['3.0T'] },
+  { make: 'Volkswagen', model: 'GTI', chassis: 'MK6', years: yearRange(2010, 2014), trims: ['2.0T'] },
+  { make: 'Volkswagen', model: 'GTI', chassis: 'MK7', years: yearRange(2015, 2021), trims: ['2.0T', 'Performance Pack'] },
+  { make: 'Volkswagen', model: 'GTI', chassis: 'MK8', years: yearRange(2022, 2026), trims: ['2.0T'] },
+  { make: 'Volkswagen', model: 'Golf R', chassis: 'MK7', years: yearRange(2015, 2019), trims: ['2.0T'] },
+  { make: 'Volkswagen', model: 'Golf R', chassis: 'MK8', years: yearRange(2022, 2026), trims: ['2.0T'] },
+  { make: 'Volkswagen', model: 'Jetta', chassis: 'MK7', years: yearRange(2019, 2026), trims: ['1.4T', '1.5T', 'GLI'] },
+  { make: 'Mercedes-Benz', model: 'C-Class', chassis: 'W204', years: yearRange(2008, 2014), trims: ['C250', 'C300', 'C350'] },
+  { make: 'Mercedes-Benz', model: 'C-Class', chassis: 'W205', years: yearRange(2015, 2021), trims: ['C300', 'C43 AMG'] },
+  { make: 'Mercedes-Benz', model: 'C63 AMG', chassis: 'W204', years: yearRange(2008, 2015), trims: ['M156', '507 Edition'] },
+  { make: 'Mercedes-Benz', model: 'C63 AMG', chassis: 'W205', years: yearRange(2015, 2021), trims: ['M177', 'S'] },
+  { make: 'Mercedes-Benz', model: 'E-Class', chassis: 'W212', years: yearRange(2010, 2016), trims: ['E350', 'E550', 'E63 AMG'] },
+  { make: 'Porsche', model: '911', chassis: '997', years: yearRange(2005, 2012), trims: ['Carrera', 'Carrera S', 'Turbo'] },
+  { make: 'Porsche', model: '911', chassis: '991', years: yearRange(2012, 2019), trims: ['Carrera', 'Carrera S', 'Turbo'] },
+  { make: 'Porsche', model: '911', chassis: '992', years: yearRange(2020, 2026), trims: ['Carrera', 'Carrera S', 'Turbo'] },
+  { make: 'Porsche', model: 'Cayman', chassis: '981', years: yearRange(2014, 2016), trims: ['Base', 'S', 'GTS'] },
+  { make: 'Porsche', model: 'Cayman', chassis: '982', years: yearRange(2017, 2026), trims: ['718', 'S', 'GTS', 'GT4'] },
+  { make: 'Mini', model: 'Cooper', chassis: 'R56', years: yearRange(2007, 2013), trims: ['Base', 'S', 'JCW'] },
+  { make: 'Mini', model: 'Cooper', chassis: 'F56', years: yearRange(2014, 2026), trims: ['Base', 'S', 'JCW'] },
+  { make: 'Mini', model: 'Countryman', chassis: 'F60', years: yearRange(2017, 2026), trims: ['Base', 'S', 'JCW'] },
+];
+
+const garageFieldNames = {
+  year: 'vehicle_year',
+  make: 'vehicle_make',
+  model: 'vehicle_model',
+  trim: 'vehicle_trim',
+  chassis: 'vehicle_chassis',
+};
+
+const garageOptionLabels = {
+  year: 'Year',
+  make: 'Make',
+  model: 'Model',
+  trim: 'Trim / Engine',
+  chassis: 'Chassis',
+};
+
+const garageCascadeClears = {
+  make: ['model', 'chassis', 'trim'],
+  year: ['chassis', 'trim'],
+  model: ['chassis', 'trim'],
+  chassis: ['trim'],
+};
+
 const formatGarageVehicle = (garage) => {
   const clean = cleanGarage(garage);
   if (clean.make && clean.chassis) return `${clean.make} ${clean.chassis}`;
@@ -204,9 +271,10 @@ const getFitmentState = (source, garage) => {
   const isUniversal = isUniversalFitment(normalizedSource);
   const chassisMatch = clean.chassis && sourceHasTerm(normalizedSource, clean.chassis);
   const modelMatch = clean.model && sourceHasTerm(normalizedSource, clean.model);
+  const trimMatch = clean.trim && sourceHasTerm(normalizedSource, clean.trim);
   const makeMatch = clean.make && sourceHasAnyTerm(normalizedSource, getMakeTerms(clean.make));
   const yearMatch = clean.year && sourceHasTerm(normalizedSource, clean.year);
-  const isFit = savedVehicle && (chassisMatch || (makeMatch && (modelMatch || yearMatch)));
+  const isFit = savedVehicle && (chassisMatch || (makeMatch && (modelMatch || yearMatch || trimMatch)));
 
   if (savedVehicle && isFit) return 'fit';
   if (savedVehicle && isUniversal) return 'universal';
@@ -323,17 +391,122 @@ const updateFitmentProductGrids = (garage) => {
   });
 };
 
+const getGarageField = (form, key) => form.querySelector(`[name="${garageFieldNames[key]}"]`);
+
+const getCatalogMatches = (garage, omittedKey = '') => {
+  const clean = cleanGarage(garage);
+
+  return garageVehicleCatalog.filter((entry) => {
+    if (omittedKey !== 'make' && clean.make && normalizeText(entry.make) !== normalizeText(clean.make)) {
+      return false;
+    }
+
+    if (omittedKey !== 'model' && clean.model && normalizeText(entry.model) !== normalizeText(clean.model)) {
+      return false;
+    }
+
+    if (omittedKey !== 'chassis' && clean.chassis && normalizeText(entry.chassis) !== normalizeText(clean.chassis)) {
+      return false;
+    }
+
+    if (omittedKey !== 'year' && clean.year && !entry.years.includes(clean.year)) {
+      return false;
+    }
+
+    if (
+      omittedKey !== 'trim'
+      && clean.trim
+      && !entry.trims.some((trim) => normalizeText(trim) === normalizeText(clean.trim))
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+};
+
+const sortGarageOptions = (key, values) => {
+  const unique = Array.from(new Set(values.filter(Boolean)));
+  if (key === 'year') {
+    return unique.sort((a, b) => Number(b) - Number(a));
+  }
+  return unique.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+};
+
+const setSelectOptions = (field, key, values, selectedValue = '') => {
+  const currentValue = String(selectedValue || field.value || '').trim();
+  const options = sortGarageOptions(key, values);
+
+  if (currentValue && !options.some((option) => normalizeText(option) === normalizeText(currentValue))) {
+    options.unshift(currentValue);
+  }
+
+  field.innerHTML = '';
+
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = garageOptionLabels[key];
+  field.appendChild(placeholder);
+
+  options.forEach((value) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    field.appendChild(option);
+  });
+
+  field.value = currentValue;
+};
+
+const getGarageDraftFromForm = (form, fallbackGarage = {}) => {
+  const fallback = cleanGarage(fallbackGarage);
+  const draft = {};
+
+  Object.keys(garageFieldNames).forEach((key) => {
+    const field = getGarageField(form, key);
+    draft[key] = field?.value || fallback[key];
+  });
+
+  return cleanGarage(draft);
+};
+
+const populateGarageFormOptions = (form, fallbackGarage = {}) => {
+  const draft = getGarageDraftFromForm(form, fallbackGarage);
+
+  Object.keys(garageFieldNames).forEach((key) => {
+    const field = getGarageField(form, key);
+    if (!(field instanceof HTMLSelectElement)) return;
+
+    const matches = getCatalogMatches(draft, key);
+    let values = [];
+
+    matches.forEach((entry) => {
+      if (key === 'year') values.push(...entry.years);
+      if (key === 'make') values.push(entry.make);
+      if (key === 'model') values.push(entry.model);
+      if (key === 'chassis') values.push(entry.chassis);
+      if (key === 'trim') values.push(...entry.trims);
+    });
+
+    if (!values.length && key === 'make') {
+      values = garageVehicleCatalog.map((entry) => entry.make);
+    }
+
+    setSelectOptions(field, key, values, draft[key]);
+  });
+};
+
+const clearGarageDependentFields = (form, key) => {
+  (garageCascadeClears[key] || []).forEach((fieldKey) => {
+    const field = getGarageField(form, fieldKey);
+    if (field) field.value = '';
+  });
+};
+
 const setGarageFormValues = (form, garage, force = false) => {
   const clean = cleanGarage(garage);
-  const fieldNames = {
-    year: 'vehicle_year',
-    make: 'vehicle_make',
-    model: 'vehicle_model',
-    trim: 'vehicle_trim',
-    chassis: 'vehicle_chassis',
-  };
 
-  Object.entries(fieldNames).forEach(([key, name]) => {
+  Object.entries(garageFieldNames).forEach(([key, name]) => {
     const field = form.querySelector(`[name="${name}"]`);
     if (field && (force || !field.value)) {
       field.value = clean[key];
@@ -358,11 +531,15 @@ const updateGarageUI = (garage) => {
   const garageIndicator = garageToggle?.querySelector('[data-garage-indicator]');
 
   if (garageForm) {
+    populateGarageFormOptions(garageForm, clean);
     setGarageFormValues(garageForm, clean, true);
+    populateGarageFormOptions(garageForm, clean);
   }
 
   document.querySelectorAll('[data-garage-save]').forEach((form) => {
+    populateGarageFormOptions(form, clean);
     setGarageFormValues(form, clean, !savedVehicle);
+    populateGarageFormOptions(form, clean);
   });
 
   if (garageTitle) {
@@ -456,6 +633,20 @@ if (garageToggle && garageDrawer) {
     closeGarageDrawer();
   });
 }
+
+document.querySelectorAll('[data-garage-form], [data-garage-save]').forEach((form) => {
+  populateGarageFormOptions(form, readGarage());
+
+  Object.entries(garageFieldNames).forEach(([key, name]) => {
+    const field = form.querySelector(`[name="${name}"]`);
+    if (!(field instanceof HTMLSelectElement)) return;
+
+    field.addEventListener('change', () => {
+      clearGarageDependentFields(form, key);
+      populateGarageFormOptions(form);
+    });
+  });
+});
 
 updateGarageUI(readGarage());
 moveProductDescriptionTrustCluster();

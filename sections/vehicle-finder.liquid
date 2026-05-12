@@ -18,7 +18,9 @@
           <input type="hidden" name="q" value="">
 
           <label class="visually-hidden" for="FinderYear-{{ section.id }}">Year</label>
-          <input class="field" id="FinderYear-{{ section.id }}" type="text" name="vehicle_year" placeholder="Year">
+          <select class="select" id="FinderYear-{{ section.id }}" name="vehicle_year">
+            <option value="">Year</option>
+          </select>
 
           <label class="visually-hidden" for="FinderMake-{{ section.id }}">Make</label>
           <select class="select" id="FinderMake-{{ section.id }}" name="vehicle_make">
@@ -32,10 +34,19 @@
           </select>
 
           <label class="visually-hidden" for="FinderModel-{{ section.id }}">Model</label>
-          <input class="field" id="FinderModel-{{ section.id }}" type="text" name="vehicle_model" placeholder="Model">
+          <select class="select" id="FinderModel-{{ section.id }}" name="vehicle_model">
+            <option value="">Model</option>
+          </select>
 
           <label class="visually-hidden" for="FinderChassis-{{ section.id }}">Chassis</label>
-          <input class="field" id="FinderChassis-{{ section.id }}" type="text" name="vehicle_chassis" placeholder="Chassis">
+          <select class="select" id="FinderChassis-{{ section.id }}" name="vehicle_chassis">
+            <option value="">Chassis</option>
+          </select>
+
+          <label class="visually-hidden" for="FinderTrim-{{ section.id }}">Trim / Engine</label>
+          <select class="select" id="FinderTrim-{{ section.id }}" name="vehicle_trim">
+            <option value="">Trim / Engine</option>
+          </select>
 
           <label class="visually-hidden" for="FinderPart-{{ section.id }}">Part type</label>
           <select class="select" id="FinderPart-{{ section.id }}" name="part_type">
