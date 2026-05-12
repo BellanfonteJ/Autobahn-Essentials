@@ -2,6 +2,11 @@
 
 ### May 12th
 
+#### 4:34PM PST - Slow scroll reveal easing
+
+- Slowed the scroll reveal timing and increased the entry offset.
+- Updated the reveal curve so content ramps in and eases more gently as it settles.
+
 #### 4:30PM PST - Add scroll reveal animations
 
 - Added one-time scroll reveal animations for sections, cards, promo tiles, product cards, and supporting content.
