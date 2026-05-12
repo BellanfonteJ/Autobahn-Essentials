@@ -2,6 +2,13 @@
 
 ### May 12th
 
+#### 11:47AM PST - Fix desktop hero typewriter overflow
+
+Source: Push by slimeraps
+
+- Removed the desktop width cap from the animated hero typewriter line.
+- Added a small reveal buffer so the italic Performance line and pulsing period are not clipped.
+
 #### 11:39AM PST - Fix hero typewriter clipping
 
 Source: Push by slimeraps
