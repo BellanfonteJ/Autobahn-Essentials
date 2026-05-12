@@ -2,6 +2,14 @@
 
 ### May 11th
 
+#### 11:55PM PST - Lock ticker above header
+
+Source: Push by slimeraps
+
+- Replaced the static announcement text with the scrolling parts ticker.
+- Locked the ticker in the announcement-bar slot above the header.
+- Kept the main header sticky below the ticker on desktop and mobile.
+
 #### 11:52PM PST - Add My Garage fitment filtering
 
 Source: Push by slimeraps

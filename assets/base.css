@@ -330,6 +330,10 @@ summary:focus-visible {
 }
 
 .announcement-bar {
+  position: sticky;
+  top: 0;
+  z-index: 31;
+  overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: #000;
   color: #fff;
@@ -358,7 +362,7 @@ summary:focus-visible {
 
 .site-header--sticky {
   position: sticky;
-  top: 0;
+  top: 38px;
 }
 
 .site-header__inner {
@@ -646,28 +650,12 @@ summary:focus-visible {
 }
 
 .ticker-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 21;
+  width: 100%;
   overflow: hidden;
-  opacity: 1;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-right: 0;
-  border-left: 0;
+  border: 0;
   border-radius: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: transparent;
   color: #fff;
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.42);
-  backdrop-filter: blur(14px);
-  pointer-events: none;
-  transform: translateY(20px);
-  transition: opacity 180ms ease, transform 220ms ease;
-}
-
-.site-header.is-scrolled ~ .ticker-banner {
-  transform: translateY(20px);
 }
 
 .ticker-banner__track {
@@ -2935,9 +2923,8 @@ body.is-cart-open {
     padding-right: 22px;
   }
 
-  .ticker-banner,
-  .site-header.is-scrolled ~ .ticker-banner {
-    transform: translateY(10px);
+  .site-header--sticky {
+    top: 46px;
   }
 
   .promo-tiles,
