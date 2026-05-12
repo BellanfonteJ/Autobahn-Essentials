@@ -2673,7 +2673,7 @@ body.is-cart-open {
 
   .site-nav {
     position: fixed;
-    inset: 0 0 0 auto;
+    inset: 0 auto 0 0;
     width: min(82vw, 360px);
     height: 100vh;
     height: 100dvh;
@@ -2684,9 +2684,9 @@ body.is-cart-open {
     overflow-y: auto;
     overscroll-behavior: contain;
     background: #000;
-    border-left: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: -24px 0 70px rgba(0, 0, 0, 0.55);
-    transform: translateX(100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 24px 0 70px rgba(0, 0, 0, 0.55);
+    transform: translateX(-100%);
     visibility: hidden;
     pointer-events: none;
     transition: transform 180ms ease, visibility 0s linear 180ms;
