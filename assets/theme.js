@@ -871,30 +871,127 @@ if (menuToggle && mobileNav) {
   });
 }
 
-document.querySelectorAll('[data-gallery-thumb]').forEach((thumbButton) => {
-  thumbButton.addEventListener('click', () => {
-    const gallery = thumbButton.closest('.product-gallery');
-    const target = gallery?.querySelector('[data-gallery-main]') || document.querySelector('[data-gallery-main]');
-    if (!target) return;
+function getRenderedImageRect(image) {
+  const rect = image.getBoundingClientRect();
+  const naturalWidth = image.naturalWidth || image.width;
+  const naturalHeight = image.naturalHeight || image.height;
 
-    const nextSrc = thumbButton.dataset.galleryThumbSrc;
-    if (!nextSrc) return;
+  if (!naturalWidth || !naturalHeight || !rect.width || !rect.height) {
+    return rect;
+  }
 
-    target.srcset = thumbButton.dataset.galleryThumbSrcset || '';
-    target.src = nextSrc;
-    target.alt = thumbButton.dataset.galleryThumbAlt || '';
+  const naturalRatio = naturalWidth / naturalHeight;
+  const boxRatio = rect.width / rect.height;
 
-    if (thumbButton.dataset.galleryThumbWidth) {
-      target.width = Number(thumbButton.dataset.galleryThumbWidth);
+  if (naturalRatio > boxRatio) {
+    const height = rect.width / naturalRatio;
+    return {
+      top: rect.top + (rect.height - height) / 2,
+      right: rect.right,
+      bottom: rect.top + (rect.height + height) / 2,
+      left: rect.left,
+      width: rect.width,
+      height,
+    };
+  }
+
+  const width = rect.height * naturalRatio;
+  return {
+    top: rect.top,
+    right: rect.left + (rect.width + width) / 2,
+    bottom: rect.bottom,
+    left: rect.left + (rect.width - width) / 2,
+    width,
+    height: rect.height,
+  };
+}
+
+document.querySelectorAll('.product-gallery').forEach((gallery) => {
+  const main = gallery.querySelector('.product-gallery__main');
+  const target = gallery.querySelector('[data-gallery-main]');
+  const magnifier = gallery.querySelector('[data-gallery-magnifier]');
+  const hoverZoomQuery = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 990px)');
+
+  if (!main || !target) return;
+
+  const updateMagnifierImage = () => {
+    if (!magnifier) return;
+    const imageUrl = target.currentSrc || target.src;
+    if (imageUrl) {
+      magnifier.style.setProperty('--magnifier-image', `url("${imageUrl}")`);
     }
-    if (thumbButton.dataset.galleryThumbHeight) {
-      target.height = Number(thumbButton.dataset.galleryThumbHeight);
+  };
+
+  const hideMagnifier = () => {
+    main.classList.remove('is-magnifying');
+  };
+
+  const moveMagnifier = (event) => {
+    if (!magnifier || !hoverZoomQuery.matches) {
+      hideMagnifier();
+      return;
     }
 
-    gallery?.querySelectorAll('[data-gallery-thumb]').forEach((button) => {
-      const isActive = button === thumbButton;
-      button.classList.toggle('is-active', isActive);
-      button.setAttribute('aria-current', String(isActive));
+    const imageRect = getRenderedImageRect(target);
+    const isInsideImage =
+      event.clientX >= imageRect.left &&
+      event.clientX <= imageRect.right &&
+      event.clientY >= imageRect.top &&
+      event.clientY <= imageRect.bottom;
+
+    if (!isInsideImage) {
+      hideMagnifier();
+      return;
+    }
+
+    const mainRect = main.getBoundingClientRect();
+    const x = event.clientX - mainRect.left;
+    const y = event.clientY - mainRect.top;
+    const cursorImageX = event.clientX - imageRect.left;
+    const cursorImageY = event.clientY - imageRect.top;
+    const zoom = Number.parseFloat(getComputedStyle(main).getPropertyValue('--magnifier-zoom')) || 2.3;
+    const lensRadius = magnifier.clientWidth / 2;
+    const backgroundX = lensRadius - cursorImageX * zoom;
+    const backgroundY = lensRadius - cursorImageY * zoom;
+
+    magnifier.style.setProperty('--magnifier-x', `${x}px`);
+    magnifier.style.setProperty('--magnifier-y', `${y}px`);
+    magnifier.style.setProperty('--magnifier-bg-size', `${imageRect.width * zoom}px ${imageRect.height * zoom}px`);
+    magnifier.style.setProperty('--magnifier-bg-position', `${backgroundX}px ${backgroundY}px`);
+    updateMagnifierImage();
+    main.classList.add('is-magnifying');
+  };
+
+  main.addEventListener('pointermove', moveMagnifier);
+  main.addEventListener('pointerleave', hideMagnifier);
+  hoverZoomQuery.addEventListener('change', hideMagnifier);
+  target.addEventListener('load', updateMagnifierImage);
+  updateMagnifierImage();
+
+  gallery.querySelectorAll('[data-gallery-thumb]').forEach((thumbButton) => {
+    thumbButton.addEventListener('click', () => {
+      const nextSrc = thumbButton.dataset.galleryThumbSrc;
+      if (!nextSrc) return;
+
+      hideMagnifier();
+      target.srcset = thumbButton.dataset.galleryThumbSrcset || '';
+      target.src = nextSrc;
+      target.alt = thumbButton.dataset.galleryThumbAlt || '';
+
+      if (thumbButton.dataset.galleryThumbWidth) {
+        target.width = Number(thumbButton.dataset.galleryThumbWidth);
+      }
+      if (thumbButton.dataset.galleryThumbHeight) {
+        target.height = Number(thumbButton.dataset.galleryThumbHeight);
+      }
+
+      gallery.querySelectorAll('[data-gallery-thumb]').forEach((button) => {
+        const isActive = button === thumbButton;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-current', String(isActive));
+      });
+
+      requestAnimationFrame(updateMagnifierImage);
     });
   });
 });
