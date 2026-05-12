@@ -11,10 +11,40 @@
     {%- if section.settings.eyebrow != blank -%}
       <div class="eyebrow">{{ section.settings.eyebrow }}</div>
     {%- endif -%}
-    <h1>
-      <span>{{ section.settings.heading }}</span>
+    {%- assign hero_heading = section.settings.heading | default: 'Built For' -%}
+    {%- assign hero_accent = section.settings.accent_heading | default: 'Performance.' -%}
+    {%- assign hero_accent_text = hero_accent -%}
+    {%- assign hero_period = '' -%}
+    {%- assign hero_accent_last = hero_accent | slice: -1 -%}
+    {%- if hero_accent_last == '.' -%}
+      {%- assign hero_accent_text = hero_accent | remove_last: '.' -%}
+      {%- assign hero_period = '.' -%}
+    {%- endif -%}
+    {%- assign hero_heading_duration = hero_heading.size | times: 70 -%}
+    {%- assign hero_accent_duration = hero_accent.size | times: 70 -%}
+    {%- assign hero_period_delay = hero_heading_duration | plus: hero_accent_duration -%}
+    <h1
+      class="hero-typewriter"
+      style="
+        --hero-heading-chars: {{ hero_heading.size }};
+        --hero-heading-duration: {{ hero_heading_duration }}ms;
+        --hero-accent-chars: {{ hero_accent.size }};
+        --hero-accent-duration: {{ hero_accent_duration }}ms;
+        --hero-accent-delay: {{ hero_heading_duration }}ms;
+        --hero-period-delay: {{ hero_period_delay }}ms;
+      "
+    >
+      <span class="hero-typewriter__line">
+        <span class="hero-typewriter__reserve" aria-hidden="true">{{ hero_heading }}</span>
+        <span class="hero-typewriter__typing">{{ hero_heading }}</span>
+      </span>
       {%- if section.settings.accent_heading != blank -%}
-        <em>{{ section.settings.accent_heading }}</em>
+        <em class="hero-typewriter__line hero-typewriter__line--accent">
+          <span class="hero-typewriter__reserve" aria-hidden="true">{{ hero_accent }}</span>
+          <span class="hero-typewriter__typing hero-typewriter__typing--accent">
+            {{- hero_accent_text -}}<span class="hero-typewriter__period">{{ hero_period }}</span>
+          </span>
+        </em>
       {%- endif -%}
     </h1>
     <p class="hero__copy">{{ section.settings.text }}</p>
