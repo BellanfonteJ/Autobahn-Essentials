@@ -1468,6 +1468,59 @@ select option:hover {
   font-weight: 700;
 }
 
+@media (hover: hover) and (pointer: fine) and (min-width: 990px) {
+  .promo-tiles {
+    display: flex;
+    align-items: stretch;
+    gap: 18px;
+    transition: gap 260ms cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .promo-tiles:has(.promo-tile:hover),
+  .promo-tiles:focus-within {
+    gap: 32px;
+  }
+
+  .promo-tile {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 240px;
+    transition:
+      flex 300ms cubic-bezier(0.19, 1, 0.22, 1),
+      min-height 300ms cubic-bezier(0.19, 1, 0.22, 1),
+      transform 300ms cubic-bezier(0.19, 1, 0.22, 1),
+      border-color 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .promo-tile p {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-4px);
+    transition:
+      max-height 260ms cubic-bezier(0.19, 1, 0.22, 1),
+      opacity 180ms ease,
+      transform 260ms cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .promo-tile:hover,
+  .promo-tile:focus-visible {
+    flex: 1.55 1 0;
+    min-height: 320px;
+    z-index: 1;
+    outline: 0;
+    transform: translateY(-4px);
+  }
+
+  .promo-tile:hover p,
+  .promo-tile:focus-visible p {
+    max-height: 96px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .rte {
   color: #fff;
 }

@@ -2,6 +2,11 @@
 
 ### May 12th
 
+#### 4:45PM PST - Add expanding promo tile hover
+
+- Matched the homepage promo tile interaction to the spec strip behavior.
+- Hid promo tile descriptions until desktop hover or keyboard focus, then expanded the active tile and widened spacing around it.
+
 #### 4:34PM PST - Slow scroll reveal easing
 
 - Slowed the scroll reveal timing and increased the entry offset.
