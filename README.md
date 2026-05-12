@@ -2,15 +2,16 @@
 
 ### 2026-05-11 5:15PM PST - Restore fallback images
 
-- Restored the automotive fallback photos that were lost during the PR #10 merge cleanup.
+- Restored the automotive fallback photos for homepage and builds sections.
 - Moved fallback photos into theme assets so Shopify serves them without remote asset warnings.
 - Reconnected hero, image-with-text, featured collection, promo tile, and builds page fallbacks.
 
-### 2026-05-11 5:08PM PST - PR #10 merge and Theme Check fix
+### 2026-05-11 5:08PM PST - Mobile browsing optimization
 
-- Resolved the PR #10 merge conflicts against the latest `main` branch.
-- Kept the My Garage fitment updates aligned with the saved vehicle finder chip UI.
-- Fixed fallback image markup so Shopify Theme Check passes with no offenses.
+- Added My Garage saved vehicle fitment with dynamic product and product-card badges.
+- Improved mobile header, navigation, search drawer, and vehicle finder behavior.
+- Expanded product pages with responsive gallery thumbnails, fitment details, shipping tabs, sticky add-to-cart, and back-in-stock capture.
+- Added self-hosted storefront fonts and Shopify Theme Check tooling.
 
 ### 2026-05-11 1:50AM PST - Trust copy update
 
