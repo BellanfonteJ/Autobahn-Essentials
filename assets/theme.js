@@ -8,6 +8,7 @@ const garageToggle = document.querySelector('[data-garage-toggle]');
 const garageDrawer = document.querySelector('[data-garage-drawer]');
 const garageForm = document.querySelector('[data-garage-form]');
 const garageStorageKey = 'autobahn:garage';
+const garageFitOnlyStorageKey = 'autobahn:garageFitOnly';
 
 const closeMobileMenu = () => {
   if (!menuToggle || !mobileNav) return;
@@ -193,6 +194,42 @@ const isUniversalFitment = (source) => [
   'universal fitment',
 ].some((term) => sourceHasTerm(source, term));
 
+const getFitmentState = (source, garage) => {
+  const clean = cleanGarage(garage);
+  const savedVehicle = hasGarage(clean);
+  const normalizedSource = normalizeText(source);
+
+  if (!normalizedSource) return 'empty';
+
+  const isUniversal = isUniversalFitment(normalizedSource);
+  const chassisMatch = clean.chassis && sourceHasTerm(normalizedSource, clean.chassis);
+  const modelMatch = clean.model && sourceHasTerm(normalizedSource, clean.model);
+  const makeMatch = clean.make && sourceHasAnyTerm(normalizedSource, getMakeTerms(clean.make));
+  const yearMatch = clean.year && sourceHasTerm(normalizedSource, clean.year);
+  const isFit = savedVehicle && (chassisMatch || (makeMatch && (modelMatch || yearMatch)));
+
+  if (savedVehicle && isFit) return 'fit';
+  if (savedVehicle && isUniversal) return 'universal';
+  if (savedVehicle) return 'check';
+  return 'empty';
+};
+
+const readGarageFitOnly = () => {
+  try {
+    return window.localStorage.getItem(garageFitOnlyStorageKey) === 'true';
+  } catch (error) {
+    return false;
+  }
+};
+
+const writeGarageFitOnly = (value) => {
+  try {
+    window.localStorage.setItem(garageFitOnlyStorageKey, String(Boolean(value)));
+  } catch (error) {
+    /* leave the toggle as an in-page preference when storage is unavailable */
+  }
+};
+
 const updateFitmentBadges = (garage) => {
   const clean = cleanGarage(garage);
   const savedVehicle = hasGarage(clean);
@@ -200,34 +237,89 @@ const updateFitmentBadges = (garage) => {
 
   document.querySelectorAll('[data-fitment-badge]').forEach((badge) => {
     const labelTarget = badge.querySelector('[data-fitment-badge-text]') || badge;
-    const source = normalizeText(badge.dataset.fitmentText);
-    const isUniversal = source && isUniversalFitment(source);
-    const chassisMatch = clean.chassis && sourceHasTerm(source, clean.chassis);
-    const modelMatch = clean.model && sourceHasTerm(source, clean.model);
-    const makeMatch = clean.make && sourceHasAnyTerm(source, getMakeTerms(clean.make));
-    const yearMatch = clean.year && sourceHasTerm(source, clean.year);
-    const isFit = source && (chassisMatch || (makeMatch && (modelMatch || yearMatch)));
+    const state = getFitmentState(badge.dataset.fitmentText, clean);
     const defaultLabel = badge.dataset.fitmentDefault || 'Check fitment';
 
     let label = defaultLabel;
-    let state = 'empty';
 
-    if (savedVehicle && isFit && vehicle) {
+    if (savedVehicle && state === 'fit' && vehicle) {
       label = replaceVehicleToken(badge.dataset.fitmentMatchTemplate || 'Fits your [vehicle]', vehicle);
-      state = 'fit';
-    } else if (savedVehicle && isUniversal) {
+    } else if (savedVehicle && state === 'universal') {
       label = badge.dataset.fitmentUniversal || 'Universal fit';
-      state = 'fit';
     } else if (savedVehicle && vehicle) {
       label = replaceVehicleToken(badge.dataset.fitmentCheckTemplate || 'Check fitment for [vehicle]', vehicle);
-      state = 'check';
     }
 
     labelTarget.textContent = label;
     badge.setAttribute('aria-label', label);
-    badge.classList.toggle('is-fit', state === 'fit');
+    badge.classList.toggle('is-fit', state === 'fit' || state === 'universal');
     badge.classList.toggle('is-check', state === 'check');
     badge.classList.toggle('is-empty', state === 'empty');
+  });
+};
+
+const updateFitmentProductGrids = (garage) => {
+  const clean = cleanGarage(garage);
+  const savedVehicle = hasGarage(clean);
+  const vehicle = formatGarageVehicle(clean);
+  const fitOnly = savedVehicle && readGarageFitOnly();
+
+  document.querySelectorAll('[data-product-card]').forEach((card) => {
+    const state = getFitmentState(card.dataset.fitmentText, clean);
+    const isMatch = state === 'fit' || state === 'universal';
+    const inFitmentGrid = Boolean(card.closest('[data-fitment-grid]'));
+
+    card.dataset.fitmentState = state;
+    card.classList.toggle('is-garage-fit', savedVehicle && isMatch);
+    card.classList.toggle('is-garage-check', savedVehicle && state === 'check');
+    card.hidden = inFitmentGrid && fitOnly && !isMatch;
+
+    if (savedVehicle && inFitmentGrid) {
+      card.style.order = state === 'fit' ? '-20' : state === 'universal' ? '-10' : '10';
+    } else {
+      card.style.removeProperty('order');
+      if (!inFitmentGrid) {
+        card.hidden = false;
+      }
+    }
+  });
+
+  document.querySelectorAll('[data-fitment-grid]').forEach((grid) => {
+    Array.from(grid.children).forEach((child) => {
+      if (!child.matches('[data-product-card]')) {
+        child.hidden = fitOnly;
+      }
+    });
+
+    const cards = Array.from(grid.querySelectorAll('[data-product-card]'));
+    const visibleCards = cards.filter((card) => !card.hidden);
+    const emptyState = grid.nextElementSibling?.matches('[data-fitment-empty]')
+      ? grid.nextElementSibling
+      : null;
+
+    if (emptyState) {
+      emptyState.hidden = !fitOnly || visibleCards.length > 0;
+    }
+  });
+
+  document.querySelectorAll('[data-fitment-filter-controls]').forEach((controls) => {
+    const toggle = controls.querySelector('[data-fitment-filter-toggle]');
+    const status = controls.querySelector('[data-fitment-filter-status]');
+    const readyTemplate = controls.dataset.readyTemplate || 'Showing fits for [vehicle]. Matching products appear first.';
+    const emptyGarageMessage = controls.dataset.emptyGarageMessage || 'Save a vehicle in My Garage to filter products.';
+
+    controls.classList.toggle('has-garage', savedVehicle);
+
+    if (toggle) {
+      toggle.disabled = !savedVehicle;
+      toggle.checked = fitOnly;
+    }
+
+    if (status) {
+      status.textContent = savedVehicle && vehicle
+        ? replaceVehicleToken(readyTemplate, vehicle)
+        : emptyGarageMessage;
+    }
   });
 };
 
@@ -291,6 +383,7 @@ const updateGarageUI = (garage) => {
   }
 
   updateFitmentBadges(clean);
+  updateFitmentProductGrids(clean);
   renderSavedVehicleChips(clean);
 };
 
@@ -366,6 +459,13 @@ if (garageToggle && garageDrawer) {
 
 updateGarageUI(readGarage());
 moveProductDescriptionTrustCluster();
+
+document.querySelectorAll('[data-fitment-filter-toggle]').forEach((toggle) => {
+  toggle.addEventListener('change', () => {
+    writeGarageFitOnly(toggle.checked);
+    updateFitmentProductGrids(readGarage());
+  });
+});
 
 if (searchToggle && searchDrawer) {
   searchToggle.addEventListener('click', (event) => {

@@ -13,12 +13,27 @@
     </form>
 
     {%- if search.performed -%}
+      <div
+        class="garage-fitment-filter"
+        data-fitment-filter-controls
+        data-empty-message="No search results match your saved garage."
+        data-ready-template="Showing fits for [vehicle]. Matching products appear first."
+        data-empty-garage-message="Save a vehicle in My Garage to filter these results."
+      >
+        <label class="garage-fitment-filter__toggle">
+          <input type="checkbox" data-fitment-filter-toggle>
+          <span>Show only parts for my garage</span>
+        </label>
+        <button class="button button--secondary" type="button" data-garage-open>My Garage</button>
+        <p data-fitment-filter-status>Save a vehicle in My Garage to filter these results.</p>
+      </div>
+
       <div class="section-heading section--tight">
         <p>{{ 'general.search.results_with_count' | t: count: search.results_count, terms: search.terms }}</p>
       </div>
 
       {%- paginate search.results by 12 -%}
-        <div class="search-grid">
+        <div class="search-grid" data-fitment-grid>
           {%- for item in search.results -%}
             {%- if item.object_type == 'product' -%}
               {% render 'product-card', product: item %}
@@ -35,6 +50,7 @@
             <div class="empty-state">{{ 'general.search.no_results' | t }}</div>
           {%- endfor -%}
         </div>
+        <div class="empty-state" data-fitment-empty hidden>No search results match your saved garage.</div>
 
         {%- if paginate.pages > 1 -%}
           <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">

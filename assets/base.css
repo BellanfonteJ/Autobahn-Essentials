@@ -1055,6 +1055,18 @@ select option:hover {
   box-shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
 }
 
+.product-card.is-garage-fit {
+  border-color: rgba(59, 209, 111, 0.38);
+  box-shadow:
+    inset 1px 0 0 rgba(59, 209, 111, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 16px 42px rgba(0, 0, 0, 0.28);
+}
+
+.product-card.is-garage-check {
+  opacity: 0.82;
+}
+
 .product-card__media,
 .collection-card__media {
   position: relative;
@@ -1681,6 +1693,60 @@ select option:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.garage-fitment-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 8px;
+  padding: 12px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    rgba(18, 18, 18, 0.86);
+}
+
+.garage-fitment-filter__toggle {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.garage-fitment-filter__toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+}
+
+.garage-fitment-filter__toggle input:disabled + span {
+  color: var(--color-muted);
+}
+
+.garage-fitment-filter .button {
+  min-height: 38px;
+  padding: 8px 14px;
+  font-size: 0.74rem;
+}
+
+.garage-fitment-filter p {
+  flex: 1 1 220px;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.88rem;
+}
+
+.garage-fitment-filter.has-garage {
+  border-color: rgba(59, 209, 111, 0.32);
+  box-shadow: inset 2px 0 0 rgba(59, 209, 111, 0.28);
 }
 
 .filter-chip {

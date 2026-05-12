@@ -2,6 +2,14 @@
 
 ### May 11th
 
+#### 11:52PM PST - Add My Garage fitment filtering
+
+Source: Push by slimeraps
+
+- Added collection and search controls to show only parts that fit the saved My Garage vehicle.
+- Prioritized matching and universal-fit products ahead of other product cards when a garage is saved.
+- Reused the product fitment badge logic so saved vehicles update card badges and filtering consistently.
+
 #### 11:46PM PST - Pin ticker to header bottom
 
 Source: Push by slimeraps

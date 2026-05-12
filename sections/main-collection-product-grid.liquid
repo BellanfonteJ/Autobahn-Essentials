@@ -48,15 +48,31 @@
           {%- endif -%}
         {%- endfor -%}
       </div>
+
+      <div
+        class="garage-fitment-filter"
+        data-fitment-filter-controls
+        data-empty-message="No parts in this view match your saved garage."
+        data-ready-template="Showing fits for [vehicle]. Matching parts appear first."
+        data-empty-garage-message="Save a vehicle in My Garage to filter this collection."
+      >
+        <label class="garage-fitment-filter__toggle">
+          <input type="checkbox" data-fitment-filter-toggle>
+          <span>Show only parts for my garage</span>
+        </label>
+        <button class="button button--secondary" type="button" data-garage-open>My Garage</button>
+        <p data-fitment-filter-status>Save a vehicle in My Garage to filter this collection.</p>
+      </div>
     </div>
 
     {%- paginate collection.products by section.settings.products_per_page -%}
       {%- if collection.products.size > 0 -%}
-        <div class="product-grid">
+        <div class="product-grid" data-fitment-grid>
           {%- for product in collection.products -%}
             {% render 'product-card', product: product %}
           {%- endfor -%}
         </div>
+        <div class="empty-state" data-fitment-empty hidden>No parts in this view match your saved garage.</div>
 
         {%- if paginate.pages > 1 -%}
           <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">

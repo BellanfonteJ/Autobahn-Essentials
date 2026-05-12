@@ -1,8 +1,40 @@
 {%- liquid
   assign sizes = '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw'
+  assign product_tags = product.tags | join: ' '
+  assign fitment_source = product.title | append: ' ' | append: product.type | append: ' ' | append: product_tags
+  assign fitment_metafield = product.metafields.custom.fitment.value | default: product.metafields.custom.fitment
+  assign fitment_notes = product.metafields.custom.fitment_notes.value | default: product.metafields.custom.fitment_notes
+  assign fitment_make = product.metafields.custom.vehicle_make.value | default: product.metafields.custom.vehicle_make
+  assign fitment_model = product.metafields.custom.vehicle_model.value | default: product.metafields.custom.vehicle_model
+  assign fitment_chassis = product.metafields.custom.chassis.value | default: product.metafields.custom.chassis
+  assign fitment_years = product.metafields.custom.years.value | default: product.metafields.custom.years
+
+  if fitment_metafield != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_metafield
+  endif
+
+  if fitment_notes != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_notes
+  endif
+
+  if fitment_make != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_make
+  endif
+
+  if fitment_model != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_model
+  endif
+
+  if fitment_chassis != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_chassis
+  endif
+
+  if fitment_years != blank
+    assign fitment_source = fitment_source | append: ' ' | append: fitment_years
+  endif
 -%}
 
-<article class="product-card">
+<article class="product-card" data-product-card data-fitment-text="{{ fitment_source | strip_html | downcase | escape }}">
   <a href="{{ product.url }}" class="product-card__media" aria-label="{{ product.title | escape }}">
     {%- if product.featured_media -%}
       {{ product.featured_media | image_url: width: 820 | image_tag: loading: 'lazy', decoding: 'async', sizes: sizes, class: 'product-card__image' }}
