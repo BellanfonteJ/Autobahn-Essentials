@@ -1,25 +1,3 @@
-## My Garage Fitment
-
-Shoppers can save their vehicle from the header garage button or from supported fitment search forms. The saved vehicle stays in the browser and updates fitment badges across browsing and product pages.
-
-Badges can show:
-
-- `Fits your BMW F30`
-- `Check fitment for BMW F30`
-- `Universal fit`
-- `Check fitment`
-
-To make badges accurate, add product tags or custom metafields that include the relevant fitment terms. Useful tags include make, model, chassis, engine, and year values such as `BMW`, `F30`, `B58`, `Audi`, `B8`, or `MK7`.
-
-Supported custom metafields:
-
-- `custom.fitment`
-- `custom.fitment_notes`
-- `custom.vehicle_make`
-- `custom.vehicle_model`
-- `custom.chassis`
-- `custom.years`
-
 ## Changelog
 
 ### 2026-05-11 - PR #10 merge and Theme Check fix
