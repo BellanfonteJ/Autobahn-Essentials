@@ -1104,26 +1104,52 @@ select option:hover {
   display: grid;
   place-items: center;
   overflow: hidden;
+}
+
+.product-card__media {
+  padding: clamp(14px, 6%, 26px);
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.13), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.012)),
+    #171717;
+}
+
+.collection-card__media {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
     #282828;
 }
 
-.product-card__media img,
+.product-card__media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.26));
+  transition: opacity 180ms ease, transform 220ms ease;
+}
+
 .collection-card__media img {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
   transition: transform 220ms ease;
 }
 
 .product-card__image--hover {
   position: absolute;
-  inset: 0;
+  inset: clamp(14px, 6%, 26px);
+  width: auto;
+  height: auto;
   opacity: 0;
 }
 
-.product-card:hover .product-card__media img,
+.product-card:hover .product-card__media img {
+  transform: scale(1.025);
+}
+
 .collection-card:hover .collection-card__media img {
   transform: scale(1.035);
 }
@@ -1404,14 +1430,20 @@ select option:hover {
   aspect-ratio: 1 / 1;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
+  padding: clamp(18px, 4vw, 34px);
   overflow: hidden;
-  background: #282828;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.12), transparent 36%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    #171717;
 }
 
 .product-gallery__main img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.28));
 }
 
 .product-thumbs {
@@ -1423,8 +1455,11 @@ select option:hover {
 .product-thumb-button {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 4px;
-  padding: 0;
-  background: transparent;
+  padding: 8px;
+  aspect-ratio: 1 / 1;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.012)),
+    #171717;
   cursor: pointer;
   overflow: hidden;
   transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
@@ -1447,10 +1482,12 @@ select option:hover {
 
 .product-thumbs img {
   width: 100%;
+  height: 100%;
   aspect-ratio: 1 / 1;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   border: 0;
-  border-radius: inherit;
+  border-radius: 3px;
   display: block;
 }
 
@@ -1676,9 +1713,11 @@ select option:hover {
 .cart-item img {
   width: 92px;
   aspect-ratio: 1 / 1;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 4px;
-  background: #282828;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    #171717;
 }
 
 .brand-cta {
@@ -2364,9 +2403,12 @@ select option:hover {
 .cart-drawer__thumb img {
   width: 72px;
   height: 72px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    #171717;
 }
 
 .cart-drawer__details {
