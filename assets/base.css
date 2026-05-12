@@ -1466,7 +1466,7 @@ select option:hover {
     radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.12), transparent 36%),
     linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
     #171717;
-  cursor: zoom-in;
+  cursor: default;
 }
 
 .product-gallery__magnifier {
@@ -1527,7 +1527,7 @@ select option:hover {
   object-fit: contain;
   object-position: center;
   filter: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.28));
-  cursor: zoom-in;
+  cursor: default;
 }
 
 @media (hover: none), (pointer: coarse), (max-width: 989px) {
