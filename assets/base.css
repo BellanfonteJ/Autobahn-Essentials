@@ -668,7 +668,7 @@ summary:focus-visible {
 
 .site-header.is-scrolled ~ .ticker-banner {
   opacity: 1;
-  transform: translateY(64px);
+  transform: translateY(38px);
 }
 
 .ticker-banner__track {
@@ -2871,7 +2871,7 @@ body.is-cart-open {
   }
 
   .site-header.is-scrolled ~ .ticker-banner {
-    transform: translateY(56px);
+    transform: translateY(34px);
   }
 
   .promo-tiles,
