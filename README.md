@@ -2,6 +2,13 @@
 
 ### May 12th
 
+#### 11:17AM PST - Update header nav order
+
+Source: Push by slimeraps
+
+- Updated the header navigation order to Home, Shop, Contacts.
+- Renamed the header Contact label to Contacts while preserving the existing destination URL.
+
 #### 1:18AM PST - Tune header action visibility by page
 
 Source: Push by slimeraps
