@@ -63,10 +63,6 @@ body.is-menu-open {
   overflow: hidden;
 }
 
-body.has-floating-ticker {
-  padding-bottom: 46px;
-}
-
 img, svg {
   display: block;
   max-width: 100%;
@@ -651,29 +647,45 @@ summary:focus-visible {
 
 .ticker-banner {
   position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: 12px;
-  z-index: 30;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 19;
   overflow: hidden;
+  opacity: 0;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-left: 4px solid var(--color-accent);
-  border-radius: 6px;
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
   background: rgba(0, 0, 0, 0.92);
   color: #fff;
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.46);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.42);
   backdrop-filter: blur(14px);
+  pointer-events: none;
+  transform: translateY(-100%);
+  transition: opacity 180ms ease, transform 220ms ease;
+}
+
+.site-header.is-scrolled ~ .ticker-banner {
+  opacity: 1;
+  transform: translateY(64px);
 }
 
 .ticker-banner__track {
   width: max-content;
   display: flex;
   align-items: center;
-  gap: 28px;
   min-height: 44px;
-  padding: 0 28px;
-  animation: aeTicker 34s linear infinite;
+  animation: aeTicker 28s linear infinite;
   white-space: nowrap;
+  will-change: transform;
+}
+
+.ticker-banner__group {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding-right: 28px;
 }
 
 .ticker-banner__track span {
@@ -701,7 +713,7 @@ summary:focus-visible {
   }
 
   to {
-    transform: translateX(-50%);
+    transform: translateX(-33.333333%);
   }
 }
 
@@ -2849,20 +2861,17 @@ body.is-cart-open {
     padding: 72px 0 44px;
   }
 
-  body.has-floating-ticker {
-    padding-bottom: calc(56px + env(safe-area-inset-bottom));
-  }
-
-  .ticker-banner {
-    left: 8px;
-    right: 8px;
-    bottom: calc(8px + env(safe-area-inset-bottom));
-  }
-
   .ticker-banner__track {
     min-height: 46px;
+  }
+
+  .ticker-banner__group {
     gap: 22px;
-    padding: 0 22px;
+    padding-right: 22px;
+  }
+
+  .site-header.is-scrolled ~ .ticker-banner {
+    transform: translateY(56px);
   }
 
   .promo-tiles,
@@ -3160,7 +3169,6 @@ select option:hover,
 .nav-dropdown summary,
 .nav-dropdown__menu,
 .nav-dropdown__menu a,
-.ticker-banner,
 .filter-chip,
 .trust-pill,
 .product-tabs details,

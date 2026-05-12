@@ -1,5 +1,11 @@
 ## Changelog
 
+### May 11th 11:30PM PST - Move ticker into header
+
+- Moved the scrolling parts ticker from the bottom of the viewport to the top header area.
+- Hid the ticker into the header while the page is at the top and revealed it after scrolling.
+- Rebuilt the ticker track with repeated groups so the marquee loops continuously without a blank gap.
+
 ### May 11th 11:17PM PST - Slide mobile menu from left
 
 - Changed the mobile navigation drawer to open from the left side of the screen.

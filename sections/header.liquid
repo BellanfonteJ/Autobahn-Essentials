@@ -100,16 +100,18 @@
 {%- if settings.show_ticker -%}
   <div class="ticker-banner" role="region" aria-label="Autobahn Essentials parts ticker">
     <div class="ticker-banner__track">
-      {%- for i in (1..2) -%}
-        <span>{{ settings.ticker_text }}</span>
-        <span>OEM+ Performance Parts</span>
-        <span>Turbo Upgrades</span>
-        <span>Downpipes</span>
-        <span>Intercoolers</span>
-        <span>Carbon Fiber Exterior</span>
-        <span>Interior Accessories</span>
-        <span>Euro Builds</span>
-        <span>Fast Shipping</span>
+      {%- for i in (1..3) -%}
+        <div class="ticker-banner__group"{% unless forloop.first %} aria-hidden="true"{% endunless %}>
+          <span>{{ settings.ticker_text }}</span>
+          <span>OEM+ Performance Parts</span>
+          <span>Turbo Upgrades</span>
+          <span>Downpipes</span>
+          <span>Intercoolers</span>
+          <span>Carbon Fiber Exterior</span>
+          <span>Interior Accessories</span>
+          <span>Euro Builds</span>
+          <span>Fast Shipping</span>
+        </div>
       {%- endfor -%}
     </div>
   </div>

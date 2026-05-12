@@ -40,7 +40,7 @@
       {
         "type": "checkbox",
         "id": "show_ticker",
-        "label": "Show floating ticker",
+        "label": "Show header ticker",
         "default": true
       },
       {
