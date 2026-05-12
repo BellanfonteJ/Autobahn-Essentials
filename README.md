@@ -1,5 +1,11 @@
 ## Changelog
 
+### May 11th 5:43PM PST - Remove black bands behind hero modules
+
+- Removed the solid black hero/spec-strip backgrounds behind the stat and trust modules.
+- Softened the hero image fade so the image carries farther behind the upper modules.
+- Replaced the lower module band with a transparent carbon texture layer.
+
 ### May 11th 5:39PM PST - Add graphite texture and red edge lighting
 
 - Reworked the default background and surface colors from flat black to layered graphite tones.

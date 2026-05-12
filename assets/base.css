@@ -913,8 +913,8 @@ select option:hover {
   display: flex;
   align-items: end;
   overflow: hidden;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: #000;
+  border-bottom: 0;
+  background: transparent;
 }
 
 .hero::before {
@@ -945,8 +945,8 @@ select option:hover {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.72) 44%, rgba(0, 0, 0, 0.18) 100%),
-    linear-gradient(180deg, transparent 64%, rgba(0, 0, 0, 0.94) 100%);
+    linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.68) 44%, rgba(0, 0, 0, 0.12) 100%),
+    linear-gradient(180deg, transparent 64%, rgba(0, 0, 0, 0.42) 100%);
 }
 
 .hero__content {
@@ -1022,9 +1022,13 @@ select option:hover {
 }
 
 .spec-strip {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: #000;
+  position: relative;
+  border-top: 0;
+  border-bottom: 0;
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.16), rgba(8, 8, 8, 0.28)),
+    var(--ae-carbon-texture);
+  background-blend-mode: normal, soft-light;
 }
 
 .spec-strip__grid {
