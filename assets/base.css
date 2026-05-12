@@ -334,71 +334,6 @@ summary:focus-visible {
   color: #fff;
 }
 
-.sticky-atc {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 19; /* just under the header at 20 */
-  background: rgba(0, 0, 0, 0.96);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  transform: translateY(-100%);
-  transition: transform 200ms ease;
-  pointer-events: none;
-}
-
-.sticky-atc.is-visible {
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.site-header--sticky ~ .main-content .sticky-atc {
-  top: 92px; /* match .site-header__inner min-height */
-}
-
-.sticky-atc__inner {
-  min-height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.sticky-atc__title {
-  font-family: var(--font-heading);
-  font-size: 0.9rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sticky-atc__right {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-shrink: 0;
-}
-
-.sticky-atc__price {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 900;
-  color: var(--color-accent);
-}
-
-.sticky-atc__btn {
-  min-height: 38px;
-  padding: 8px 18px;
-  font-size: 0.82rem;
-}
-
-@media (max-width: 640px) {
-  .sticky-atc__title { display: none; }
-}
-
 .announcement-bar {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: #000;
@@ -931,7 +866,7 @@ select option:hover {
 
 .hero__media {
   position: absolute;
-  inset: 0 0 -260px;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
 }
@@ -948,9 +883,7 @@ select option:hover {
   inset: 0;
   background:
     linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.62) 44%, rgba(0, 0, 0, 0.08) 100%),
-    linear-gradient(180deg, transparent 58%, rgba(0, 0, 0, 0.18) 76%, rgba(8, 9, 10, 0.62) 100%),
-    var(--ae-carbon-texture);
-  background-blend-mode: normal, normal, soft-light;
+    linear-gradient(180deg, transparent 58%, rgba(0, 0, 0, 0.18) 76%, rgba(8, 9, 10, 0.88) 100%);
 }
 
 .hero__content {
@@ -2803,10 +2736,6 @@ body.is-cart-open {
   .site-header__inner {
     min-height: 72px;
     gap: 8px;
-  }
-
-  .site-header--sticky ~ .main-content .sticky-atc {
-    top: 72px;
   }
 
   .site-logo {

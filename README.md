@@ -1,5 +1,11 @@
 ## Changelog
 
+### May 11th 11:09PM PST - Separate hero texture and remove floating cart
+
+- Stopped the homepage hero image from extending into the carbon-texture section below it.
+- Removed the carbon texture overlay from the hero image fade so the top image stays clean.
+- Removed the floating product add-to-cart bar and kept the static product form button under the images.
+
 ### May 11th 11:01PM PST - Show mobile header icons
 
 - Adjusted the mobile header grid so the logo, menu trigger, and action icons all have room to display.

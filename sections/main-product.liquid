@@ -209,22 +209,6 @@
       </div>
     </div>
   </div>
-  <div class="sticky-atc" id="sticky-atc" aria-hidden="true">
-  <div class="page-width sticky-atc__inner">
-    <span class="sticky-atc__title">{{ product.title }}</span>
-    <div class="sticky-atc__right">
-      <span class="sticky-atc__price">{{ product.selected_or_first_available_variant.price | money }}</span>
-      <button class="button sticky-atc__btn" id="sticky-atc-btn"
-        {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
-        {%- if product.selected_or_first_available_variant.available -%}
-          {{ 'products.product.add_to_cart' | t }}
-        {%- else -%}
-          {{ 'products.product.sold_out' | t }}
-        {%- endif -%}
-      </button>
-    </div>
-  </div>
-</div>
 </section>
 
 {% schema %}
