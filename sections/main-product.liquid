@@ -14,6 +14,7 @@
         {%- if featured_image -%}
           <img
             data-gallery-main
+            data-gallery-lightbox-src="{{ featured_image | image_url: width: 2400 }}"
             src="{{ featured_image | image_url: width: 1400 }}"
             srcset="
               {{ featured_image | image_url: width: 640 }} 640w,
@@ -28,6 +29,7 @@
             fetchpriority="high"
             sizes="(min-width: 990px) 58vw, 100vw"
           >
+          <button class="product-gallery__zoom-button" type="button" data-gallery-open aria-label="Open product image gallery"></button>
           <div class="product-gallery__magnifier" data-gallery-magnifier aria-hidden="true"></div>
           <div class="product-gallery__cursor-dot" data-gallery-cursor-dot aria-hidden="true"></div>
         {%- else -%}
@@ -52,6 +54,7 @@
               aria-current="{% if is_active_thumb %}true{% else %}false{% endif %}"
               data-gallery-thumb
               data-gallery-thumb-src="{{ thumb_image | image_url: width: 1400 }}"
+              data-gallery-lightbox-src="{{ thumb_image | image_url: width: 2400 }}"
               data-gallery-thumb-srcset="
                 {{ thumb_image | image_url: width: 640 }} 640w,
                 {{ thumb_image | image_url: width: 1000 }} 1000w,
@@ -71,6 +74,33 @@
               >
             </button>
           {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if featured_image -%}
+        <div class="product-gallery-lightbox" data-gallery-lightbox role="dialog" aria-modal="true" aria-label="Product image gallery" aria-hidden="true">
+          <button class="product-gallery-lightbox__backdrop" type="button" data-gallery-lightbox-close aria-label="Close product image gallery"></button>
+          <div class="product-gallery-lightbox__frame">
+            <div class="product-gallery-lightbox__bar">
+              <div class="product-gallery-lightbox__count">
+                <span data-gallery-lightbox-current>1</span>
+                <span aria-hidden="true">/</span>
+                <span data-gallery-lightbox-total>1</span>
+              </div>
+              <button class="icon-button product-gallery-lightbox__close" type="button" data-gallery-lightbox-close aria-label="Close product image gallery">
+                {% render 'icon', icon: 'close' %}
+              </button>
+            </div>
+            <button class="product-gallery-lightbox__nav product-gallery-lightbox__nav--prev" type="button" data-gallery-lightbox-prev aria-label="Previous product image">
+              <span aria-hidden="true">&lsaquo;</span>
+            </button>
+            <div class="product-gallery-lightbox__stage" data-gallery-lightbox-stage>
+              <img data-gallery-lightbox-image src="{{ featured_image | image_url: width: 2000 }}" alt="{{ featured_image.alt | default: product.title | escape }}" width="{{ featured_image.width }}" height="{{ featured_image.height }}" loading="lazy">
+            </div>
+            <button class="product-gallery-lightbox__nav product-gallery-lightbox__nav--next" type="button" data-gallery-lightbox-next aria-label="Next product image">
+              <span aria-hidden="true">&rsaquo;</span>
+            </button>
+          </div>
         </div>
       {%- endif -%}
     </div>
