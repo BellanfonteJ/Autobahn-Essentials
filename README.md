@@ -2,6 +2,14 @@
 
 ### May 12th
 
+#### 12:28PM PST - Add fullscreen product gallery
+
+Source: Push by slimeraps
+
+- Added a click-to-open fullscreen product image gallery with previous and next controls.
+- Added image count, keyboard navigation, Escape close, and swipe support.
+- Preserved the existing product magnifier, cursor dot, thumbnails, and page layout.
+
 #### 12:02PM PST - Add product image cursor dot
 
 Source: Push by slimeraps

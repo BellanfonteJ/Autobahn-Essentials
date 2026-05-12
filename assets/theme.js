@@ -911,9 +911,47 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
   const target = gallery.querySelector('[data-gallery-main]');
   const magnifier = gallery.querySelector('[data-gallery-magnifier]');
   const cursorDot = gallery.querySelector('[data-gallery-cursor-dot]');
+  const openButton = gallery.querySelector('[data-gallery-open]');
+  const lightbox = gallery.querySelector('[data-gallery-lightbox]');
+  const lightboxImage = gallery.querySelector('[data-gallery-lightbox-image]');
+  const lightboxCloseButtons = gallery.querySelectorAll('[data-gallery-lightbox-close]');
+  const lightboxPrev = gallery.querySelector('[data-gallery-lightbox-prev]');
+  const lightboxNext = gallery.querySelector('[data-gallery-lightbox-next]');
+  const lightboxCurrent = gallery.querySelector('[data-gallery-lightbox-current]');
+  const lightboxTotal = gallery.querySelector('[data-gallery-lightbox-total]');
+  const lightboxStage = gallery.querySelector('[data-gallery-lightbox-stage]');
   const hoverZoomQuery = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 990px)');
 
   if (!main || !target) return;
+
+  const getGalleryItems = () => {
+    const thumbs = Array.from(gallery.querySelectorAll('[data-gallery-thumb]'));
+    if (thumbs.length) {
+      return thumbs.map((button) => ({
+        src: button.dataset.galleryLightboxSrc || button.dataset.galleryThumbSrc,
+        previewSrc: button.dataset.galleryThumbSrc,
+        srcset: button.dataset.galleryThumbSrcset || '',
+        alt: button.dataset.galleryThumbAlt || '',
+        width: Number(button.dataset.galleryThumbWidth) || undefined,
+        height: Number(button.dataset.galleryThumbHeight) || undefined,
+        thumb: button,
+      })).filter((item) => item.src);
+    }
+
+    return [{
+      src: target.dataset.galleryLightboxSrc || target.currentSrc || target.src,
+      previewSrc: target.currentSrc || target.src,
+      srcset: target.srcset || '',
+      alt: target.alt || '',
+      width: target.width,
+      height: target.height,
+      thumb: null,
+    }].filter((item) => item.src);
+  };
+
+  let galleryItems = getGalleryItems();
+  let activeIndex = Math.max(0, galleryItems.findIndex((item) => item.thumb?.classList.contains('is-active')));
+  let swipeStartX = null;
 
   const updateMagnifierImage = () => {
     if (!magnifier) return;
@@ -922,6 +960,44 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
       magnifier.style.setProperty('--magnifier-image', `url("${imageUrl}")`);
     }
   };
+
+  const updateLightbox = (nextIndex = activeIndex) => {
+    if (!lightbox || !lightboxImage || !galleryItems.length) return;
+    activeIndex = (nextIndex + galleryItems.length) % galleryItems.length;
+    const item = galleryItems[activeIndex];
+
+    lightboxImage.src = item.src;
+    lightboxImage.alt = item.alt;
+    if (item.width) lightboxImage.width = item.width;
+    if (item.height) lightboxImage.height = item.height;
+    if (lightboxCurrent) lightboxCurrent.textContent = String(activeIndex + 1);
+    if (lightboxTotal) lightboxTotal.textContent = String(galleryItems.length);
+    if (lightboxPrev) lightboxPrev.hidden = galleryItems.length < 2;
+    if (lightboxNext) lightboxNext.hidden = galleryItems.length < 2;
+  };
+
+  const openLightbox = () => {
+    if (!lightbox || !lightboxImage) return;
+    galleryItems = getGalleryItems();
+    const currentThumbIndex = galleryItems.findIndex((item) => item.thumb?.classList.contains('is-active'));
+    activeIndex = currentThumbIndex >= 0 ? currentThumbIndex : activeIndex;
+    updateLightbox(activeIndex);
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-gallery-lightbox-open');
+    lightboxCloseButtons[0]?.focus();
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox) return;
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('is-gallery-lightbox-open');
+    openButton?.focus();
+  };
+
+  const showPreviousImage = () => updateLightbox(activeIndex - 1);
+  const showNextImage = () => updateLightbox(activeIndex + 1);
 
   const hideMagnifier = () => {
     main.classList.remove('is-magnifying');
@@ -973,12 +1049,50 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
   target.addEventListener('load', updateMagnifierImage);
   updateMagnifierImage();
 
+  openButton?.addEventListener('click', openLightbox);
+  lightboxCloseButtons.forEach((button) => button.addEventListener('click', closeLightbox));
+  lightboxPrev?.addEventListener('click', showPreviousImage);
+  lightboxNext?.addEventListener('click', showNextImage);
+
+  lightboxStage?.addEventListener('pointerdown', (event) => {
+    swipeStartX = event.clientX;
+  });
+
+  lightboxStage?.addEventListener('pointerup', (event) => {
+    if (swipeStartX === null) return;
+    const swipeDistance = event.clientX - swipeStartX;
+    swipeStartX = null;
+    if (Math.abs(swipeDistance) < 48 || galleryItems.length < 2) return;
+    if (swipeDistance > 0) {
+      showPreviousImage();
+    } else {
+      showNextImage();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!lightbox?.classList.contains('is-open')) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeLightbox();
+    }
+    if (event.key === 'ArrowLeft' && galleryItems.length > 1) {
+      event.preventDefault();
+      showPreviousImage();
+    }
+    if (event.key === 'ArrowRight' && galleryItems.length > 1) {
+      event.preventDefault();
+      showNextImage();
+    }
+  });
+
   gallery.querySelectorAll('[data-gallery-thumb]').forEach((thumbButton) => {
     thumbButton.addEventListener('click', () => {
       const nextSrc = thumbButton.dataset.galleryThumbSrc;
       if (!nextSrc) return;
 
       hideMagnifier();
+      target.dataset.galleryLightboxSrc = thumbButton.dataset.galleryLightboxSrc || nextSrc;
       target.srcset = thumbButton.dataset.galleryThumbSrcset || '';
       target.src = nextSrc;
       target.alt = thumbButton.dataset.galleryThumbAlt || '';
@@ -996,6 +1110,9 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
         button.setAttribute('aria-current', String(isActive));
       });
 
+      const nextIndex = galleryItems.findIndex((item) => item.thumb === thumbButton);
+      if (nextIndex >= 0) activeIndex = nextIndex;
+      if (lightbox?.classList.contains('is-open')) updateLightbox(activeIndex);
       requestAnimationFrame(updateMagnifierImage);
     });
   });
