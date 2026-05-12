@@ -2,6 +2,14 @@
 
 ### May 12th
 
+#### 1:18AM PST - Tune header action visibility by page
+
+Source: Push by slimeraps
+
+- Kept Cart, My Garage, and Search visible on the homepage header.
+- Kept only Cart visible by default on product pages.
+- Revealed Search and My Garage on product pages when the header is hovered or focused.
+
 #### 1:12AM PST - Extend homepage hero fade
 
 Source: Push by slimeraps
@@ -9,14 +17,6 @@ Source: Push by slimeraps
 - Extended the homepage hero image lower behind the first carbon-texture section.
 - Added a layered fade so the car image blends into the graphite carbon background instead of ending at a hard horizontal cutoff.
 - Let the spec-strip modules sit over the blended transition while preserving the carbon texture below.
-
-#### 1:07AM PST - Add PR #15 changelog entry
-
-Source: Push by slimeraps
-
-- Added changelog coverage for the latest shop dropdown navigation pull request.
-- Kept the new entry in the grouped May 12th format with source attribution.
-- Confirmed the changelog update against the latest remote main history before pushing.
 
 #### 1:03AM PST - Update shop dropdown navigation
 
@@ -33,14 +33,6 @@ Source: Push by slimeraps
 - Removed unsupported My Garage makes that are not represented in the product export.
 - Pruned the vehicle catalog to BMW, Audi, and Volkswagen model/chassis families with parts in the current product list.
 - Kept fitment aliases aligned with the remaining sold platforms so garage filtering and product search stay consistent.
-
-#### 12:37AM PST - Audit recent changelog coverage
-
-Source: Push by slimeraps
-
-- Checked the latest remote main history against the changelog.
-- Added missing changelog-maintenance entries for recent day-grouping and source-credit updates.
-- Corrected the My Garage fitment matching entry to the pushed commit time.
 
 #### 12:31AM PST - Strengthen My Garage product fitment matching
 
@@ -91,22 +83,6 @@ Source: Push by slimeraps
 - Made the scrolling header ticker persistent instead of only appearing after scroll.
 - Raised the ticker so it sits against the bottom edge of the compact header on desktop and mobile.
 
-#### 11:40PM PST - Credit changelog pushes to slimeraps
-
-Source: Push by slimeraps
-
-- Updated changelog source labels so Codex direct pushes are credited as pushes by slimeraps.
-- Kept pull request entries credited to the pull request author and merger.
-- Preserved the grouped day format while cleaning up source wording.
-
-#### 11:35PM PST - Group changelog by day and source
-
-Source: Push by slimeraps
-
-- Grouped changelog entries under named day headings.
-- Added source lines to distinguish direct pushes from pull request changes.
-- Tightened the header ticker position as part of the same push.
-
 #### 11:32PM PST - Tighten header ticker position
 
 Source: Push by slimeraps
@@ -143,14 +119,6 @@ Source: Push by slimeraps
 - Stopped the homepage hero image from extending into the carbon-texture section below it.
 - Removed the carbon texture overlay from the hero image fade so the top image stays clean.
 - Removed the floating product add-to-cart bar and kept the static product form button under the images.
-
-#### 11:03PM PST - Backfill recent merge changelog entries
-
-Source: Push by slimeraps
-
-- Added missing changelog coverage for the product image rendering pull request.
-- Added missing changelog coverage for the mobile header icon pull request.
-- Kept the product description cleanup entries in the same timestamp format.
 
 #### 11:01PM PST - Show mobile header icons
 

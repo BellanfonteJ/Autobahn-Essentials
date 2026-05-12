@@ -498,10 +498,50 @@ summary:focus-visible {
   }
 
   .template-index .site-nav > a,
-  .template-index .site-nav .nav-dropdown {
+  .template-index .site-nav .nav-dropdown,
+  .template-index .header-actions,
+  .template-product .header-actions {
     opacity: 1;
     visibility: visible;
     transition: opacity 180ms ease, visibility 0s linear 0s;
+  }
+
+  .template-product .header-actions [data-garage-toggle],
+  .template-product .header-actions [data-search-toggle] {
+    width: 0;
+    min-width: 0;
+    border-width: 0;
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    overflow: hidden;
+    transform: translateY(-4px);
+    transition:
+      width 180ms ease,
+      border-width 180ms ease,
+      opacity 180ms ease,
+      visibility 0s linear 180ms,
+      transform 180ms ease;
+  }
+
+  .template-product .site-header:hover .header-actions [data-garage-toggle],
+  .template-product .site-header:hover .header-actions [data-search-toggle],
+  .template-product .site-header:focus-within .header-actions [data-garage-toggle],
+  .template-product .site-header:focus-within .header-actions [data-search-toggle] {
+    width: 42px;
+    border-width: 1px;
+    padding: 0;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition:
+      width 180ms ease,
+      border-width 180ms ease,
+      opacity 180ms ease,
+      visibility 0s linear 0s,
+      transform 180ms ease;
   }
 }
 
