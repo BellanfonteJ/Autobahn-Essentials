@@ -34,21 +34,6 @@
   </div>
 </section>
 
-<div class="hero__stats">
-  <div class="hero-stat">
-    <strong>{{ section.settings.stat_1 }}</strong>
-    <span>{{ section.settings.stat_label_1 }}</span>
-  </div>
-  <div class="hero-stat">
-    <strong>{{ section.settings.stat_2 }}</strong>
-    <span>{{ section.settings.stat_label_2 }}</span>
-  </div>
-  <div class="hero-stat">
-    <strong>{{ section.settings.stat_3 }}</strong>
-    <span>{{ section.settings.stat_label_3 }}</span>
-  </div>
-</div>
-
 {% schema %}
 {
   "name": "Autobahn hero",
@@ -104,42 +89,6 @@
       "type": "url",
       "id": "secondary_link",
       "label": "Secondary button link"
-    },
-    {
-      "type": "text",
-      "id": "stat_1",
-      "label": "Stat 1",
-      "default": "OEM+"
-    },
-    {
-      "type": "text",
-      "id": "stat_label_1",
-      "label": "Stat label 1",
-      "default": "Quality parts"
-    },
-    {
-      "type": "text",
-      "id": "stat_2",
-      "label": "Stat 2",
-      "default": "Euro"
-    },
-    {
-      "type": "text",
-      "id": "stat_label_2",
-      "label": "Stat label 2",
-      "default": "Build focus"
-    },
-    {
-      "type": "text",
-      "id": "stat_3",
-      "label": "Stat 3",
-      "default": "Fast"
-    },
-    {
-      "type": "text",
-      "id": "stat_label_3",
-      "label": "Stat label 3",
-      "default": "Shipping"
     }
   ],
   "presets": [

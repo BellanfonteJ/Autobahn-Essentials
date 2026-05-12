@@ -2,7 +2,7 @@
   <div class="page-width">
     <div class="spec-strip__grid">
       {%- for block in section.blocks -%}
-        <div class="spec-item" {{ block.shopify_attributes }}>
+        <div class="spec-item" tabindex="0" {{ block.shopify_attributes }}>
           {% render 'icon', icon: block.settings.icon %}
           <h3>{{ block.settings.heading }}</h3>
           <p>{{ block.settings.text }}</p>

@@ -1,5 +1,16 @@
 ## Changelog
 
+### May 11th 11:17PM PST - Slide mobile menu from left
+
+- Changed the mobile navigation drawer to open from the left side of the screen.
+- Flipped the drawer border and shadow so the mobile menu depth matches the new slide direction.
+
+### May 11th 11:17PM PST - Add interactive homepage spec modules
+
+- Removed the homepage hero stat cards for OEM+, Euro, and Fast.
+- Made the homepage spec modules compact by default with descriptions hidden.
+- Added hover and keyboard-focus expansion so the active module grows and reveals its description while neighboring modules shift away.
+
 ### May 11th 11:09PM PST - Separate hero texture and remove floating cart
 
 - Stopped the homepage hero image from extending into the carbon-texture section below it.
