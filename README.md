@@ -2,6 +2,11 @@
 
 ### May 12th
 
+#### 4:25PM PST - Update homepage CTA copy
+
+- Changed the homepage brand CTA heading from "Upgrade Your Build Today." to "Grab Your Essentials."
+- Updated the Brand CTA section default to match the homepage copy.
+
 #### 4:18PM PST - Update category card imagery
 
 - Replaced the Engine Performance card image with an Audi performance engine bay.
