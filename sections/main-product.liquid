@@ -79,7 +79,6 @@
         <div class="eyebrow">{{ product.vendor }}</div>
       {%- endif -%}
       <h1>{{ product.title }}</h1>
-      {% render 'price', product: product %}
 
       <div class="stock-counter">
         {%- if current_variant.available -%}
@@ -96,10 +95,6 @@
         {%- endif -%}
       </div>
       {% render 'fitment-badge', product: product, context: 'product' %}
-
-      {%- if product.description != blank -%}
-        <div class="rte">{{ product.description }}</div>
-      {%- endif -%}
 
       {%- form 'product', product, class: 'product-form', data-product-form: '' -%}
         {%- if product.has_only_default_variant -%}
@@ -122,16 +117,23 @@
           <input class="quantity__input" id="Quantity-{{ section.id }}" type="number" name="quantity" min="1" value="1">
         </div>
 
-        <button class="button button--full" type="submit" name="add" data-atc-main{% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
-          {%- if product.selected_or_first_available_variant.available -%}
-            {{ 'products.product.add_to_cart' | t }}
-          {%- else -%}
-            {{ 'products.product.sold_out' | t }}
-          {%- endif -%}
-        </button>
+        <div class="product-buy-row">
+          {% render 'price', product: product %}
+          <button class="button" type="submit" name="add" data-atc-main{% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+            {%- if product.selected_or_first_available_variant.available -%}
+              {{ 'products.product.add_to_cart' | t }}
+            {%- else -%}
+              {{ 'products.product.sold_out' | t }}
+            {%- endif -%}
+          </button>
+        </div>
 
         {{ form | payment_button }}
       {%- endform -%}
+
+      {%- if product.description != blank -%}
+        <div class="rte product-description">{{ product.description }}</div>
+      {%- endif -%}
 
       {%- unless current_variant.available -%}
         {%- form 'contact', class: 'back-in-stock-form' -%}

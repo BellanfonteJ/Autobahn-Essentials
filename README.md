@@ -1,5 +1,11 @@
 ## Changelog
 
+### May 11th 10:48PM PST - Center product media and purchase panel
+
+- Moved product pages to an image-first layout with the main image centered above the product details.
+- Kept preview thumbnails centered directly under the main product image.
+- Moved the product description below the media and paired the price with the add-to-cart action at the top of the details panel.
+
 ### May 11th 5:46PM PST - Smooth hero-to-carbon transition
 
 - Extended the hero image below the hero boundary so the upper modules sit over the same visual field.

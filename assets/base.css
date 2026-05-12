@@ -1414,19 +1414,23 @@ select option:hover {
 
 .product-page {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.8fr);
-  gap: clamp(28px, 5vw, 64px);
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 48px);
+  align-items: center;
+  justify-items: center;
 }
 
 .product-gallery {
   display: grid;
   gap: 14px;
+  width: min(100%, 980px);
+  justify-items: center;
 }
 
 .product-gallery__main {
   display: grid;
   place-items: center;
+  width: min(100%, 840px);
   aspect-ratio: 1 / 1;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
@@ -1450,6 +1454,8 @@ select option:hover {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
+  width: min(100%, 620px);
+  justify-self: center;
 }
 
 .product-thumb-button {
@@ -1492,16 +1498,19 @@ select option:hover {
 }
 
 .product-info {
-  position: sticky;
-  top: 104px;
+  position: static;
+  width: min(100%, 900px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: clamp(22px, 4vw, 34px);
   background: rgba(17, 17, 17, 0.94);
+  text-align: center;
 }
 
 .product-info h1 {
+  max-width: 780px;
   margin: 8px 0 12px;
+  margin-inline: auto;
   font-size: clamp(2rem, 4vw, 4rem);
   line-height: 0.95;
   text-transform: uppercase;
@@ -1545,6 +1554,7 @@ select option:hover {
 .form-row {
   display: grid;
   gap: 8px;
+  text-align: left;
 }
 
 .form-label {
@@ -1552,6 +1562,38 @@ select option:hover {
   font-size: 0.78rem;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+.product-buy-row {
+  display: grid;
+  grid-template-columns: minmax(160px, max-content) minmax(220px, 340px);
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.product-buy-row .price {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border: 1px solid rgba(232, 67, 42, 0.3);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012)),
+    rgba(18, 18, 18, 0.84);
+  box-shadow: inset 1px 0 0 rgba(232, 67, 42, 0.2);
+}
+
+.product-buy-row .button {
+  width: 100%;
+}
+
+.product-description {
+  max-width: 760px;
+  margin: 26px auto 0;
 }
 
 .trust-row {
@@ -3037,6 +3079,10 @@ body.is-cart-open {
     padding: 8px 8px;
     font-size: 0.68rem;
     line-height: 1.1;
+  }
+
+  .product-buy-row {
+    grid-template-columns: 1fr;
   }
 
   .price {
