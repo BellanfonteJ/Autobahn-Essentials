@@ -2,6 +2,13 @@
 
 ### May 12th
 
+#### 12:02PM PST - Add product image cursor dot
+
+Source: Push by slimeraps
+
+- Replaced the default desktop cursor over product images with a small white custom cursor dot.
+- Preserved the existing product image magnifier behavior while sharing the same hover tracking.
+
 #### 11:47AM PST - Fix desktop hero typewriter overflow
 
 Source: Push by slimeraps
