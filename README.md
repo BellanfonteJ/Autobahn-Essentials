@@ -2,6 +2,11 @@
 
 ### May 12th
 
+#### 10:09PM PST - Fix expanded collection card image coverage
+
+- Made featured collection card images cover the full tile on desktop so expanded hover states no longer expose empty card edges.
+- Added extra image scale and a subtle hover pan to keep the crop filled while cards expand.
+
 #### 10:04PM PST - Add expanding collection card hover
 
 - Matched the Shop By Brand and Shop By Category card rows to the promo tile hover behavior with expanding active cards and wider surrounding spacing.
