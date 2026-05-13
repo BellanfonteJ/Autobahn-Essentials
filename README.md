@@ -2,6 +2,11 @@
 
 ### May 12th
 
+#### 9:46PM PST - Fix brand card image fallback
+
+- Made Shop By Brand infer Audi, BMW, and Volkswagen theme images from card titles before using generic collection placeholders.
+- Preserved collection and manual fallback image overrides for future Shopify wiring.
+
 #### 9:42PM PST - Add homepage brand cards
 
 - Added a new Shop By Brand card section above Shop By Category with Audi, BMW, and Volkswagen cards.

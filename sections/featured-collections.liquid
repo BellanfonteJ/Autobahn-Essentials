@@ -25,6 +25,20 @@
           <div class="collection-card__media">
             {%- assign image_asset = block.settings.image_asset | strip -%}
             {%- assign image_position = block.settings.image_position | default: 'center center' -%}
+            {%- assign card_title = collection.title | default: block.settings.title -%}
+            {%- assign card_title_normalized = card_title | downcase -%}
+            {%- if image_asset == blank and section.settings.heading == 'Shop By Brand' -%}
+              {%- if card_title_normalized contains 'audi' -%}
+                {%- assign image_asset = 'brand-audi-rs6.jpg' -%}
+              {%- elsif card_title_normalized contains 'bmw' -%}
+                {%- assign image_asset = 'brand-bmw-m4.jpg' -%}
+              {%- elsif card_title_normalized contains 'volkswagen' or card_title_normalized contains 'vw' -%}
+                {%- assign image_asset = 'brand-volkswagen-golf-r.jpg' -%}
+                {%- if block.settings.image_position == blank -%}
+                  {%- assign image_position = 'center bottom' -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endif -%}
             {%- if collection.featured_image -%}
               {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw' }}
             {%- elsif block.settings.image != blank -%}
