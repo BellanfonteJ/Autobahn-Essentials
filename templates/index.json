@@ -92,7 +92,7 @@
         "volkswagen": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "vw",
             "image_asset": "brand-volkswagen-golf-r.jpg",
             "image_position": "center bottom",
             "title": "Volkswagen",
