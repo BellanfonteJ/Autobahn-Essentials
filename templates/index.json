@@ -147,7 +147,7 @@
           "type": "collection",
           "settings": {
             "collection": "",
-            "image_asset": "",
+            "image_asset": "category-interior-accessories.jpg",
             "image_position": "center center",
             "title": "Interior Accessories",
             "fallback_link": "/search?type=product&q=Interior+Accessories"
