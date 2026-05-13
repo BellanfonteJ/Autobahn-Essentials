@@ -1126,44 +1126,14 @@ select option:hover {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-rows: auto 1fr;
+  place-items: center;
   width: min(100% - 32px, var(--page-width));
   height: 100%;
   margin: 0 auto;
   padding: clamp(20px, 4vw, 44px) 0 clamp(28px, 6vw, 68px);
 }
 
-.password-hero--has-ticker .password-hero__inner {
-  padding-top: calc(44px + clamp(20px, 4vw, 44px));
-}
-
-.password-hero__ticker {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 2;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.34);
-  backdrop-filter: blur(14px);
-}
-
-.password-hero__logo {
-  display: inline-flex;
-  justify-self: center;
-  width: clamp(112px, 14vw, 190px);
-  align-items: center;
-  justify-content: center;
-}
-
-.password-hero__logo img {
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.46));
-}
-
 .password-hero__content {
-  align-self: center;
   width: 100%;
   max-width: 960px;
   margin: 0 auto;
