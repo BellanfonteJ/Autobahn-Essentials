@@ -74,7 +74,7 @@
           "settings": {
             "collection": "audi",
             "image_asset": "brand-audi-black-bmw-m3.jpg",
-            "image_position": "center 68%",
+            "image_position": "center 80%",
             "title": "Audi",
             "fallback_link": "/search?type=product&q=Audi"
           }
@@ -84,7 +84,7 @@
           "settings": {
             "collection": "bmw",
             "image_asset": "brand-bmw-white-mercedes-c-class.jpg",
-            "image_position": "center 62%",
+            "image_position": "center 20%",
             "title": "BMW",
             "fallback_link": "/search?type=product&q=BMW"
           }
