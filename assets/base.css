@@ -704,8 +704,11 @@ summary:focus-visible {
 }
 
 .cart-toggle svg {
-  width: 18px;
-  height: 18px;
+  width: 26px;
+  height: 26px;
+  max-width: 64%;
+  max-height: 64%;
+  transform: translateY(1px);
 }
 
 .icon-button:hover,
@@ -3798,8 +3801,8 @@ body.is-cart-open {
   }
 
   .cart-toggle svg {
-    width: 17px;
-    height: 17px;
+    width: 23px;
+    height: 23px;
   }
 
   .header-actions {
@@ -4131,8 +4134,8 @@ body.is-cart-open {
   }
 
   .cart-toggle svg {
-    width: 15px;
-    height: 15px;
+    width: 21px;
+    height: 21px;
   }
 
   .header-actions {
