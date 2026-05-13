@@ -1073,6 +1073,238 @@ select option:hover {
   }
 }
 
+.template-password {
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #070808;
+}
+
+.password-main {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.password-hero {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #070808;
+}
+
+.password-hero__media,
+.password-hero__media::after {
+  position: absolute;
+  inset: 0;
+}
+
+.password-hero__media {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.password-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 58%;
+}
+
+.password-hero__media::after {
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.64) 46%, rgba(0, 0, 0, 0.16) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.54) 0%, transparent 34%, rgba(8, 9, 10, 0.68) 100%);
+}
+
+.password-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  width: min(100% - 32px, var(--page-width));
+  height: 100%;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 44px) 0 clamp(28px, 6vw, 68px);
+}
+
+.password-hero__logo {
+  display: inline-flex;
+  justify-self: center;
+  width: clamp(112px, 14vw, 190px);
+  align-items: center;
+  justify-content: center;
+}
+
+.password-hero__logo img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.46));
+}
+
+.password-hero__content {
+  align-self: center;
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+  transform: translateY(clamp(-18px, -3vh, 0px));
+}
+
+.password-hero__heading {
+  max-width: 960px;
+  margin: 0 0 clamp(18px, 3vw, 30px);
+  color: var(--color-accent);
+  font-family: var(--font-heading);
+  font-size: 1.72rem;
+  line-height: 0.88;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.password-hero__heading span,
+.password-hero__heading em {
+  display: block;
+}
+
+.password-hero__heading em {
+  color: var(--color-accent);
+  font-style: italic;
+}
+
+.password-hero__heading .hero-typewriter__line {
+  position: relative;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  padding-right: 0.16em;
+  margin: 0 auto;
+}
+
+.password-hero__heading .hero-typewriter__reserve {
+  display: inline-block;
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+}
+
+.password-hero__heading .hero-typewriter__typing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  width: max-content;
+  max-width: none;
+  padding-right: 0.16em;
+  clip-path: inset(0 100% 0 0);
+  white-space: nowrap;
+  animation: aeHeroTypewriter var(--hero-heading-duration) steps(var(--hero-heading-chars), end) forwards;
+}
+
+.password-hero__heading .hero-typewriter__typing--accent {
+  animation-delay: var(--hero-accent-delay);
+  animation-duration: var(--hero-accent-duration);
+  animation-timing-function: steps(var(--hero-accent-chars), end);
+}
+
+.password-hero__heading .hero-typewriter__period {
+  display: inline-block;
+  transform-origin: center;
+  animation: aeHeroPeriodPulse 1.45s ease-in-out var(--hero-period-delay) infinite both;
+}
+
+.password-form {
+  width: min(100%, 500px);
+  margin: 0 auto;
+}
+
+.password-form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.password-form__input {
+  min-height: 52px;
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(0, 0, 0, 0.62);
+  color: #fff;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+}
+
+.password-form__input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.password-form__button {
+  min-height: 52px;
+  white-space: nowrap;
+}
+
+.password-form__errors {
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.password-form__errors ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+@media (min-width: 480px) {
+  .password-hero__heading {
+    font-size: 2.1rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .password-hero__heading {
+    font-size: 2.8rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .password-hero__heading {
+    font-size: 4.2rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .password-hero__heading {
+    font-size: 5.6rem;
+  }
+}
+
+@media (min-width: 1450px) {
+  .password-hero__heading {
+    font-size: 6.6rem;
+  }
+}
+
+@media (max-width: 379px) {
+  .password-hero__heading {
+    font-size: 1.55rem;
+  }
+
+  .password-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .password-hero__heading .hero-typewriter__typing {
+    clip-path: none;
+    animation: none;
+  }
+
+  .password-hero__heading .hero-typewriter__period {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
 .hero__copy {
   max-width: 620px;
   margin: 0 0 30px;
