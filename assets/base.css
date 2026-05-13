@@ -103,12 +103,13 @@ summary:focus-visible {
 .main-content {
   min-height: 55vh;
   background:
-    radial-gradient(ellipse at 8% -6%, rgba(232, 67, 42, 0.3) 0%, rgba(232, 67, 42, 0.14) 28%, transparent 62%),
-    linear-gradient(116deg, rgba(232, 67, 42, 0.18) 0%, rgba(232, 67, 42, 0.07) 22%, transparent 52%),
+    radial-gradient(1100px 820px at -8% 18%, rgba(232, 67, 42, 0.26) 0%, rgba(232, 67, 42, 0.12) 38%, transparent 74%),
+    radial-gradient(900px 720px at 18% 64%, rgba(232, 67, 42, 0.18) 0%, rgba(232, 67, 42, 0.08) 42%, transparent 78%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22rem),
     var(--ae-satin-panel);
-  background-size: 126vw 78vh, 100% 120vh, auto, auto;
-  background-position: left top, center top, center top, center top;
+  background-repeat: no-repeat;
+  background-size: auto, auto, auto, auto;
+  background-position: left top, left top, center top, center top;
 }
 
 .page-width {

@@ -2,6 +2,11 @@
 
 ### May 13th
 
+#### 12:34AM PST - Release 4.7 smooth orange glow
+
+- Replaced the blocky angled orange glow with softer radial background blooms.
+- Kept the warmer orange page tone while removing the visible rectangular edge.
+
 #### 12:23AM PST - Release 4.6 orange glow and brand crops
 
 - Restored a stronger visible orange background glow across the main page surface.
