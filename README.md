@@ -2,6 +2,10 @@
 
 ### May 13th
 
+#### 4:27PM PST - Fix Shop Pay accelerated checkout button
+
+- Fixed Shop Pay accelerated checkout button overlap and removed unwanted white Visa box on product pages.
+
 #### 1:25AM PST - Resize header cart icon
 
 - Added explicit desktop sizing for header icon SVGs so the cart icon stays proportional inside its button.
