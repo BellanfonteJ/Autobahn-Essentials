@@ -1248,6 +1248,12 @@ select option:hover {
     #282828;
 }
 
+.collection-card {
+  position: relative;
+  display: block;
+  isolation: isolate;
+}
+
 .product-card__media img {
   width: 100%;
   height: 100%;
@@ -1305,6 +1311,12 @@ select option:hover {
   padding: 16px;
 }
 
+.collection-card__info {
+  background:
+    linear-gradient(180deg, rgba(34, 34, 34, 0.92), rgba(21, 21, 21, 0.96)),
+    rgba(24, 24, 24, 0.95);
+}
+
 .product-card__vendor {
   margin-bottom: 6px;
   color: var(--color-muted);
@@ -1334,6 +1346,74 @@ select option:hover {
 .price s {
   color: var(--color-muted);
   font-weight: 600;
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 990px) {
+  .collection-grid--featured {
+    display: flex;
+    align-items: stretch;
+    gap: 18px;
+    transition: gap 260ms cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .collection-grid--featured:has(.collection-card:hover),
+  .collection-grid--featured:focus-within {
+    gap: 32px;
+  }
+
+  .collection-grid--featured .collection-card {
+    flex: 1 1 0;
+    min-width: 0;
+    transition:
+      flex 300ms cubic-bezier(0.19, 1, 0.22, 1),
+      transform 300ms cubic-bezier(0.19, 1, 0.22, 1),
+      border-color 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .collection-grid--featured .collection-card:hover,
+  .collection-grid--featured .collection-card:focus-visible {
+    flex: 1.55 1 0;
+    z-index: 1;
+    outline: 0;
+    transform: translateY(-4px);
+  }
+
+  .collection-grid--featured .collection-card__info {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 2;
+    min-height: 104px;
+    padding: 18px 16px;
+    transform: translateY(calc(100% - 66px));
+    transition:
+      transform 300ms cubic-bezier(0.19, 1, 0.22, 1),
+      background 220ms ease;
+  }
+
+  .collection-grid--featured .collection-card:hover .collection-card__info,
+  .collection-grid--featured .collection-card:focus-visible .collection-card__info {
+    transform: translateY(0);
+  }
+
+  .collection-grid--featured .collection-card__info .eyebrow {
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(8px);
+    transition:
+      max-height 260ms cubic-bezier(0.19, 1, 0.22, 1),
+      opacity 180ms ease,
+      transform 260ms cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .collection-grid--featured .collection-card:hover .collection-card__info .eyebrow,
+  .collection-grid--featured .collection-card:focus-visible .collection-card__info .eyebrow {
+    max-height: 28px;
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .price__sale {

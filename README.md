@@ -2,6 +2,11 @@
 
 ### May 12th
 
+#### 10:04PM PST - Add expanding collection card hover
+
+- Matched the Shop By Brand and Shop By Category card rows to the promo tile hover behavior with expanding active cards and wider surrounding spacing.
+- Changed featured collection card info bars to slide up on hover or keyboard focus before revealing View collection.
+
 #### 9:55PM PST - Add scrolling gradient page background
 
 - Reworked the global page background into fixed gradient layers so transparent modules float over a consistent backdrop while scrolling.
