@@ -1102,14 +1102,17 @@ select option:hover {
 
 .password-hero__media {
   z-index: 0;
+  inset: -18px;
   pointer-events: none;
 }
 
 .password-hero__media img {
   width: 100%;
   height: 100%;
+  filter: blur(9px) saturate(1.06);
   object-fit: cover;
   object-position: center 58%;
+  transform: scale(1.03);
 }
 
 .password-hero__media::after {
@@ -1130,6 +1133,21 @@ select option:hover {
   padding: clamp(20px, 4vw, 44px) 0 clamp(28px, 6vw, 68px);
 }
 
+.password-hero--has-ticker .password-hero__inner {
+  padding-top: calc(44px + clamp(20px, 4vw, 44px));
+}
+
+.password-hero__ticker {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(14px);
+}
+
 .password-hero__logo {
   display: inline-flex;
   justify-self: center;
@@ -1146,6 +1164,7 @@ select option:hover {
 
 .password-hero__content {
   align-self: center;
+  width: 100%;
   max-width: 960px;
   margin: 0 auto;
   text-align: center;
@@ -1153,11 +1172,12 @@ select option:hover {
 }
 
 .password-hero__heading {
+  width: 100%;
   max-width: 960px;
   margin: 0 0 clamp(18px, 3vw, 30px);
   color: var(--color-accent);
   font-family: var(--font-heading);
-  font-size: 1.72rem;
+  font-size: 1.5rem;
   line-height: 0.88;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -1177,9 +1197,10 @@ select option:hover {
   position: relative;
   display: block;
   width: max-content;
-  max-width: 100%;
+  max-width: calc(100vw - 32px);
   padding-right: 0.16em;
   margin: 0 auto;
+  overflow: visible;
 }
 
 .password-hero__heading .hero-typewriter__reserve {
@@ -1254,7 +1275,7 @@ select option:hover {
 
 @media (min-width: 480px) {
   .password-hero__heading {
-    font-size: 2.1rem;
+    font-size: 2rem;
   }
 }
 
@@ -1284,11 +1305,17 @@ select option:hover {
 
 @media (max-width: 379px) {
   .password-hero__heading {
-    font-size: 1.55rem;
+    font-size: 1.34rem;
   }
 
   .password-form__row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 380px) and (max-width: 479px) {
+  .password-hero__heading {
+    font-size: 1.62rem;
   }
 }
 
