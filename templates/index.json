@@ -93,8 +93,8 @@
           "type": "collection",
           "settings": {
             "collection": "vw",
-            "image_asset": "brand-volkswagen-blue-vw.jpg",
-            "image_position": "36% 58%",
+            "image_asset": "brand-volkswagen-red-gti.jpg",
+            "image_position": "center 76%",
             "title": "Volkswagen",
             "fallback_link": "/search?type=product&q=Volkswagen"
           }
