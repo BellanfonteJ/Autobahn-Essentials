@@ -8,12 +8,15 @@
   --ae-metal: #181715;
   --ae-red-edge: rgba(232, 67, 42, 0.42);
   --ae-red-glow: rgba(232, 67, 42, 0.18);
-  --ae-carbon-texture:
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 9px),
-    repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 9px);
-  --ae-brushed-texture:
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 7px),
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 18px);
+  --ae-satin-graphite:
+    radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 5px),
+    radial-gradient(circle at 72% 64%, rgba(255, 255, 255, 0.014) 0 1px, transparent 1px 6px),
+    linear-gradient(105deg, rgba(255, 255, 255, 0.034), transparent 32%, rgba(0, 0, 0, 0.18) 72%, rgba(255, 255, 255, 0.018)),
+    linear-gradient(180deg, #101112, #070808);
+  --ae-satin-panel:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.012) 38%, rgba(0, 0, 0, 0.12)),
+    radial-gradient(circle at 28% 16%, rgba(255, 255, 255, 0.026) 0 1px, transparent 1px 6px),
+    #151515;
 }
 
 html {
@@ -29,13 +32,13 @@ body {
   margin: 0;
   color: var(--color-text);
   background:
-    linear-gradient(120deg, rgba(232, 67, 42, 0.18) 0%, rgba(232, 67, 42, 0.08) 18%, transparent 42%),
-    linear-gradient(245deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.018) 24%, transparent 54%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 48vh),
-    var(--ae-carbon-texture),
+    linear-gradient(120deg, rgba(232, 67, 42, 0.13) 0%, rgba(232, 67, 42, 0.045) 16%, transparent 40%),
+    linear-gradient(245deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.014) 24%, transparent 54%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), transparent 48vh),
+    var(--ae-satin-graphite),
     linear-gradient(180deg, #070808 0%, var(--color-background) 52vh, #0b0a09 100%);
   background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
-  background-size: 100% 120vh, 100% 120vh, 100% 100vh, auto, auto, 100% 100%;
+  background-size: 100% 120vh, 100% 120vh, 100% 100vh, 9px 9px, 100% 100%;
   background-position: center top, center top, center top, center top, center top, center top;
   font-family: var(--font-body);
   font-size: 16px;
@@ -100,7 +103,7 @@ summary:focus-visible {
   min-height: 55vh;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22rem),
-    var(--ae-brushed-texture);
+    var(--ae-satin-panel);
   background-size: auto, auto;
 }
 
@@ -198,7 +201,7 @@ summary:focus-visible {
   padding: clamp(48px, 8vw, 96px) 0;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(0, 0, 0, 0.035)),
-    var(--ae-carbon-texture);
+    var(--ae-satin-graphite);
   background-blend-mode: normal, soft-light;
 }
 
@@ -948,6 +951,7 @@ select option:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 58%;
 }
 
 .hero__media::after {
@@ -1095,7 +1099,7 @@ select option:hover {
   z-index: 0;
   background:
     linear-gradient(180deg, rgba(8, 9, 10, 0) 0%, rgba(8, 9, 10, 0.3) 30%, rgba(8, 9, 10, 0.82) 68%, rgba(8, 9, 10, 0.96) 100%),
-    var(--ae-carbon-texture);
+    var(--ae-satin-graphite);
   background-blend-mode: normal, soft-light;
   pointer-events: none;
 }
@@ -4050,7 +4054,7 @@ select option:hover,
 .site-header {
   background:
     linear-gradient(180deg, rgba(18, 18, 18, 0.96), rgba(7, 8, 8, 0.92)),
-    var(--ae-brushed-texture);
+    var(--ae-satin-panel);
   border-bottom-color: rgba(232, 67, 42, 0.24);
   box-shadow:
     0 1px 0 rgba(232, 67, 42, 0.22),
@@ -4060,7 +4064,7 @@ select option:hover,
 .site-header.is-scrolled {
   background:
     linear-gradient(180deg, rgba(17, 17, 17, 0.98), rgba(7, 8, 8, 0.96)),
-    var(--ae-brushed-texture);
+    var(--ae-satin-panel);
   box-shadow:
     0 1px 0 rgba(232, 67, 42, 0.26),
     0 6px 24px rgba(0, 0, 0, 0.56);
@@ -4070,7 +4074,7 @@ select option:hover,
 .garage-drawer {
   background:
     linear-gradient(135deg, rgba(232, 67, 42, 0.11), transparent 36%),
-    var(--ae-carbon-texture),
+    var(--ae-satin-graphite),
     linear-gradient(180deg, rgba(19, 19, 18, 0.98), rgba(8, 8, 8, 0.98));
   border-top-color: rgba(232, 67, 42, 0.28);
 }
@@ -4091,7 +4095,7 @@ select option:hover,
   border-color: rgba(255, 255, 255, 0.13);
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.058), rgba(255, 255, 255, 0.012)),
-    var(--ae-brushed-texture),
+    var(--ae-satin-panel),
     var(--color-surface);
   box-shadow:
     inset 1px 0 0 rgba(232, 67, 42, 0.12),
@@ -4179,7 +4183,7 @@ select option:hover,
 .spec-item {
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.012)),
-    var(--ae-carbon-texture),
+    var(--ae-satin-graphite),
     rgba(18, 18, 18, 0.9);
 }
 

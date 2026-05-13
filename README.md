@@ -2,6 +2,12 @@
 
 ### May 12th
 
+#### 11:18PM PST - Release 4.3 satin graphite refresh
+
+- Replaced the carbon-style texture system with a satin graphite and subtle noise treatment across the page, panels, header, drawers, and spec modules.
+- Reduced the global AE-orange background wash so orange reads as a focused glow around key brand moments instead of a full-page tint.
+- Kept the original hero image and shifted its focal position upward so the BMW sits better in the homepage crop.
+
 #### 11:05PM PST - Release 4.2 from 4.0 merge
 
 - Merged the `4.0` collection-card hover image coverage fix back onto the `3.9` rollback line.
