@@ -2,6 +2,11 @@
 
 ### May 13th
 
+#### 12:52AM PST - Fix VW brand tile image reference
+
+- Pointed the homepage Volkswagen brand tile at the new red VW GTI asset instead of the old blue VW image.
+- Updated the Shop By Brand Volkswagen fallback image to use the same red VW asset.
+
 #### 12:34AM PST - Release 4.7 smooth orange glow
 
 - Replaced the blocky angled orange glow with softer radial background blooms.
