@@ -2,6 +2,11 @@
 
 ### May 12th
 
+#### 11:27PM PST - Restore orange page glow
+
+- Restored the warmer AE-orange page glow as a gradient layer over the satin graphite background.
+- Kept the carbon texture removed while bringing back the stronger orange wash from the previous background treatment.
+
 #### 11:18PM PST - Release 4.3 satin graphite refresh
 
 - Replaced the carbon-style texture system with a satin graphite and subtle noise treatment across the page, panels, header, drawers, and spec modules.

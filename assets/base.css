@@ -32,14 +32,15 @@ body {
   margin: 0;
   color: var(--color-text);
   background:
-    linear-gradient(120deg, rgba(232, 67, 42, 0.13) 0%, rgba(232, 67, 42, 0.045) 16%, transparent 40%),
+    radial-gradient(ellipse at 12% 10%, rgba(232, 67, 42, 0.24) 0%, rgba(232, 67, 42, 0.12) 24%, transparent 58%),
+    linear-gradient(120deg, rgba(232, 67, 42, 0.18) 0%, rgba(232, 67, 42, 0.08) 18%, transparent 42%),
     linear-gradient(245deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.014) 24%, transparent 54%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.024), transparent 48vh),
     var(--ae-satin-graphite),
     linear-gradient(180deg, #070808 0%, var(--color-background) 52vh, #0b0a09 100%);
   background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
-  background-size: 100% 120vh, 100% 120vh, 100% 100vh, 9px 9px, 100% 100%;
-  background-position: center top, center top, center top, center top, center top, center top;
+  background-size: 120vw 92vh, 100% 120vh, 100% 120vh, 100% 100vh, 9px 9px, 100% 100%;
+  background-position: left top, center top, center top, center top, center top, center top;
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
