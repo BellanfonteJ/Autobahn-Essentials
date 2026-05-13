@@ -2409,6 +2409,9 @@ body.is-gallery-lightbox-open {
 .brand-cta {
   background: var(--color-accent);
   color: #fff;
+  box-shadow:
+    0 0 42px rgba(232, 67, 42, 0.42),
+    0 18px 58px rgba(232, 67, 42, 0.24);
 }
 
 .brand-cta__inner {
@@ -3899,7 +3902,6 @@ select option:hover,
 
 .section,
 .spec-strip,
-.brand-cta,
 .social-section {
   background: transparent;
   background-color: transparent;
