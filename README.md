@@ -2,6 +2,11 @@
 
 ### May 13th
 
+#### 12:23AM PST - Release 4.6 orange glow and brand crops
+
+- Restored a stronger visible orange background glow across the main page surface.
+- Recentered the Shop By Brand card crops so the cars sit better inside the image frames.
+
 #### 12:17AM PST - Release 4.5 homepage image refresh
 
 - Replaced the homepage hero fallback with the orange Lamborghini parking-lot image.
