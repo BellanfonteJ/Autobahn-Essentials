@@ -2,6 +2,12 @@
 
 ### May 13th
 
+#### 4:09PM PST - Fix Shop Pay button layout
+
+- Kept the product page accelerated checkout button full-width and centered across responsive layouts.
+- Constrained Shopify's branded wallet iframe/layout so Shop Pay and saved-card labels do not overlap.
+- Removed white card-logo backgrounds inside the branded Shop Pay button where Shopify exposes the wallet markup.
+
 #### 1:25AM PST - Resize header cart icon
 
 - Added explicit desktop sizing for header icon SVGs so the cart icon stays proportional inside its button.
