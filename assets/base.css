@@ -698,6 +698,19 @@ summary:focus-visible {
   cursor: pointer;
 }
 
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.cart-toggle svg {
+  width: 26px;
+  height: 26px;
+  max-width: 64%;
+  max-height: 64%;
+  transform: translateY(1px);
+}
+
 .icon-button:hover,
 .icon-button:focus-visible {
   border-color: rgba(255, 255, 255, 0.28);
@@ -3757,6 +3770,11 @@ body.is-cart-open {
     height: 19px;
   }
 
+  .cart-toggle svg {
+    width: 23px;
+    height: 23px;
+  }
+
   .header-actions {
     gap: 4px;
   }
@@ -4083,6 +4101,11 @@ body.is-cart-open {
   .icon-button svg {
     width: 17px;
     height: 17px;
+  }
+
+  .cart-toggle svg {
+    width: 21px;
+    height: 21px;
   }
 
   .header-actions {
