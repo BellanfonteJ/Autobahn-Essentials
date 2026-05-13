@@ -11,7 +11,15 @@
     <div class="collection-grid">
       {%- for block in section.blocks -%}
         {%- assign collection = block.settings.collection -%}
-        <a class="collection-card" href="{{ collection.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
+        {%- assign card_url = collection.url -%}
+        {%- if card_url == blank -%}
+          {%- assign card_url = block.settings.fallback_link -%}
+        {%- endif -%}
+        {%- if card_url == blank -%}
+          {%- assign fallback_query = block.settings.title | default: collection.title | url_encode -%}
+          {%- assign card_url = routes.search_url | append: '?type=product&q=' | append: fallback_query -%}
+        {%- endif -%}
+        <a class="collection-card" href="{{ card_url }}" {{ block.shopify_attributes }}>
           <div class="collection-card__media">
             {%- if collection.featured_image -%}
               {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw' }}
@@ -69,6 +77,12 @@
           "id": "title",
           "label": "Fallback title",
           "default": "Performance"
+        },
+        {
+          "type": "url",
+          "id": "fallback_link",
+          "label": "Fallback link",
+          "info": "Used only when no collection is selected."
         }
       ]
     }
@@ -80,25 +94,29 @@
         {
           "type": "collection",
           "settings": {
-            "title": "Engine Performance"
+            "title": "Engine Performance",
+            "fallback_link": "/search?type=product&q=Engine+Performance"
           }
         },
         {
           "type": "collection",
           "settings": {
-            "title": "Turbo Upgrades"
+            "title": "Turbo Upgrades",
+            "fallback_link": "/search?type=product&q=Turbo+Upgrades"
           }
         },
         {
           "type": "collection",
           "settings": {
-            "title": "Exterior Styling"
+            "title": "Exterior Styling",
+            "fallback_link": "/search?type=product&q=Exterior+Styling"
           }
         },
         {
           "type": "collection",
           "settings": {
-            "title": "Interior Accessories"
+            "title": "Interior Accessories",
+            "fallback_link": "/search?type=product&q=Interior+Accessories"
           }
         }
       ]

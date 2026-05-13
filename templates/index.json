@@ -79,28 +79,32 @@
           "type": "collection",
           "settings": {
             "collection": "",
-            "title": "Engine Performance"
+            "title": "Engine Performance",
+            "fallback_link": "/search?type=product&q=Engine+Performance"
           }
         },
         "detailing": {
           "type": "collection",
           "settings": {
             "collection": "",
-            "title": "Turbo Upgrades"
+            "title": "Turbo Upgrades",
+            "fallback_link": "/search?type=product&q=Turbo+Upgrades"
           }
         },
         "maintenance": {
           "type": "collection",
           "settings": {
             "collection": "",
-            "title": "Exterior Styling"
+            "title": "Exterior Styling",
+            "fallback_link": "/search?type=product&q=Exterior+Styling"
           }
         },
         "garage": {
           "type": "collection",
           "settings": {
             "collection": "",
-            "title": "Interior Accessories"
+            "title": "Interior Accessories",
+            "fallback_link": "/search?type=product&q=Interior+Accessories"
           }
         }
       },

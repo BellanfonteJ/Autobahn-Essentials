@@ -2,6 +2,12 @@
 
 ### May 12th
 
+#### 9:37PM PST - Add category card fallback links
+
+- Added per-card fallback links for homepage category cards when Shopify collections are not assigned yet.
+- Routed Engine Performance, Turbo Upgrades, Exterior Styling, and Interior Accessories to matching product search pages instead of `/collections/all`.
+- Kept assigned Shopify collections as the primary destination once they are wired in.
+
 #### 4:45PM PST - Add expanding promo tile hover
 
 - Matched the homepage promo tile interaction to the spec strip behavior.
