@@ -2,6 +2,11 @@
 
 ### May 12th
 
+#### 9:52PM PST - Remove module background opacity
+
+- Set outer section, spec strip, brand CTA, and social section backgrounds to transparent so modules float over the page texture.
+- Removed the social section band borders while keeping card and tile surfaces intact.
+
 #### 9:46PM PST - Fix brand card image fallback
 
 - Made Shop By Brand infer Audi, BMW, and Volkswagen theme images from card titles before using generic collection placeholders.
