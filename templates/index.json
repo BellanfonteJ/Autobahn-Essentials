@@ -83,6 +83,7 @@
           "type": "collection",
           "settings": {
             "collection": "bmw",
+            "image": "shopify://shop_images/rana-singh-ugHK9StGR28-unsplash.jpg",
             "image_asset": "brand-bmw-white-mercedes-c-class.jpg",
             "image_position": "center 62%",
             "title": "BMW",
