@@ -19,13 +19,7 @@
         "primary_label": "Shop Now",
         "primary_link": "/collections/all",
         "secondary_label": "View Builds",
-        "secondary_link": "/pages/builds",
-        "stat_1": "OEM+",
-        "stat_label_1": "Quality parts",
-        "stat_2": "Euro",
-        "stat_label_2": "Build focus",
-        "stat_3": "Fast",
-        "stat_label_3": "Shipping"
+        "secondary_link": "/pages/builds"
       }
     },
     "spec_strip": {
@@ -78,7 +72,7 @@
         "audi": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "audi",
             "image_asset": "brand-audi-rs6.jpg",
             "image_position": "center center",
             "title": "Audi",
@@ -88,7 +82,7 @@
         "bmw": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "bmw",
             "image_asset": "brand-bmw-m4.jpg",
             "image_position": "center center",
             "title": "BMW",
@@ -123,6 +117,8 @@
           "type": "collection",
           "settings": {
             "collection": "",
+            "image_asset": "",
+            "image_position": "center center",
             "title": "Engine Performance",
             "fallback_link": "/search?type=product&q=Engine+Performance"
           }
@@ -131,6 +127,8 @@
           "type": "collection",
           "settings": {
             "collection": "",
+            "image_asset": "",
+            "image_position": "center center",
             "title": "Turbo Upgrades",
             "fallback_link": "/search?type=product&q=Turbo+Upgrades"
           }
@@ -139,6 +137,8 @@
           "type": "collection",
           "settings": {
             "collection": "",
+            "image_asset": "",
+            "image_position": "center center",
             "title": "Exterior Styling",
             "fallback_link": "/search?type=product&q=Exterior+Styling"
           }
@@ -147,6 +147,8 @@
           "type": "collection",
           "settings": {
             "collection": "",
+            "image_asset": "",
+            "image_position": "center center",
             "title": "Interior Accessories",
             "fallback_link": "/search?type=product&q=Interior+Accessories"
           }
