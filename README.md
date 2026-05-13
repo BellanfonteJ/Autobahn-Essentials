@@ -1,5 +1,14 @@
 ## Changelog
 
+### May 13th
+
+#### 12:17AM PST - Release 4.5 homepage image refresh
+
+- Replaced the homepage hero fallback with the orange Lamborghini parking-lot image.
+- Updated the Shop By Brand cards with new local Audi, BMW, and Volkswagen image assets.
+- Updated the Exterior Styling category card with the requested headlight close-up image.
+- Made explicit theme asset filenames take priority over Shopify collection featured images.
+
 ### May 12th
 
 #### 11:49PM PST - Release 4.4 homepage image refresh

@@ -73,7 +73,7 @@
           "type": "collection",
           "settings": {
             "collection": "audi",
-            "image_asset": "brand-audi-rs6.jpg",
+            "image_asset": "brand-audi-black-bmw-m3.jpg",
             "image_position": "center center",
             "title": "Audi",
             "fallback_link": "/search?type=product&q=Audi"
@@ -83,7 +83,7 @@
           "type": "collection",
           "settings": {
             "collection": "bmw",
-            "image_asset": "brand-bmw-m4.jpg",
+            "image_asset": "brand-bmw-white-mercedes-c-class.jpg",
             "image_position": "center center",
             "title": "BMW",
             "fallback_link": "/search?type=product&q=BMW"
@@ -93,8 +93,8 @@
           "type": "collection",
           "settings": {
             "collection": "vw",
-            "image_asset": "brand-volkswagen-golf-r.jpg",
-            "image_position": "center bottom",
+            "image_asset": "brand-volkswagen-blue-vw.jpg",
+            "image_position": "center center",
             "title": "Volkswagen",
             "fallback_link": "/search?type=product&q=Volkswagen"
           }
@@ -137,7 +137,7 @@
           "type": "collection",
           "settings": {
             "collection": "",
-            "image_asset": "",
+            "image_asset": "category-exterior-styling-lights.jpg",
             "image_position": "center center",
             "title": "Exterior Styling",
             "fallback_link": "/search?type=product&q=Exterior+Styling"
