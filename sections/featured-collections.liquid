@@ -2,7 +2,9 @@
   <div class="page-width">
     <div class="section-heading">
       <div>
-        <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="eyebrow">{{ section.settings.eyebrow }}</div>
+        {%- endif -%}
         <h2>{{ section.settings.heading }}</h2>
       </div>
     </div>
@@ -21,10 +23,14 @@
         {%- endif -%}
         <a class="collection-card" href="{{ card_url }}" {{ block.shopify_attributes }}>
           <div class="collection-card__media">
+            {%- assign image_asset = block.settings.image_asset | strip -%}
+            {%- assign image_position = block.settings.image_position | default: 'center center' -%}
             {%- if collection.featured_image -%}
               {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw' }}
             {%- elsif block.settings.image != blank -%}
               {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', decoding: 'async', sizes: '(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw' }}
+            {%- elsif image_asset != blank -%}
+              <img src="{{ image_asset | asset_url }}" alt="" width="900" height="600" loading="lazy" decoding="async" sizes="(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw" style="object-position: {{ image_position }};">
             {%- else -%}
               {%- assign placeholder_index = forloop.index0 | modulo: collection_fallback_images.size -%}
               <img src="{{ collection_fallback_images[placeholder_index] | asset_url }}" alt="" width="900" height="600" loading="lazy" decoding="async" sizes="(min-width: 990px) 25vw, (min-width: 361px) 50vw, 100vw">
@@ -71,6 +77,17 @@
           "type": "image_picker",
           "id": "image",
           "label": "Fallback image"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Theme asset image filename"
+        },
+        {
+          "type": "text",
+          "id": "image_position",
+          "label": "Image crop position",
+          "default": "center center"
         },
         {
           "type": "text",

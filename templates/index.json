@@ -72,6 +72,50 @@
       ],
       "settings": {}
     },
+    "brand_collections": {
+      "type": "featured-collections",
+      "blocks": {
+        "audi": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "image_asset": "brand-audi-rs6.jpg",
+            "image_position": "center center",
+            "title": "Audi",
+            "fallback_link": "/search?type=product&q=Audi"
+          }
+        },
+        "bmw": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "image_asset": "brand-bmw-m4.jpg",
+            "image_position": "center center",
+            "title": "BMW",
+            "fallback_link": "/search?type=product&q=BMW"
+          }
+        },
+        "volkswagen": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "image_asset": "brand-volkswagen-golf-r.jpg",
+            "image_position": "center bottom",
+            "title": "Volkswagen",
+            "fallback_link": "/search?type=product&q=Volkswagen"
+          }
+        }
+      },
+      "block_order": [
+        "audi",
+        "bmw",
+        "volkswagen"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Shop By Brand"
+      }
+    },
     "featured_collections": {
       "type": "featured-collections",
       "blocks": {
@@ -115,7 +159,7 @@
         "garage"
       ],
       "settings": {
-        "eyebrow": "Shop by category",
+        "eyebrow": "",
         "heading": "Shop By Category"
       }
     },
@@ -243,6 +287,7 @@
   "order": [
     "hero",
     "spec_strip",
+    "brand_collections",
     "featured_collections",
     "promo_tiles",
     "brand_cta",

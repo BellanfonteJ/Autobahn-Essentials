@@ -2,6 +2,12 @@
 
 ### May 12th
 
+#### 9:42PM PST - Add homepage brand cards
+
+- Added a new Shop By Brand card section above Shop By Category with Audi, BMW, and Volkswagen cards.
+- Added local sport-model brand imagery for the new cards and matching product-search fallback links.
+- Removed the orange eyebrow line from the homepage brand and category card sections.
+
 #### 9:37PM PST - Add category card fallback links
 
 - Added per-card fallback links for homepage category cards when Shopify collections are not assigned yet.
