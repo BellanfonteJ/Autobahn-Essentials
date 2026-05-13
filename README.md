@@ -2,6 +2,12 @@
 
 ### May 12th
 
+#### 11:05PM PST - Release 4.2 from 4.0 merge
+
+- Merged the `4.0` collection-card hover image coverage fix back onto the `3.9` rollback line.
+- Restored the Brand CTA module to a 100% opacity AE-orange background.
+- Added an orange glow around the Brand CTA while leaving the Shop Now button styling unchanged.
+
 #### 10:09PM PST - Fix expanded collection card image coverage
 
 - Made featured collection card images cover the full tile on desktop so expanded hover states no longer expose empty card edges.
