@@ -2,6 +2,12 @@
 
 ### May 12th
 
+#### 11:49PM PST - Release 4.4 homepage image refresh
+
+- Replaced the homepage hero fallback with the dark BMW headlights photo.
+- Updated the Interior Accessories category card to use the BMW steering-wheel interior photo.
+- Added both requested Unsplash-sourced images as local theme assets.
+
 #### 11:27PM PST - Restore orange page glow
 
 - Restored the warmer AE-orange page glow as a gradient layer over the satin graphite background.
