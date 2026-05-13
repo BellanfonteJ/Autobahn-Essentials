@@ -2,6 +2,11 @@
 
 ### May 13th
 
+#### 1:25AM PST - Resize header cart icon
+
+- Added explicit desktop sizing for header icon SVGs so the cart icon stays proportional inside its button.
+- Made the cart icon slightly smaller than the shared header action icons for a cleaner header balance.
+
 #### 12:52AM PST - Fix VW brand tile image reference
 
 - Pointed the homepage Volkswagen brand tile at the new red VW GTI asset instead of the old blue VW image.
