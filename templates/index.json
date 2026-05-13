@@ -74,7 +74,7 @@
           "settings": {
             "collection": "audi",
             "image_asset": "brand-audi-black-bmw-m3.jpg",
-            "image_position": "center 80%",
+            "image_position": "center 85%",
             "title": "Audi",
             "fallback_link": "/search?type=product&q=Audi"
           }
@@ -94,7 +94,7 @@
           "settings": {
             "collection": "vw",
             "image_asset": "brand-volkswagen-red-gti.jpg",
-            "image_position": "center 76%",
+            "image_position": "center 87%",
             "title": "Volkswagen",
             "fallback_link": "/search?type=product&q=Volkswagen"
           }
