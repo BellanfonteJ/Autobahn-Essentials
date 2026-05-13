@@ -2,6 +2,11 @@
 
 ### May 12th
 
+#### 9:55PM PST - Add scrolling gradient page background
+
+- Reworked the global page background into fixed gradient layers so transparent modules float over a consistent backdrop while scrolling.
+- Kept the carbon texture in the background stack for the existing Autobahn visual feel.
+
 #### 9:52PM PST - Remove module background opacity
 
 - Set outer section, spec strip, brand CTA, and social section backgrounds to transparent so modules float over the page texture.

@@ -29,10 +29,14 @@ body {
   margin: 0;
   color: var(--color-text);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 240px),
-    linear-gradient(135deg, rgba(232, 67, 42, 0.075), transparent 22rem),
+    linear-gradient(120deg, rgba(232, 67, 42, 0.18) 0%, rgba(232, 67, 42, 0.08) 18%, transparent 42%),
+    linear-gradient(245deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.018) 24%, transparent 54%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 48vh),
     var(--ae-carbon-texture),
-    linear-gradient(180deg, #070808 0%, var(--color-background) 32rem, #0b0a09 100%);
+    linear-gradient(180deg, #070808 0%, var(--color-background) 52vh, #0b0a09 100%);
+  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
+  background-size: 100% 120vh, 100% 120vh, 100% 100vh, auto, auto, 100% 100%;
+  background-position: center top, center top, center top, center top, center top, center top;
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
