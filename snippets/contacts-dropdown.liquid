@@ -1,0 +1,25 @@
+{%- assign dropdown_label = label | default: 'Contacts' -%}
+{%- assign about_url = '/pages/about' -%}
+{%- if pages['about-us'] != blank -%}
+  {%- assign about_url = pages['about-us'].url -%}
+{%- elsif pages['about'] != blank -%}
+  {%- assign about_url = pages['about'].url -%}
+{%- endif -%}
+{%- assign support_url = '/contact' -%}
+{%- if pages['support'] != blank -%}
+  {%- assign support_url = pages['support'].url -%}
+{%- elsif pages['contact'] != blank -%}
+  {%- assign support_url = pages['contact'].url -%}
+{%- endif -%}
+
+<details class="nav-dropdown nav-dropdown--contacts">
+  <summary>
+    <span>{{ dropdown_label }}</span>
+    <span class="nav-dropdown__chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="nav-dropdown__menu">
+    <a href="/contact">Contact Us</a>
+    <a href="{{ about_url }}">About Us</a>
+    <a href="{{ support_url }}">Support</a>
+  </div>
+</details>
