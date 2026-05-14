@@ -2,6 +2,11 @@
 
 ### May 13th
 
+#### 5:18PM PST - Update Contacts dropdown links
+
+- Reduced the Contacts dropdown to Contact Us and Returns.
+- Routed Returns to the existing shipping and returns page when available, with a `/pages/returns` fallback.
+
 #### 5:07PM PST - Add Contacts dropdown menu
 
 - Added a Contacts header dropdown with Contact Us, About Us, and Support links.
