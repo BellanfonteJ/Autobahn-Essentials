@@ -67,6 +67,95 @@ const initScrollReveal = () => {
   revealItems.forEach((element) => observer.observe(element));
 };
 
+const initHeroTypewriterSequence = () => {
+  const typewriters = Array.from(document.querySelectorAll('[data-hero-typewriter]'));
+  if (!typewriters.length) return;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const typeDelay = 105;
+  const eraseDelay = 55;
+  const blinkDuration = 1680;
+
+  const wait = (duration) => new Promise((resolve) => {
+    window.setTimeout(resolve, duration);
+  });
+
+  const parseSequence = (value) => String(value || '')
+    .split(';')
+    .map((phrase) => {
+      const [base = '', accent = ''] = phrase.split('|');
+      return {
+        base: base.trim(),
+        accent: accent.trim(),
+      };
+    })
+    .filter((phrase) => phrase.base && phrase.accent);
+
+  const typeText = async (element, text) => {
+    for (let index = 1; index <= text.length; index += 1) {
+      element.textContent = text.slice(0, index);
+      await wait(typeDelay);
+    }
+  };
+
+  const eraseText = async (element) => {
+    const text = element.textContent || '';
+    for (let index = text.length - 1; index >= 0; index -= 1) {
+      element.textContent = text.slice(0, index);
+      await wait(eraseDelay);
+    }
+  };
+
+  const blinkPeriod = async (periodElement) => {
+    periodElement.classList.remove('is-blinking');
+    void periodElement.offsetWidth;
+    periodElement.classList.add('is-visible', 'is-blinking');
+    await wait(blinkDuration);
+    periodElement.classList.remove('is-blinking');
+  };
+
+  typewriters.forEach(async (typewriter) => {
+    const sequence = parseSequence(typewriter.dataset.heroTypewriterSequence);
+    const baseElement = typewriter.querySelector('[data-hero-typewriter-base]');
+    const accentElement = typewriter.querySelector('[data-hero-typewriter-accent]');
+    const periodElement = typewriter.querySelector('[data-hero-typewriter-period]');
+    const finalPhrase = sequence[sequence.length - 1];
+
+    if (!sequence.length || !baseElement || !accentElement || !periodElement) return;
+
+    if (reducedMotion) {
+      baseElement.textContent = finalPhrase.base;
+      accentElement.textContent = finalPhrase.accent;
+      periodElement.textContent = '.';
+      periodElement.classList.add('is-visible');
+      return;
+    }
+
+    for (let index = 0; index < sequence.length; index += 1) {
+      const phrase = sequence[index];
+      const isFinalPhrase = index === sequence.length - 1;
+
+      await typeText(baseElement, phrase.base);
+      await typeText(accentElement, phrase.accent);
+      periodElement.textContent = '.';
+      await wait(typeDelay);
+      await blinkPeriod(periodElement);
+
+      if (isFinalPhrase) {
+        periodElement.classList.add('is-visible');
+        return;
+      }
+
+      periodElement.classList.remove('is-visible');
+      periodElement.textContent = '';
+      await wait(eraseDelay);
+      await eraseText(accentElement);
+      await eraseText(baseElement);
+      await wait(typeDelay * 2);
+    }
+  });
+};
+
 const closeMobileMenu = () => {
   if (!menuToggle || !mobileNav) return;
   mobileNav.classList.remove('is-open');
@@ -1424,6 +1513,7 @@ if (cartDrawer) {
 }
 
 initScrollReveal();
+initHeroTypewriterSequence();
 
 const stickyHeader = document.querySelector('.site-header--sticky');
 if (stickyHeader) {

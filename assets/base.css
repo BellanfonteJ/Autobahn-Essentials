@@ -1066,6 +1066,25 @@ select option:hover {
   animation: aeHeroPeriodPulse 1.45s ease-in-out var(--hero-period-delay) infinite both;
 }
 
+.hero h1[data-hero-typewriter] .hero-typewriter__typing {
+  clip-path: none;
+  animation: none;
+}
+
+.hero h1[data-hero-typewriter] .hero-typewriter__period {
+  min-width: 0.28em;
+  opacity: 0;
+  animation: none;
+}
+
+.hero h1[data-hero-typewriter] .hero-typewriter__period.is-visible {
+  opacity: 1;
+}
+
+.hero h1[data-hero-typewriter] .hero-typewriter__period.is-blinking {
+  animation: aeHeroPeriodBlink 0.42s steps(1, end) 4 both;
+}
+
 @keyframes aeHeroTypewriter {
   from {
     clip-path: inset(0 100% 0 0);
@@ -1073,6 +1092,19 @@ select option:hover {
 
   to {
     clip-path: inset(0 -0.16em 0 0);
+  }
+}
+
+@keyframes aeHeroPeriodBlink {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.18;
+    transform: scale(0.98);
   }
 }
 
