@@ -1236,6 +1236,15 @@ document.querySelectorAll('.nav-dropdown').forEach((dropdown) => {
       dropdown.removeAttribute('open');
     }
   });
+
+  dropdown.addEventListener('focusout', () => {
+    if (!desktopQuery.matches) return;
+    window.setTimeout(() => {
+      if (!dropdown.contains(document.activeElement)) {
+        dropdown.removeAttribute('open');
+      }
+    }, 0);
+  });
 });
 
 const cartDrawer = document.querySelector('[data-cart-drawer]');

@@ -62,11 +62,11 @@
           {%- assign link_title = link.title | downcase | strip -%}
           {%- if link_title contains 'contact' -%}
             {%- assign has_contacts_link = true -%}
-            <a href="{{ link.url }}">Contacts</a>
+            {% render 'contacts-dropdown', label: 'Contacts' %}
           {%- endif -%}
         {%- endfor -%}
         {%- unless has_contacts_link -%}
-          <a href="/pages/contact">Contacts</a>
+          {% render 'contacts-dropdown', label: 'Contacts' %}
         {%- endunless -%}
 
         {%- for link in section.settings.menu.links -%}
@@ -80,7 +80,7 @@
         <a href="{{ routes.root_url }}">Home</a>
         {% render 'category-dropdown', label: 'Shop' %}
         <a href="/pages/builds">Builds</a>
-        <a href="/pages/contact">Contacts</a>
+        {% render 'contacts-dropdown', label: 'Contacts' %}
       {%- endif -%}
     </nav>
 

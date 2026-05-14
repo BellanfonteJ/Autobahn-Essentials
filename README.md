@@ -2,6 +2,11 @@
 
 ### May 13th
 
+#### 5:07PM PST - Add Contacts dropdown menu
+
+- Added a Contacts header dropdown with Contact Us, About Us, and Support links.
+- Reused the existing dark dropdown styling with desktop hover/focus and mobile tap-to-expand behavior.
+
 #### 4:09PM PST - Fix Shop Pay button layout
 
 - Kept the product page accelerated checkout button full-width and centered across responsive layouts.
