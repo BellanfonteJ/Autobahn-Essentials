@@ -17,6 +17,10 @@
 - Added a Contacts header dropdown with Contact Us, About Us, and Support links.
 - Reused the existing dark dropdown styling with desktop hover/focus and mobile tap-to-expand behavior.
 
+#### 4:27PM PST - Fix Shop Pay accelerated checkout button
+
+- Fixed Shop Pay accelerated checkout button overlap and removed unwanted white Visa box on product pages.
+
 #### 4:09PM PST - Fix Shop Pay button layout
 
 - Kept the product page accelerated checkout button full-width and centered across responsive layouts.
