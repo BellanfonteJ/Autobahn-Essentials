@@ -2,6 +2,12 @@
 
 ### May 13th
 
+#### 11:18PM PST - Release 5.1 homepage collection card refresh
+
+- Moved the homepage promo tile module below the Trusted By Enthusiasts module.
+- Restyled Shop By Brand and Shop By Category cards to match the darker image-led promo tile treatment.
+- Removed the large vertical spacing between the two shop modules.
+
 #### 10:33PM PST - Release 5.0 hero typewriter sequence
 
 - Updated the homepage hero headline to cycle through Built For Performance, Built For Drivers, and Backed By Passion.

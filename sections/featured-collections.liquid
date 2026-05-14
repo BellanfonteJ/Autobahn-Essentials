@@ -1,4 +1,5 @@
-<section class="section">
+{%- assign heading_normalized = section.settings.heading | downcase -%}
+<section class="section featured-collections-section{% if heading_normalized contains 'shop by brand' %} featured-collections-section--brand{% endif %}{% if heading_normalized contains 'shop by category' %} featured-collections-section--category{% endif %}">
   <div class="page-width">
     <div class="section-heading">
       <div>

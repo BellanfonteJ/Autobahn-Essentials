@@ -4567,7 +4567,174 @@ select option:hover,
     rgba(18, 18, 18, 0.9);
 }
 
+.featured-collections-section {
+  padding: clamp(30px, 4vw, 52px) 0;
+}
+
+.featured-collections-section--brand {
+  padding-bottom: 0;
+}
+
+.featured-collections-section--brand + .featured-collections-section--category {
+  padding-top: 0;
+}
+
+.featured-collections-section .section-heading {
+  margin-bottom: 18px;
+}
+
+.collection-grid--featured {
+  gap: 18px;
+}
+
+.collection-grid--featured .collection-card {
+  position: relative;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding: 22px;
+  border-color: rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.84)),
+    linear-gradient(135deg, rgba(232, 67, 42, 0.2), rgba(255, 255, 255, 0.035)),
+    #111;
+}
+
+.collection-grid--featured .collection-card__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  aspect-ratio: auto;
+  padding: 0;
+  background: #111;
+}
+
+.collection-grid--featured .collection-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.78)),
+    linear-gradient(135deg, rgba(232, 67, 42, 0.22), transparent 48%);
+  pointer-events: none;
+}
+
+.collection-grid--featured .collection-card__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.48;
+  transform: none;
+  filter: none;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.collection-grid--featured .collection-card__info {
+  position: relative;
+  inset: auto;
+  z-index: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  background: transparent;
+  transform: none;
+}
+
+.collection-grid--featured .collection-card__info .eyebrow {
+  order: -1;
+  display: block;
+  max-height: none;
+  margin-bottom: 8px;
+  opacity: 1;
+  overflow: visible;
+  transform: none;
+}
+
+.collection-grid--featured .collection-card__title {
+  max-width: 360px;
+  margin: 0;
+  color: #fff;
+  font-size: 2.6rem;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.collection-grid--featured .collection-card:hover .collection-card__media img,
+.collection-grid--featured .collection-card:focus-visible .collection-card__media img {
+  opacity: 0.62;
+  transform: scale(1.035);
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 990px) {
+  .collection-grid--featured {
+    display: flex;
+    align-items: stretch;
+    gap: 18px;
+    transition: gap 260ms cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .collection-grid--featured:has(.collection-card:hover),
+  .collection-grid--featured:focus-within {
+    gap: 32px;
+  }
+
+  .collection-grid--featured .collection-card {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 240px;
+    transition:
+      flex 300ms cubic-bezier(0.19, 1, 0.22, 1),
+      min-height 300ms cubic-bezier(0.19, 1, 0.22, 1),
+      transform 300ms cubic-bezier(0.19, 1, 0.22, 1),
+      border-color 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .collection-grid--featured .collection-card:hover,
+  .collection-grid--featured .collection-card:focus-visible {
+    flex: 1.55 1 0;
+    min-height: 320px;
+    z-index: 1;
+    outline: 0;
+    transform: translateY(-4px);
+  }
+}
+
 @media (max-width: 640px) {
+  .featured-collections-section {
+    padding: 24px 0;
+  }
+
+  .featured-collections-section--brand {
+    padding-bottom: 0;
+  }
+
+  .featured-collections-section--brand + .featured-collections-section--category {
+    padding-top: 0;
+  }
+
+  .collection-grid--featured .collection-card {
+    min-height: 210px;
+    padding: 14px;
+  }
+
+  .collection-grid--featured .collection-card__title {
+    font-size: 1.35rem;
+    line-height: 0.95;
+  }
+
+  .collection-grid--featured .collection-card__info .eyebrow {
+    margin-bottom: 6px;
+    font-size: 0.62rem;
+    line-height: 1.2;
+  }
+
   .vehicle-finder__shell {
     padding: 18px;
   }
