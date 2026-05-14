@@ -106,12 +106,13 @@ const initHeroTypewriterSequence = () => {
     }
   };
 
-  const blinkPeriod = async (periodElement) => {
-    periodElement.classList.remove('is-blinking');
+  const fadePeriod = async (periodElement, keepFading = false) => {
+    periodElement.classList.remove('is-fading');
     void periodElement.offsetWidth;
-    periodElement.classList.add('is-visible', 'is-blinking');
+    periodElement.classList.add('is-visible', 'is-fading');
+    if (keepFading) return;
     await wait(phraseHoldDuration);
-    periodElement.classList.remove('is-blinking');
+    periodElement.classList.remove('is-fading');
   };
 
   typewriters.forEach(async (typewriter) => {
@@ -139,13 +140,13 @@ const initHeroTypewriterSequence = () => {
       await typeText(accentElement, phrase.accent);
       periodElement.textContent = '.';
       await wait(typeDelay);
-      await blinkPeriod(periodElement);
 
       if (isFinalPhrase) {
-        periodElement.classList.add('is-visible');
+        await fadePeriod(periodElement, true);
         return;
       }
 
+      await fadePeriod(periodElement);
       periodElement.classList.remove('is-visible');
       periodElement.textContent = '';
       await wait(eraseDelay);

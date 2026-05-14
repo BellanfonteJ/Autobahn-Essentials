@@ -1086,8 +1086,8 @@ select option:hover {
   opacity: 1;
 }
 
-.hero h1[data-hero-typewriter] .hero-typewriter__period.is-blinking {
-  animation: aeHeroPeriodBlink 1s steps(1, end) 4 both;
+.hero h1[data-hero-typewriter] .hero-typewriter__period.is-fading {
+  animation: aeHeroPeriodFade 1.15s ease-in-out infinite both;
 }
 
 @keyframes aeHeroTypewriter {
@@ -1100,7 +1100,7 @@ select option:hover {
   }
 }
 
-@keyframes aeHeroPeriodBlink {
+@keyframes aeHeroPeriodFade {
   0%,
   100% {
     opacity: 1;
