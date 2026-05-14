@@ -2,6 +2,11 @@
 
 ### May 13th
 
+#### 10:33PM PST - Release 5.0 hero typewriter sequence
+
+- Updated the homepage hero headline to cycle through Built For Performance, Built For Drivers, and Backed By Passion.
+- Slowed the typewriter timing, added finite period blinks between phrases, and stopped on the final Passion headline.
+
 #### 5:18PM PST - Update Contacts dropdown links
 
 - Reduced the Contacts dropdown to Contact Us and Returns.
