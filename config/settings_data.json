@@ -1,5 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
+    "show_announcement": true,
+    "announcement_text": "Built for drivers. Backed by passion.",
+    "show_ticker": true,
+    "ticker_text": "Built for drivers. Backed by passion.",
     "color_background": "#08090A",
     "color_surface": "#151515",
     "color_surface_strong": "#262422",
@@ -9,10 +22,80 @@
     "color_accent_contrast": "#ffffff",
     "color_line": "#282828",
     "enable_sticky_header": true,
-    "show_announcement": true,
-    "announcement_text": "Built for drivers. Backed by passion.",
-    "show_ticker": true,
-    "ticker_text": "Built for drivers. Backed by passion.",
-    "page_width": 1240
+    "page_width": 1240,
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "menu": "main-menu"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "blocks": {
+          "footer-0": {
+            "type": "link_list",
+            "settings": {
+              "heading": "Shop",
+              "menu": "footer"
+            }
+          },
+          "footer-1": {
+            "type": "link_list",
+            "settings": {
+              "heading": "Support",
+              "menu": "footer"
+            }
+          },
+          "footer-2": {
+            "type": "link_list",
+            "settings": {
+              "heading": "Company",
+              "menu": "footer"
+            }
+          }
+        },
+        "block_order": [
+          "footer-0",
+          "footer-1",
+          "footer-2"
+        ],
+        "settings": {
+          "text": "Performance parts for Euro builds.",
+          "bottom_text": "Built for drivers. Backed by passion."
+        }
+      },
+      "popup-newsletter": {
+        "type": "popup-newsletter",
+        "settings": {
+          "enabled": true,
+          "delay_seconds": 3,
+          "eyebrow": "Welcome",
+          "heading": "Get 10% off your first order",
+          "subheading": "Join the list — we'll email you a code, plus drop alerts and build inspiration.",
+          "placeholder": "you@example.com",
+          "button_label": "Get my code",
+          "success_message": "Thanks! Check your inbox for your code.",
+          "fine_print": "One discount per customer. Unsubscribe anytime."
+        }
+      }
+    },
+    "content_for_index": [],
+    "blocks": {
+      "15683396631634586217": {
+        "type": "shopify://apps/inbox/blocks/chat/841fc607-4181-4ad1-842d-e24d7f8bad6b",
+        "disabled": false,
+        "settings": {
+          "button_color": "#db4a2b",
+          "secondary_color": "#FFFFFF",
+          "ternary_color": "#6A6A6A",
+          "button_icon": "team",
+          "button_text": "live_chat",
+          "button_horizontal_position": "bottom_right",
+          "button_vertical_position": "lowest",
+          "greeting_message": ""
+        }
+      }
+    }
   }
 }
