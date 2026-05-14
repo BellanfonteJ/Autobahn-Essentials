@@ -74,7 +74,7 @@ const initHeroTypewriterSequence = () => {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const typeDelay = 105;
   const eraseDelay = 55;
-  const blinkDuration = 1680;
+  const phraseHoldDuration = 4000;
 
   const wait = (duration) => new Promise((resolve) => {
     window.setTimeout(resolve, duration);
@@ -110,7 +110,7 @@ const initHeroTypewriterSequence = () => {
     periodElement.classList.remove('is-blinking');
     void periodElement.offsetWidth;
     periodElement.classList.add('is-visible', 'is-blinking');
-    await wait(blinkDuration);
+    await wait(phraseHoldDuration);
     periodElement.classList.remove('is-blinking');
   };
 

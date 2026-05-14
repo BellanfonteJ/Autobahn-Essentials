@@ -1071,10 +1071,15 @@ select option:hover {
   animation: none;
 }
 
+.hero h1[data-hero-typewriter] [data-hero-typewriter-accent] {
+  display: inline;
+}
+
 .hero h1[data-hero-typewriter] .hero-typewriter__period {
   min-width: 0.28em;
   opacity: 0;
   animation: none;
+  vertical-align: baseline;
 }
 
 .hero h1[data-hero-typewriter] .hero-typewriter__period.is-visible {
@@ -1082,7 +1087,7 @@ select option:hover {
 }
 
 .hero h1[data-hero-typewriter] .hero-typewriter__period.is-blinking {
-  animation: aeHeroPeriodBlink 0.42s steps(1, end) 4 both;
+  animation: aeHeroPeriodBlink 1s steps(1, end) 4 both;
 }
 
 @keyframes aeHeroTypewriter {
