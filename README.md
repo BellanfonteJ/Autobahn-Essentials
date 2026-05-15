@@ -2,6 +2,11 @@
 
 ### May 14th
 
+#### 11:48PM PST - Release 5.5 restore 5.1 hero treatment with new image
+
+- Reverted the homepage hero CSS to the 5.1 treatment: restored the `autobahn-hero.svg` underlay, the dark left-to-right and bottom gradient overlays, and `object-fit: cover` at `center 58%` desktop / `62% center` mobile.
+- Kept the new `AE-hero4.png` artwork wired up as the hero fallback so the polished 5.1 fitment now frames the new orange BMW M4 image.
+
 #### 11:32PM PST - Release 5.4 restore 5.1 hero crop
 
 - Restored the exact hero `object-position` values used in tag 5.1: `center 58%` on desktop and `62% center` on mobile so the new transparent hero artwork sits with the same fitment as the previous fallback image.

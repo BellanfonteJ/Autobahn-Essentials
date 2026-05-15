@@ -963,7 +963,15 @@ select option:hover {
 }
 
 .hero::before {
-  content: none;
+  content: "";
+  position: absolute;
+  inset: 0 0 calc(-1 * clamp(110px, 12vw, 210px));
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.72) 44%, rgba(0, 0, 0, 0.18) 100%),
+    linear-gradient(180deg, transparent 54%, rgba(8, 9, 10, 0.22) 72%, rgba(8, 9, 10, 0.9) 100%),
+    url("autobahn-hero.svg");
+  background-size: cover;
+  background-position: center;
 }
 
 .hero__media {
@@ -978,11 +986,15 @@ select option:hover {
   height: 100%;
   object-fit: cover;
   object-position: center 58%;
-  background: transparent;
 }
 
 .hero__media::after {
-  content: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.62) 44%, rgba(0, 0, 0, 0.08) 100%),
+    linear-gradient(180deg, transparent 50%, rgba(8, 9, 10, 0.14) 66%, rgba(8, 9, 10, 0.58) 84%, rgba(8, 9, 10, 0.96) 100%);
 }
 
 .hero__content {
@@ -3937,8 +3949,18 @@ body.is-cart-open {
     inset: 0 0 calc(-1 * clamp(90px, 18vw, 150px));
   }
 
+  .hero::before {
+    background-position: 62% center;
+  }
+
   .hero__media img {
     object-position: 62% center;
+  }
+
+  .hero__media::after {
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.62) 52%, rgba(0, 0, 0, 0.12) 100%),
+      linear-gradient(180deg, transparent 42%, rgba(8, 9, 10, 0.18) 62%, rgba(8, 9, 10, 0.7) 84%, rgba(8, 9, 10, 0.98) 100%);
   }
 
   .hero__content {

@@ -3,7 +3,7 @@
     {%- if section.settings.image != blank -%}
       {{ section.settings.image | image_url: width: 2400 | image_tag: loading: 'eager', sizes: '100vw' }}
     {%- else -%}
-      <img src="{{ 'AE-hero4.png' | asset_url }}" alt="Autobahn Essentials hero" width="2400" height="1600" loading="eager" sizes="100vw">
+      <img src="{{ 'AE-hero4.png' | asset_url }}" alt="Orange BMW M4 in a parking garage" width="2400" height="1600" loading="eager" sizes="100vw">
     {%- endif -%}
   </div>
 
