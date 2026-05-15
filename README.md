@@ -2,6 +2,11 @@
 
 ### May 14th
 
+#### 11:24PM PST - Release 5.3 hero crop fix
+
+- Switched the new transparent hero image back to `object-fit: cover` so the artwork fills the hero area instead of letterboxing into a narrow centered band.
+- Tuned the hero crop position to keep the car centered after scaling on desktop and mobile.
+
 #### 11:10PM PST - Release 5.2 transparent hero over site background
 
 - Replaced the homepage hero fallback with the new `AE-hero4.png` transparent hero asset.
