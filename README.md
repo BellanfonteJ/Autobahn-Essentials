@@ -2,6 +2,10 @@
 
 ### May 14th
 
+#### 11:32PM PST - Release 5.4 restore 5.1 hero crop
+
+- Restored the exact hero `object-position` values used in tag 5.1: `center 58%` on desktop and `62% center` on mobile so the new transparent hero artwork sits with the same fitment as the previous fallback image.
+
 #### 11:24PM PST - Release 5.3 hero crop fix
 
 - Switched the new transparent hero image back to `object-fit: cover` so the artwork fills the hero area instead of letterboxing into a narrow centered band.

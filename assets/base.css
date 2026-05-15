@@ -977,7 +977,7 @@ select option:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 55%;
+  object-position: center 58%;
   background: transparent;
 }
 
@@ -3938,7 +3938,7 @@ body.is-cart-open {
   }
 
   .hero__media img {
-    object-position: center 60%;
+    object-position: 62% center;
   }
 
   .hero__content {
