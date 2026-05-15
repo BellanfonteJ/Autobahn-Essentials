@@ -1,5 +1,13 @@
 ## Changelog
 
+### May 14th
+
+#### 11:10PM PST - Release 5.2 transparent hero over site background
+
+- Replaced the homepage hero fallback with the new `AE-hero4.png` transparent hero asset.
+- Removed the dark gradient overlays and SVG underlay behind the hero so the global graphite-and-orange page background shows through the transparent areas of the new image.
+- Switched the hero media to `object-fit: contain` so the hero artwork keeps its full silhouette without edge cropping on desktop and mobile.
+
 ### May 13th
 
 #### 11:18PM PST - Release 5.1 homepage collection card refresh
