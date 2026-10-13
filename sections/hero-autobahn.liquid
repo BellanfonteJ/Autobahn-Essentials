@@ -1,9 +1,9 @@
 <section class="hero">
   <div class="hero__media">
     {%- if section.settings.image != blank -%}
-      {{ section.settings.image | image_url: width: 2400 | image_tag: loading: 'eager', sizes: '100vw' }}
+      {{ section.settings.image | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '640, 1200, 1800, 2400', sizes: '100vw' }}
     {%- else -%}
-      <img src="{{ 'AE-hero-new.png' | asset_url }}" alt="Orange Lamborghini Urus and BMW M4 parked on asphalt" width="6000" height="3376" loading="eager" sizes="100vw">
+      <img src="{{ 'AE-hero-2400.webp' | asset_url }}" srcset="{{ 'AE-hero-640.webp' | asset_url }} 640w, {{ 'AE-hero-1200.webp' | asset_url }} 1200w, {{ 'AE-hero-2400.webp' | asset_url }} 2400w" alt="Orange Lamborghini Urus and BMW M4 parked on asphalt" width="2400" height="1350" loading="eager" fetchpriority="high" sizes="100vw">
     {%- endif -%}
   </div>
 
@@ -11,17 +11,17 @@
     <h1
       class="hero-typewriter"
       data-hero-typewriter
-      data-hero-typewriter-sequence="Built For|Performance;Built For|Drivers;Backed By|Passion;Autobahn|Essentials"
-      aria-label="Built For Performance. Built For Drivers. Backed By Passion. Autobahn Essentials."
+      data-hero-typewriter-sequence="{{ section.settings.heading | default: 'Built For' | escape }}|{{ section.settings.accent_heading | default: 'Performance.' | remove_last: '.' | escape }};Built For|Drivers;Backed By|Passion;Autobahn|Essentials"
+      aria-label="{{ section.settings.heading | default: 'Built For' | escape }} {{ section.settings.accent_heading | default: 'Performance.' | escape }}"
     >
       <span class="hero-typewriter__line">
         <span class="hero-typewriter__reserve" aria-hidden="true">Backed By</span>
-        <span class="hero-typewriter__typing" data-hero-typewriter-base></span>
+        <span class="hero-typewriter__typing" data-hero-typewriter-base>{{ section.settings.heading | default: 'Built For' }}</span>
       </span>
       <em class="hero-typewriter__line hero-typewriter__line--accent">
         <span class="hero-typewriter__reserve" aria-hidden="true">Performance.</span>
         <span class="hero-typewriter__typing hero-typewriter__typing--accent">
-          <span data-hero-typewriter-accent></span><span class="hero-typewriter__period" data-hero-typewriter-period></span>
+          <span data-hero-typewriter-accent>{{ section.settings.accent_heading | default: 'Performance.' | remove_last: '.' }}</span><span class="hero-typewriter__period is-visible" data-hero-typewriter-period>.</span>
         </span>
       </em>
     </h1>

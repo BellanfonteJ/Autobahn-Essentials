@@ -8,7 +8,8 @@
     </div>
 
     <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
-      <input class="field" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+      <label class="visually-hidden" for="SearchQuery">{{ 'general.search.search' | t }}</label>
+      <input id="SearchQuery" class="field" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
       <button class="button" type="submit">{{ 'general.search.submit' | t }}</button>
     </form>
 
@@ -17,19 +18,20 @@
         class="garage-fitment-filter"
         data-fitment-filter-controls
         data-empty-message="No search results match your saved garage."
-        data-ready-template="Showing fits for [vehicle]. Matching products appear first."
+        data-ready-template="Potential matches for [vehicle] appear first on this page. Confirm fitment before ordering."
         data-empty-garage-message="Save a vehicle in My Garage to filter these results."
       >
         <label class="garage-fitment-filter__toggle">
           <input type="checkbox" data-fitment-filter-toggle>
-          <span>Show only parts for my garage</span>
+          <span>Show potential matches for my garage</span>
         </label>
         <button class="button button--secondary" type="button" data-garage-open>My Garage</button>
         <p data-fitment-filter-status>Save a vehicle in My Garage to filter these results.</p>
       </div>
 
       <div class="section-heading section--tight">
-        <p>{{ 'general.search.results_with_count' | t: count: search.results_count, terms: search.terms }}</p>
+        {%- assign escaped_search_terms = search.terms | escape -%}
+        <p>{{ 'general.search.results_with_count' | t: count: search.results_count, terms: escaped_search_terms }}</p>
       </div>
 
       {%- paginate search.results by 12 -%}
@@ -41,7 +43,7 @@
               <article class="article-card">
                 <div class="article-card__info">
                   <div class="eyebrow">{{ item.object_type }}</div>
-                  <h3 class="article-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                  <h3 class="article-card__title"><a href="{{ item.url }}">{{ item.title | escape }}</a></h3>
                   <p>{{ item.content | strip_html | truncate: 120 }}</p>
                 </div>
               </article>
@@ -50,7 +52,7 @@
             <div class="empty-state">{{ 'general.search.no_results' | t }}</div>
           {%- endfor -%}
         </div>
-        <div class="empty-state" data-fitment-empty hidden>No search results match your saved garage.</div>
+        <div class="empty-state" data-fitment-empty hidden>No potential matches on this page. Try another page or contact us to confirm fitment.</div>
 
         {%- if paginate.pages > 1 -%}
           <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">

@@ -63,18 +63,20 @@
 
   <div class="product-card__info">
     {%- if product.vendor != blank -%}
-      <div class="product-card__vendor">{{ product.vendor }}</div>
+      <div class="product-card__vendor">{{ product.vendor | escape }}</div>
     {%- endif -%}
     <h3 class="product-card__title">
-      <a href="{{ product.url }}">{{ product.title }}</a>
+      <a href="{{ product.url }}">{{ product.title | escape }}</a>
     </h3>
     {% render 'price', product: product %}
     {% render 'fitment-badge', product: product, context: 'card' %}
-    {%- if product.available -%}
+    {%- if product.available and product.has_only_default_variant -%}
       {%- form 'product', product, class: 'product-card__quick-buy' -%}
         <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
         <button class="button button--full" type="submit">{{ 'products.product.quick_buy' | t }}</button>
       {%- endform -%}
+    {%- elsif product.available -%}
+      <a class="button button--full" href="{{ product.url }}">{{ 'products.product.choose_options' | t }}</a>
     {%- else -%}
       <a class="button button--secondary button--full" href="{{ product.url }}">{{ 'products.product.view_details' | t }}</a>
     {%- endif -%}

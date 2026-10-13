@@ -1,5 +1,69 @@
 document.documentElement.classList.remove('no-js');
 
+const themeConfig = JSON.parse(document.querySelector('[data-theme-config]')?.textContent || '{}');
+const themeMessages = themeConfig.messages || {};
+const themeRoute = (path) => `${themeConfig.root || window.Shopify?.routes?.root || '/'}${path}`;
+const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+})[character]);
+
+let activeModal = null;
+let modalReturnFocus = null;
+
+const focusableElements = (element) => Array.from(element.querySelectorAll(
+  'a[href], button, input, select, textarea, [tabindex="0"]',
+)).filter((target) => target.tabIndex >= 0 && !target.disabled && !target.closest('[hidden], [inert]') && target.getClientRects().length);
+
+const openModal = (element, focusTarget) => {
+  if (activeModal && activeModal !== element) {
+    activeModal.dispatchEvent(new CustomEvent('ae:close-modal'));
+  }
+  if (activeModal !== element) modalReturnFocus = document.activeElement;
+  activeModal = element;
+  element.inert = false;
+  element.setAttribute('aria-hidden', 'false');
+  (focusTarget || focusableElements(element)[0])?.focus();
+};
+
+const closeModal = (element) => {
+  element.setAttribute('aria-hidden', 'true');
+  element.inert = true;
+  if (activeModal !== element) return;
+  activeModal = null;
+  modalReturnFocus?.focus();
+  modalReturnFocus = null;
+};
+
+document.addEventListener('keydown', (event) => {
+  const dialog = activeModal || (mobileNav?.classList.contains('is-open') ? mobileNav : null);
+  if (!dialog) return;
+  if (event.key === 'Escape' && activeModal) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    activeModal.dispatchEvent(new CustomEvent('ae:close-modal'));
+    return;
+  }
+  if (event.key !== 'Tab') return;
+  const targets = activeModal ? focusableElements(dialog) : [menuToggle, ...focusableElements(dialog)];
+  const first = targets[0];
+  const last = targets[targets.length - 1];
+  if (!first) {
+    event.preventDefault();
+    return;
+  }
+  if (!targets.includes(document.activeElement) || (event.shiftKey && document.activeElement === first)) {
+    event.preventDefault();
+    (event.shiftKey ? last : first).focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+});
+
+document.addEventListener('ae:open-modal', (event) => openModal(event.target));
+document.addEventListener('ae:modal-closed', (event) => closeModal(event.target));
+document.querySelectorAll('[role="dialog"][aria-hidden="false"]').forEach((dialog) => openModal(dialog));
+
 const searchToggle = document.querySelector('[data-search-toggle]');
 const searchDrawer = document.querySelector('[data-search-drawer]');
 const menuToggle = document.querySelector('[data-menu-toggle]');
@@ -9,6 +73,8 @@ const garageDrawer = document.querySelector('[data-garage-drawer]');
 const garageForm = document.querySelector('[data-garage-form]');
 const garageStorageKey = 'autobahn:garage';
 const garageFitOnlyStorageKey = 'autobahn:garageFitOnly';
+let garageMemory;
+let garageFitOnlyMemory;
 
 const initScrollReveal = () => {
   if (!document.body.classList.contains('template-index')) return;
@@ -124,6 +190,30 @@ const initHeroTypewriterSequence = () => {
 
     if (!sequence.length || !baseElement || !accentElement || !periodElement) return;
 
+    const reserves = typewriter.querySelectorAll('.hero-typewriter__reserve');
+    const fitHeading = () => {
+      typewriter.style.fontSize = '';
+      reserves.forEach((reserve, index) => {
+        let widestText = '';
+        let widestWidth = 0;
+        sequence.forEach((phrase) => {
+          const text = index === 0 ? phrase.base : `${phrase.accent}.`;
+          reserve.textContent = text;
+          const width = reserve.getBoundingClientRect().width;
+          if (width > widestWidth) { widestWidth = width; widestText = text; }
+        });
+        reserve.textContent = widestText;
+      });
+      const width = Math.max(...Array.from(reserves, (reserve) => reserve.parentElement.getBoundingClientRect().width));
+      const available = typewriter.clientWidth;
+      if (width > available) {
+        typewriter.style.fontSize = `${Math.floor(parseFloat(getComputedStyle(typewriter).fontSize) * available / width) - 1}px`;
+      }
+    };
+    fitHeading();
+    document.fonts?.ready.then(fitHeading);
+    window.addEventListener('resize', fitHeading);
+
     if (reducedMotion) {
       baseElement.textContent = finalPhrase.base;
       accentElement.textContent = finalPhrase.accent;
@@ -132,6 +222,9 @@ const initHeroTypewriterSequence = () => {
       return;
     }
 
+    baseElement.textContent = '';
+    accentElement.textContent = '';
+    periodElement.textContent = '';
     for (let index = 0; index < sequence.length; index += 1) {
       const phrase = sequence[index];
       const isFinalPhrase = index === sequence.length - 1;
@@ -162,12 +255,14 @@ const closeMobileMenu = () => {
   mobileNav.classList.remove('is-open');
   document.body.classList.remove('is-menu-open');
   menuToggle.setAttribute('aria-expanded', 'false');
+  if (mobileNav.contains(document.activeElement)) menuToggle.focus();
 };
 
 const closeSearchDrawer = () => {
   if (!searchToggle || !searchDrawer) return;
   searchDrawer.classList.remove('is-open');
   searchToggle.setAttribute('aria-expanded', 'false');
+  if (searchDrawer.contains(document.activeElement)) searchToggle.focus();
 };
 
 const cleanGarage = (garage = {}) => {
@@ -184,6 +279,7 @@ const cleanGarage = (garage = {}) => {
 const hasGarage = (garage) => Object.values(cleanGarage(garage)).some(Boolean);
 
 const readGarage = () => {
+  if (garageMemory !== undefined) return cleanGarage(garageMemory);
   try {
     return cleanGarage(JSON.parse(window.localStorage.getItem(garageStorageKey)) || {});
   } catch (error) {
@@ -193,104 +289,6 @@ const readGarage = () => {
 
 const normalizeText = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
-const productDescriptionTrustTerms = [
-  'guarantee',
-  'money back',
-  'warranty',
-  'in stock',
-  'same day',
-  'shipping',
-  'norton',
-  'secured',
-  'secure',
-  'motorsports',
-];
-
-const getProductDescriptionSignal = (element) => {
-  const imageSignals = Array.from(element.querySelectorAll('img'))
-    .map((image) => [image.alt, image.title, image.src].filter(Boolean).join(' '))
-    .join(' ');
-
-  return normalizeText(`${element.textContent || ''} ${imageSignals}`);
-};
-
-const getProductDescriptionBlockSignature = (element) => {
-  if (!(element instanceof HTMLElement)) return '';
-
-  const imageSources = Array.from(element.querySelectorAll('img'))
-    .map((image) => image.src)
-    .filter(Boolean)
-    .join('|');
-  const signal = getProductDescriptionSignal(element);
-
-  if (!signal && !imageSources) return '';
-  return `${element.tagName.toLowerCase()}|${signal}|${imageSources}`;
-};
-
-const removeDuplicateProductDescriptionBlocks = (description) => {
-  const seen = new Set();
-
-  Array.from(description.children).forEach((child) => {
-    if (isEmptyProductDescriptionElement(child)) return;
-
-    const signature = getProductDescriptionBlockSignature(child);
-    if (!signature || signature.length < 12) return;
-
-    if (seen.has(signature)) {
-      child.remove();
-    } else {
-      seen.add(signature);
-    }
-  });
-};
-
-const isEmptyProductDescriptionElement = (element) => (
-  element instanceof HTMLElement
-  && !element.querySelector('img')
-  && !getProductDescriptionSignal(element)
-);
-
-const isTrustProductDescriptionElement = (element) => {
-  if (!(element instanceof HTMLElement)) return false;
-  const signal = getProductDescriptionSignal(element);
-  return productDescriptionTrustTerms.some((term) => sourceHasTerm(signal, term));
-};
-
-const moveProductDescriptionTrustCluster = () => {
-  document.querySelectorAll('[data-product-description]').forEach((description) => {
-    removeDuplicateProductDescriptionBlocks(description);
-
-    const children = Array.from(description.children);
-    if (children.length < 2) return;
-
-    const firstContentIndex = children.findIndex((child) => !isEmptyProductDescriptionElement(child));
-    if (firstContentIndex < 0 || !isTrustProductDescriptionElement(children[firstContentIndex])) return;
-
-    const cluster = [];
-    for (let i = firstContentIndex; i < children.length; i += 1) {
-      const child = children[i];
-      const isTrustContent = isTrustProductDescriptionElement(child);
-      const isFollowUpTrustImage = cluster.length > 0 && child.querySelector('img');
-
-      if (isEmptyProductDescriptionElement(child) || isTrustContent || isFollowUpTrustImage) {
-        cluster.push(child);
-      } else {
-        break;
-      }
-    }
-
-    const hasRemainingDescription = children
-      .slice(firstContentIndex + cluster.length)
-      .some((child) => !isEmptyProductDescriptionElement(child));
-
-    if (!cluster.length || !hasRemainingDescription) return;
-
-    const trustGroup = document.createElement('div');
-    trustGroup.className = 'product-description__trust';
-    cluster.forEach((child) => trustGroup.appendChild(child));
-    description.appendChild(trustGroup);
-  });
-};
 
 const makeAliases = {
   bmw: ['bmw'],
@@ -390,8 +388,8 @@ const garageOptionLabels = {
 };
 
 const garageCascadeClears = {
-  make: ['model', 'chassis', 'trim'],
-  year: ['chassis', 'trim'],
+  make: ['year', 'model', 'chassis', 'trim'],
+  year: ['model', 'chassis', 'trim'],
   model: ['chassis', 'trim'],
   chassis: ['trim'],
 };
@@ -544,13 +542,28 @@ const getFitmentState = (source, garage) => {
 
   if (!normalizedSource) return 'empty';
 
-  const isUniversal = isUniversalFitment(normalizedSource);
-  const chassisMatch = clean.chassis && sourceHasAnyTerm(normalizedSource, getFitmentTerms(clean.chassis));
-  const modelMatch = clean.model && sourceHasTerm(normalizedSource, clean.model);
-  const trimMatch = clean.trim && sourceHasAnyTerm(normalizedSource, getFitmentTerms(clean.trim));
+  // Free-text fitment can contain exclusions or specs from a different vehicle.
+  if (/\b(does not fit|will not fit|not compatible|not for|except|excluding)\b/.test(normalizedSource)) {
+    return savedVehicle ? 'check' : 'empty';
+  }
+  const mentionedMakes = Object.values(makeAliases).filter((terms) => sourceHasAnyTerm(normalizedSource, terms));
   const makeMatch = clean.make && sourceHasAnyTerm(normalizedSource, getMakeTerms(clean.make));
-  const yearMatch = clean.year && sourceHasTerm(normalizedSource, clean.year);
-  const isFit = savedVehicle && (chassisMatch || (makeMatch && (modelMatch || yearMatch || trimMatch)));
+  if (clean.make && mentionedMakes.length && !makeMatch) return 'check';
+  const enginePattern = /\b(?:n\d{2}|b\d{2}|s\d{2}|ea888)\b/g;
+  const selectedEngine = normalizeText(clean.trim).match(enginePattern)?.[0];
+  const mentionedEngines = normalizedSource.match(enginePattern) || [];
+  if (selectedEngine && mentionedEngines.length && !mentionedEngines.includes(selectedEngine)) return 'check';
+
+  const mentionedYears = Array.from(String(source).matchAll(/\b((?:19|20)\d{2})(?:\s*[-\u2013]\s*((?:19|20)\d{2}))?\b/g));
+  if (clean.year && mentionedYears.length && !mentionedYears.some((match) => (
+    Number(clean.year) >= Number(match[1]) && Number(clean.year) <= Number(match[2] || match[1])
+  ))) return 'check';
+
+  const isUniversal = isUniversalFitment(normalizedSource);
+  const chassisMatch = clean.chassis && sourceHasTerm(normalizedSource, clean.chassis);
+  const modelMatch = clean.model && sourceHasTerm(normalizedSource, clean.model);
+  const trimMatch = clean.trim && sourceHasTerm(normalizedSource, clean.trim);
+  const isFit = savedVehicle && (chassisMatch || (makeMatch && modelMatch && trimMatch));
 
   if (savedVehicle && isFit) return 'fit';
   if (savedVehicle && isUniversal) return 'universal';
@@ -559,6 +572,7 @@ const getFitmentState = (source, garage) => {
 };
 
 const readGarageFitOnly = () => {
+  if (garageFitOnlyMemory !== undefined) return garageFitOnlyMemory;
   try {
     return window.localStorage.getItem(garageFitOnlyStorageKey) === 'true';
   } catch (error) {
@@ -567,6 +581,7 @@ const readGarageFitOnly = () => {
 };
 
 const writeGarageFitOnly = (value) => {
+  garageFitOnlyMemory = Boolean(value);
   try {
     window.localStorage.setItem(garageFitOnlyStorageKey, String(Boolean(value)));
   } catch (error) {
@@ -587,7 +602,7 @@ const updateFitmentBadges = (garage) => {
     let label = defaultLabel;
 
     if (savedVehicle && state === 'fit' && vehicle) {
-      label = replaceVehicleToken(badge.dataset.fitmentMatchTemplate || 'Fits your [vehicle]', vehicle);
+      label = replaceVehicleToken(badge.dataset.fitmentMatchTemplate || 'Possible fit for [vehicle]', vehicle);
     } else if (savedVehicle && state === 'universal') {
       label = badge.dataset.fitmentUniversal || 'Universal fit';
     } else if (savedVehicle && vehicle) {
@@ -671,26 +686,28 @@ const getGarageField = (form, key) => form.querySelector(`[name="${garageFieldNa
 
 const getCatalogMatches = (garage, omittedKey = '') => {
   const clean = cleanGarage(garage);
+  const cascade = ['make', 'year', 'model', 'chassis', 'trim'];
+  const parents = cascade.slice(0, cascade.indexOf(omittedKey));
 
   return garageVehicleCatalog.filter((entry) => {
-    if (omittedKey !== 'make' && clean.make && normalizeText(entry.make) !== normalizeText(clean.make)) {
+    if (parents.includes('make') && clean.make && normalizeText(entry.make) !== normalizeText(clean.make)) {
       return false;
     }
 
-    if (omittedKey !== 'model' && clean.model && normalizeText(entry.model) !== normalizeText(clean.model)) {
+    if (parents.includes('model') && clean.model && normalizeText(entry.model) !== normalizeText(clean.model)) {
       return false;
     }
 
-    if (omittedKey !== 'chassis' && clean.chassis && normalizeText(entry.chassis) !== normalizeText(clean.chassis)) {
+    if (parents.includes('chassis') && clean.chassis && normalizeText(entry.chassis) !== normalizeText(clean.chassis)) {
       return false;
     }
 
-    if (omittedKey !== 'year' && clean.year && !entry.years.includes(clean.year)) {
+    if (parents.includes('year') && clean.year && !entry.years.includes(clean.year)) {
       return false;
     }
 
     if (
-      omittedKey !== 'trim'
+      parents.includes('trim')
       && clean.trim
       && !entry.trims.some((trim) => normalizeText(trim) === normalizeText(clean.trim))
     ) {
@@ -709,8 +726,8 @@ const sortGarageOptions = (key, values) => {
   return unique.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 };
 
-const setSelectOptions = (field, key, values, selectedValue = '') => {
-  const currentValue = String(selectedValue || field.value || '').trim();
+const setSelectOptions = (field, key, values, selectedValue) => {
+  const currentValue = String(selectedValue ?? field.value ?? '').trim();
   const options = sortGarageOptions(key, values);
 
   if (currentValue && !options.some((option) => normalizeText(option) === normalizeText(currentValue))) {
@@ -740,14 +757,14 @@ const getGarageDraftFromForm = (form, fallbackGarage = {}) => {
 
   Object.keys(garageFieldNames).forEach((key) => {
     const field = getGarageField(form, key);
-    draft[key] = field?.value || fallback[key];
+    draft[key] = field ? field.value : fallback[key];
   });
 
   return cleanGarage(draft);
 };
 
-const populateGarageFormOptions = (form, fallbackGarage = {}) => {
-  const draft = getGarageDraftFromForm(form, fallbackGarage);
+const populateGarageFormOptions = (form, fallbackGarage = {}, force = false) => {
+  const draft = force ? cleanGarage(fallbackGarage) : getGarageDraftFromForm(form, fallbackGarage);
 
   Object.keys(garageFieldNames).forEach((key) => {
     const field = getGarageField(form, key);
@@ -779,17 +796,6 @@ const clearGarageDependentFields = (form, key) => {
   });
 };
 
-const setGarageFormValues = (form, garage, force = false) => {
-  const clean = cleanGarage(garage);
-
-  Object.entries(garageFieldNames).forEach(([key, name]) => {
-    const field = form.querySelector(`[name="${name}"]`);
-    if (field && (force || !field.value)) {
-      field.value = clean[key];
-    }
-  });
-};
-
 const getGarageFromForm = (form) => cleanGarage({
   year: form.querySelector('[name="vehicle_year"]')?.value,
   make: form.querySelector('[name="vehicle_make"]')?.value,
@@ -806,17 +812,8 @@ const getVehicleSearchValues = (payload) => {
     trim: payload.vehicle_trim,
     chassis: payload.vehicle_chassis,
   });
-  const visibleTerms = [
-    garage.year,
-    garage.make,
-    garage.model,
-    garage.chassis,
-    garage.trim,
-    payload.part_type,
-  ];
-  const expandedTerms = getFitmentTerms(garage.model, garage.chassis, garage.trim);
-
-  return Array.from(new Set([...visibleTerms, ...expandedTerms].filter(Boolean)));
+  // Shopify combines search words; adding every alias makes valid parts disappear.
+  return [garage.chassis || garage.trim || garage.model || garage.make, payload.part_type].filter(Boolean);
 };
 
 const updateGarageUI = (garage) => {
@@ -828,15 +825,11 @@ const updateGarageUI = (garage) => {
   const garageIndicator = garageToggle?.querySelector('[data-garage-indicator]');
 
   if (garageForm) {
-    populateGarageFormOptions(garageForm, clean);
-    setGarageFormValues(garageForm, clean, true);
-    populateGarageFormOptions(garageForm, clean);
+    populateGarageFormOptions(garageForm, clean, true);
   }
 
   document.querySelectorAll('[data-garage-save]').forEach((form) => {
-    populateGarageFormOptions(form, clean);
-    setGarageFormValues(form, clean, !savedVehicle);
-    populateGarageFormOptions(form, clean);
+    populateGarageFormOptions(form, clean, true);
   });
 
   if (garageTitle) {
@@ -863,6 +856,7 @@ const updateGarageUI = (garage) => {
 
 const writeGarage = (garage) => {
   const clean = cleanGarage(garage);
+  garageMemory = clean;
 
   try {
     if (hasGarage(clean)) {
@@ -881,6 +875,7 @@ const closeGarageDrawer = () => {
   if (!garageToggle || !garageDrawer) return;
   garageDrawer.classList.remove('is-open');
   garageToggle.setAttribute('aria-expanded', 'false');
+  if (garageDrawer.contains(document.activeElement)) garageToggle.focus();
 };
 
 const openGarageDrawer = () => {
@@ -946,7 +941,14 @@ document.querySelectorAll('[data-garage-form], [data-garage-save]').forEach((for
 });
 
 updateGarageUI(readGarage());
-moveProductDescriptionTrustCluster();
+
+window.addEventListener('storage', (event) => {
+  if (event.key === garageStorageKey || event.key === garageFitOnlyStorageKey || event.key === null) {
+    garageMemory = undefined;
+    garageFitOnlyMemory = undefined;
+    updateGarageUI(readGarage());
+  }
+});
 
 document.querySelectorAll('[data-fitment-filter-toggle]').forEach((toggle) => {
   toggle.addEventListener('change', () => {
@@ -989,6 +991,7 @@ if (menuToggle && mobileNav) {
     menuToggle.setAttribute('aria-expanded', String(isOpen));
     if (isOpen) closeSearchDrawer();
     if (isOpen) closeGarageDrawer();
+    if (isOpen) focusableElements(mobileNav)[0]?.focus();
   });
 
   mobileNav.addEventListener('click', (event) => {
@@ -1005,9 +1008,11 @@ if (menuToggle && mobileNav) {
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
+      const wasOpen = mobileNav.classList.contains('is-open');
       closeMobileMenu();
       closeSearchDrawer();
       closeGarageDrawer();
+      if (wasOpen) menuToggle.focus();
     }
   });
 
@@ -1130,17 +1135,15 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
     activeIndex = currentThumbIndex >= 0 ? currentThumbIndex : activeIndex;
     updateLightbox(activeIndex);
     lightbox.classList.add('is-open');
-    lightbox.setAttribute('aria-hidden', 'false');
     document.body.classList.add('is-gallery-lightbox-open');
-    lightboxCloseButtons[0]?.focus();
+    openModal(lightbox, lightbox.querySelector('.product-gallery-lightbox__close'));
   };
 
   const closeLightbox = () => {
     if (!lightbox) return;
     lightbox.classList.remove('is-open');
-    lightbox.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('is-gallery-lightbox-open');
-    openButton?.focus();
+    closeModal(lightbox);
   };
 
   const showPreviousImage = () => updateLightbox(activeIndex - 1);
@@ -1197,6 +1200,7 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
   updateMagnifierImage();
 
   openButton?.addEventListener('click', openLightbox);
+  lightbox?.addEventListener('ae:close-modal', closeLightbox);
   lightboxCloseButtons.forEach((button) => button.addEventListener('click', closeLightbox));
   lightboxPrev?.addEventListener('click', showPreviousImage);
   lightboxNext?.addEventListener('click', showNextImage);
@@ -1216,6 +1220,7 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
       showNextImage();
     }
   });
+  lightboxStage?.addEventListener('pointercancel', () => { swipeStartX = null; });
 
   document.addEventListener('keydown', (event) => {
     if (!lightbox?.classList.contains('is-open')) return;
@@ -1265,6 +1270,42 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
   });
 });
 
+document.querySelectorAll('[data-product-info]').forEach((info) => {
+  const form = info.querySelector('[data-product-form]');
+  const select = form?.querySelector('select[name="id"]');
+  const variantData = info.querySelector('[data-product-variants]');
+  if (!select || !variantData) return;
+  const variants = JSON.parse(variantData.content.textContent);
+
+  select.addEventListener('change', () => {
+    const variant = variants.find((item) => String(item.id) === select.value);
+    if (!variant) return;
+    form.dataset.variantAvailable = String(variant.available);
+    info.querySelector('[data-product-price]').innerHTML = variant.priceHTML;
+    const button = form.querySelector('[data-atc-main]');
+    button.disabled = !variant.available || form.dataset.submitting === 'true';
+    button.textContent = variant.available ? button.dataset.labelAvailable : button.dataset.labelUnavailable;
+    const stock = info.querySelector('[data-product-stock]');
+    stock.querySelector('.stock-counter__dot').className = `stock-counter__dot${variant.stockState === 'available' ? '' : ` stock-counter__dot--${variant.stockState}`}`;
+    stock.querySelector('span:last-child').textContent = variant.stockLabel;
+    info.querySelector('[data-product-sku]').textContent = variant.sku;
+    const notification = info.querySelector('[data-back-in-stock]');
+    notification.hidden = variant.available;
+    const body = notification.querySelector('[name="contact[body]"]');
+    body.value = `Back in stock request for ${info.querySelector('h1').textContent} - ${variant.title} (${variant.id})`;
+    const payment = form.querySelector('[data-product-payment]');
+    if (payment) payment.hidden = !variant.available;
+    const error = form.querySelector('[data-product-error]');
+    if (error) error.hidden = true;
+    const thumb = Array.from(info.closest('.product-page').querySelectorAll('[data-gallery-thumb]'))
+      .find((item) => item.dataset.mediaId === String(variant.imageId));
+    thumb?.click();
+    const url = new URL(window.location.href);
+    url.searchParams.set('variant', variant.id);
+    window.history.replaceState({}, '', url);
+  });
+});
+
 document.querySelectorAll('[data-vehicle-finder]').forEach((form) => {
   form.addEventListener('submit', () => {
     if (form.hasAttribute('data-garage-save')) {
@@ -1301,6 +1342,13 @@ renderSavedVehicleChips();
 document.querySelectorAll('.nav-dropdown').forEach((dropdown) => {
   const summary = dropdown.querySelector('summary');
   const desktopQuery = window.matchMedia('(min-width: 991px)');
+  dropdown.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && dropdown.open) {
+      event.stopPropagation();
+      dropdown.removeAttribute('open');
+      summary?.focus();
+    }
+  });
 
   dropdown.addEventListener('mouseenter', () => {
     if (desktopQuery.matches) {
@@ -1340,21 +1388,57 @@ document.querySelectorAll('.nav-dropdown').forEach((dropdown) => {
 const cartDrawer = document.querySelector('[data-cart-drawer]');
 const cartDrawerBody = document.querySelector('[data-cart-drawer-body]');
 const cartCountEls = document.querySelectorAll('[data-cart-count]');
+const cartError = cartDrawer?.querySelector('[data-cart-error]');
+let cartRequestQueue = Promise.resolve();
+let cartBusyCount = 0;
+let lastConfirmedCart;
+
+function queueCartRequest(task) {
+  const request = cartRequestQueue.then(task);
+  cartRequestQueue = request.catch(() => {});
+  return request;
+}
+
+function showCartError(message = '') {
+  if (!cartError) return;
+  cartError.textContent = message;
+  cartError.hidden = !message;
+}
+
+function setCartBusy(busy) {
+  cartBusyCount += busy ? 1 : -1;
+  cartDrawer?.setAttribute('aria-busy', String(cartBusyCount > 0));
+  cartDrawerBody?.querySelectorAll('button, input').forEach((control) => {
+    control.disabled = cartBusyCount > 0;
+  });
+}
+
+async function cartResponse(response) {
+  const data = await response.json();
+  if (!response.ok) {
+    const message = typeof data.description === 'string' ? data.description : data.message;
+    throw new Error(typeof message === 'string' ? message : themeMessages.cartError);
+  }
+  return data;
+}
 
 function openCartDrawer() {
   if (!cartDrawer) return;
+  closeMobileMenu();
+  closeSearchDrawer();
+  closeGarageDrawer();
   cartDrawer.classList.add('is-open');
-  cartDrawer.setAttribute('aria-hidden', 'false');
   document.body.classList.add('is-cart-open');
   document.querySelectorAll('[data-cart-drawer-open]').forEach((el) => el.setAttribute('aria-expanded', 'true'));
+  openModal(cartDrawer, cartDrawer.querySelector('.cart-drawer__header button'));
 }
 
 function closeCartDrawer() {
   if (!cartDrawer) return;
   cartDrawer.classList.remove('is-open');
-  cartDrawer.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('is-cart-open');
   document.querySelectorAll('[data-cart-drawer-open]').forEach((el) => el.setAttribute('aria-expanded', 'false'));
+  closeModal(cartDrawer);
 }
 
 function updateCartCount(count) {
@@ -1365,19 +1449,20 @@ function updateCartCount(count) {
   });
 }
 
-function formatMoney(cents) {
-  return '$' + (cents / 100).toFixed(2);
+function formatMoney(cents, currency = themeConfig.currency || window.Shopify?.currency?.active || 'USD') {
+  return new Intl.NumberFormat(document.documentElement.lang || 'en', { style: 'currency', currency }).format(cents / 100);
 }
 
 function renderCartDrawer(cart) {
   if (!cartDrawerBody) return;
+  lastConfirmedCart = cart;
   updateCartCount(cart.item_count);
 
   if (cart.item_count === 0) {
     cartDrawerBody.innerHTML = `
       <div class="empty-state cart-drawer__empty">
-        <p>Your cart is ready for its first upgrade.</p>
-        <a class="button" href="/collections/all" data-cart-drawer-close>Continue shopping</a>
+        <p>${escapeHTML(themeMessages.empty || 'Your cart is ready for its first upgrade.')}</p>
+        <a class="button" href="${escapeHTML(themeConfig.allProductsUrl || themeRoute('collections/all'))}">${escapeHTML(themeMessages.continueShopping || 'Continue shopping')}</a>
       </div>`;
     const footer = cartDrawer.querySelector('.cart-drawer__footer');
     if (footer) footer.remove();
@@ -1385,20 +1470,20 @@ function renderCartDrawer(cart) {
   }
 
   const itemsHtml = cart.items.map((item, i) => `
-    <li class="cart-drawer__item" data-cart-line="${i + 1}" data-key="${item.key}">
-      ${item.image ? `<a href="${item.url}" class="cart-drawer__thumb"><img src="${item.image}" loading="lazy" alt=""></a>` : ''}
+    <li class="cart-drawer__item" data-cart-line="${i + 1}" data-key="${escapeHTML(item.key)}">
+      ${item.image ? `<a href="${escapeHTML(item.url)}" class="cart-drawer__thumb"><img src="${escapeHTML(item.image)}" loading="lazy" alt="${escapeHTML(item.product_title)}"></a>` : ''}
       <div class="cart-drawer__details">
-        <a class="cart-drawer__title" href="${item.url}">${item.product_title}</a>
-        ${item.variant_title && item.variant_title !== 'Default Title' ? `<p class="cart-drawer__variant">${item.variant_title}</p>` : ''}
+        <a class="cart-drawer__title" href="${escapeHTML(item.url)}">${escapeHTML(item.product_title)}</a>
+        ${item.variant_title && item.variant_title !== 'Default Title' ? `<p class="cart-drawer__variant">${escapeHTML(item.variant_title)}</p>` : ''}
         <div class="cart-drawer__line-row">
           <div class="cart-drawer__qty">
-            <button type="button" data-cart-qty-decrement aria-label="Decrease quantity">&minus;</button>
-            <input type="number" min="0" value="${item.quantity}" data-cart-qty-input aria-label="Quantity">
-            <button type="button" data-cart-qty-increment aria-label="Increase quantity">+</button>
+            <button type="button" data-cart-qty-decrement aria-label="${escapeHTML(themeMessages.decrease || 'Decrease quantity')}">&minus;</button>
+            <input type="number" min="0" step="1" value="${item.quantity}" data-cart-qty-input aria-label="${escapeHTML(themeMessages.quantity || 'Quantity')}">
+            <button type="button" data-cart-qty-increment aria-label="${escapeHTML(themeMessages.increase || 'Increase quantity')}">+</button>
           </div>
-          <span class="cart-drawer__line-price">${formatMoney(item.final_line_price)}</span>
+          <span class="cart-drawer__line-price">${escapeHTML(formatMoney(item.final_line_price, cart.currency))}</span>
         </div>
-        <button class="cart-drawer__remove eyebrow" type="button" data-cart-remove>Remove</button>
+        <button class="cart-drawer__remove eyebrow" type="button" data-cart-remove>${escapeHTML(themeMessages.remove || 'Remove')}</button>
       </div>
     </li>`).join('');
 
@@ -1407,42 +1492,50 @@ function renderCartDrawer(cart) {
   let footer = cartDrawer.querySelector('.cart-drawer__footer');
   const footerHtml = `
     <div class="cart-drawer__subtotal">
-      <span class="eyebrow">Subtotal</span>
-      <strong>${formatMoney(cart.total_price)}</strong>
+      <span class="eyebrow">${escapeHTML(themeMessages.subtotal || 'Subtotal')}</span>
+      <strong>${escapeHTML(formatMoney(cart.total_price, cart.currency))}</strong>
     </div>
-    <a class="button button--secondary" href="/cart">View cart</a>
-    <a class="button" href="/cart/checkout">Checkout</a>`;
+    <a class="button button--secondary" href="${escapeHTML(themeConfig.cartUrl || themeRoute('cart'))}">${escapeHTML(themeMessages.viewCart || 'View cart')}</a>
+    <a class="button" href="${escapeHTML(themeConfig.cartUrl || themeRoute('cart'))}/checkout">${escapeHTML(themeMessages.checkout || 'Checkout')}</a>`;
   if (!footer) {
     footer = document.createElement('footer');
     footer.className = 'cart-drawer__footer';
     cartDrawer.querySelector('.cart-drawer__panel').appendChild(footer);
   }
   footer.innerHTML = footerHtml;
+  cartDrawerBody.querySelectorAll('button, input').forEach((control) => { control.disabled = cartBusyCount > 0; });
 }
 
 async function refreshCart() {
-  try {
-    const res = await fetch('/cart.js', { headers: { Accept: 'application/json' } });
-    if (!res.ok) return;
-    const cart = await res.json();
-    renderCartDrawer(cart);
-  } catch (e) {
-    /* network error - leave drawer state alone */
-  }
+  const response = await fetch(themeRoute('cart.js'), { headers: { Accept: 'application/json' } });
+  renderCartDrawer(await cartResponse(response));
 }
 
 async function changeCartLine(key, quantity) {
+  if (!Number.isInteger(quantity) || quantity < 0) return;
+  showCartError();
+  const focusedControl = document.activeElement;
+  const focusAttribute = ['data-cart-qty-decrement', 'data-cart-qty-increment', 'data-cart-qty-input', 'data-cart-remove']
+    .find((attribute) => focusedControl?.hasAttribute(attribute));
+  setCartBusy(true);
   try {
-    const res = await fetch('/cart/change.js', {
+    await queueCartRequest(async () => {
+      const res = await fetch(themeRoute('cart/change.js'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({ id: key, quantity }),
+      });
+      renderCartDrawer(await cartResponse(res));
     });
-    if (!res.ok) return;
-    const cart = await res.json();
-    renderCartDrawer(cart);
-  } catch (e) {
-    /* swallow */
+  } catch (error) {
+    if (lastConfirmedCart) renderCartDrawer(lastConfirmedCart);
+    showCartError(error.message || themeMessages.cartError || 'Unable to update your cart. Please try again.');
+  } finally {
+    setCartBusy(false);
+    if (focusAttribute && !focusedControl.isConnected) {
+      const updatedLine = Array.from(cartDrawerBody.querySelectorAll('[data-key]')).find((line) => line.dataset.key === key);
+      (updatedLine?.querySelector(`[${focusAttribute}]`) || cartDrawer.querySelector('.cart-drawer__header button'))?.focus();
+    }
   }
 }
 
@@ -1450,8 +1543,9 @@ if (cartDrawer) {
   document.querySelectorAll('[data-cart-drawer-open]').forEach((el) => {
     el.addEventListener('click', (evt) => {
       evt.preventDefault();
+      showCartError();
       openCartDrawer();
-      refreshCart();
+      queueCartRequest(refreshCart).catch((error) => showCartError(error.message || themeMessages.cartError));
     });
   });
 
@@ -1464,14 +1558,15 @@ if (cartDrawer) {
     }
     const line = target.closest('[data-cart-line]');
     if (!line) return;
+    if (cartBusyCount > 0) return;
     const key = line.dataset.key;
     const input = line.querySelector('[data-cart-qty-input]');
     if (target.closest('[data-cart-remove]')) {
       changeCartLine(key, 0);
     } else if (target.closest('[data-cart-qty-decrement]')) {
-      changeCartLine(key, Math.max(0, parseInt(input.value, 10) - 1));
+      changeCartLine(key, Math.max(0, Number(input.value) - 1));
     } else if (target.closest('[data-cart-qty-increment]')) {
-      changeCartLine(key, parseInt(input.value, 10) + 1);
+      changeCartLine(key, Number(input.value) + 1);
     }
   });
 
@@ -1480,35 +1575,56 @@ if (cartDrawer) {
     if (!input) return;
     const line = input.closest('[data-cart-line]');
     if (!line) return;
-    changeCartLine(line.dataset.key, Math.max(0, parseInt(input.value, 10) || 0));
+    if (!input.value || !input.checkValidity() || cartBusyCount > 0) return;
+    changeCartLine(line.dataset.key, Number(input.value));
   });
 
   document.addEventListener('keydown', (evt) => {
     if (evt.key === 'Escape' && cartDrawer.classList.contains('is-open')) closeCartDrawer();
   });
+  cartDrawer.addEventListener('ae:close-modal', closeCartDrawer);
 
   document.addEventListener('submit', async (evt) => {
-    const form = evt.target.closest('form[action$="/cart/add"], form[action*="/cart/add"]');
-    if (!form) return;
+    const form = evt.target;
+    if (!(form instanceof HTMLFormElement) || !new URL(form.action).pathname.endsWith('/cart/add')) return;
     evt.preventDefault();
-    const submitBtn = form.querySelector('[type="submit"]');
+    if (form.dataset.submitting === 'true') return;
+    const submitBtn = evt.submitter || form.querySelector('[type="submit"]');
+    if (submitBtn?.disabled) return;
+    form.dataset.submitting = 'true';
+    const formData = new FormData(form);
+    let errorTarget = form.querySelector('[data-product-error]');
+    if (!errorTarget) {
+      errorTarget = document.createElement('p');
+      errorTarget.className = 'form-error';
+      errorTarget.dataset.productError = '';
+      errorTarget.setAttribute('role', 'alert');
+      form.appendChild(errorTarget);
+    }
+    errorTarget.hidden = true;
     if (submitBtn) submitBtn.setAttribute('disabled', '');
+    let added = false;
     try {
-      const res = await fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: new FormData(form),
-      });
-      if (res.ok) {
+      await queueCartRequest(async () => {
+        const res = await fetch(themeRoute('cart/add.js'), {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: formData,
+        });
+        await cartResponse(res);
+        added = true;
         await refreshCart();
-        openCartDrawer();
-      } else {
-        form.submit();
-      }
-    } catch (e) {
-      form.submit();
+      });
+      showCartError();
+      openCartDrawer();
+    } catch (error) {
+      errorTarget.textContent = added
+        ? themeMessages.addedButRefreshFailed || 'Your item was added. Open the cart before adding again.'
+        : error.message || themeMessages.cartError || 'Unable to update your cart. Please try again.';
+      errorTarget.hidden = false;
     } finally {
-      if (submitBtn) submitBtn.removeAttribute('disabled');
+      delete form.dataset.submitting;
+      if (submitBtn && form.dataset.variantAvailable !== 'false') submitBtn.removeAttribute('disabled');
     }
   });
 }
@@ -1531,10 +1647,12 @@ if (stickyHeader) {
 
     stickyHeader.classList.toggle('is-scrolled', y > shrinkAt);
 
-    if (y <= hideAt) {
+    const headerIsActive = stickyHeader.contains(document.activeElement)
+      || stickyHeader.querySelector('.is-open, details[open]');
+    if (y <= hideAt || headerIsActive) {
       stickyHeader.classList.remove('is-hidden');
       parkedY = y;
-    } else if (delta > intentDelta) {
+    } else if (delta > intentDelta || y - parkedY > 24) {
       stickyHeader.classList.add('is-hidden');
       parkedY = y;
     } else if (delta < -intentDelta || parkedY - y > 24) {
@@ -1554,17 +1672,19 @@ if (stickyHeader) {
 
   updateHeader();
   window.addEventListener('scroll', onScroll, { passive: true });
+  stickyHeader.addEventListener('focusin', () => stickyHeader.classList.remove('is-hidden'));
 }
 
 const backToTop = document.querySelector('[data-back-to-top]');
 if (backToTop) {
   const toggleBackToTop = () => {
     backToTop.classList.toggle('is-visible', window.scrollY > 640);
+    backToTop.tabIndex = window.scrollY > 640 ? 0 : -1;
   };
 
   toggleBackToTop();
   window.addEventListener('scroll', toggleBackToTop, { passive: true });
   backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   });
 }

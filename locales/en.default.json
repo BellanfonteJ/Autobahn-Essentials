@@ -18,7 +18,8 @@
   },
   "newsletter": {
     "label": "Email address",
-    "button_label": "Join"
+    "button_label": "Join",
+    "success": "Thanks for subscribing."
   },
   "sections": {
     "header": {
@@ -34,6 +35,11 @@
       "subtotal": "Subtotal",
       "update": "Update cart",
       "checkout": "Checkout",
+      "view_cart": "View cart",
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity",
+      "error": "We couldn't update your cart. Check your connection and try again.",
+      "added_refresh_error": "Your item was added, but the cart couldn't refresh. Open the cart to review it before adding again.",
       "headings": {
         "product": "Product",
         "quantity": "Quantity",
@@ -55,14 +61,16 @@
       "products": "products",
       "add_to_cart": "Add to cart",
       "quick_buy": "Quick buy",
+      "choose_options": "Choose options",
       "view_details": "View details",
       "sold_out": "Sold out",
-      "in_stock": "In stock and ready to ship",
+      "in_stock": "In stock",
+      "available_to_order": "Available to order",
       "low_stock": "Only {{ count }} left - order soon",
       "back_in_stock": "Get notified when this is back",
       "fitment_check": "Check fitment",
       "fitment_check_vehicle": "Check fitment for {{ vehicle }}",
-      "fitment_match": "Fits your {{ vehicle }}",
+      "fitment_match": "Possible fit for {{ vehicle }}",
       "fitment_universal": "Universal fit",
       "fitment_fallback": "Fitment varies by chassis, trim, and supporting modifications. Confirm compatibility before ordering or contact the AE crew with your vehicle details.",
       "shipping_fallback": "Most in-stock items process quickly. Oversized, special-order, and freight items may require additional handling time.",
@@ -96,7 +104,7 @@
     "empty_title": "No vehicle saved",
     "empty_summary": "Save your vehicle to check product fitment across the shop.",
     "saved_title": "Your {{ vehicle }}",
-    "saved_summary": "Fitment badges are using this saved vehicle.",
+    "saved_summary": "Matches are suggestions. Confirm chassis, engine, and fitment notes before ordering.",
     "year": "Year",
     "make": "Make",
     "model": "Model",

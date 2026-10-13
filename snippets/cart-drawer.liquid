@@ -1,4 +1,4 @@
-<div class="cart-drawer" data-cart-drawer aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle">
+<div id="CartDrawer" class="cart-drawer" data-cart-drawer aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle" inert>
   <div class="cart-drawer__backdrop" data-cart-drawer-close tabindex="-1"></div>
   <aside class="cart-drawer__panel" aria-label="Shopping cart">
     <header class="cart-drawer__header">
@@ -8,11 +8,12 @@
       </button>
     </header>
 
+    <p class="form-error cart-drawer__error" data-cart-error role="alert" hidden></p>
     <div class="cart-drawer__body" data-cart-drawer-body>
       {%- if cart.item_count == 0 -%}
         <div class="empty-state cart-drawer__empty">
           <p>{{ 'sections.cart.empty' | t }}</p>
-          <a class="button" href="{{ routes.all_products_collection_url }}" data-cart-drawer-close>{{ 'general.continue_shopping' | t }}</a>
+          <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a>
         </div>
       {%- else -%}
         <ul class="cart-drawer__items">
@@ -20,13 +21,13 @@
             <li class="cart-drawer__item" data-cart-line="{{ forloop.index }}" data-key="{{ item.key }}">
               {%- if item.image -%}
                 <a href="{{ item.url }}" class="cart-drawer__thumb">
-                  {{ item.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: item.image.alt | escape }}
+                  {{ item.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: item.image.alt }}
                 </a>
               {%- endif -%}
               <div class="cart-drawer__details">
-                <a class="cart-drawer__title" href="{{ item.url }}">{{ item.product.title }}</a>
+                <a class="cart-drawer__title" href="{{ item.url }}">{{ item.product.title | escape }}</a>
                 {%- unless item.product.has_only_default_variant -%}
-                  <p class="cart-drawer__variant">{{ item.variant.title }}</p>
+                  <p class="cart-drawer__variant">{{ item.variant.title | escape }}</p>
                 {%- endunless -%}
                 <div class="cart-drawer__line-row">
                   <div class="cart-drawer__qty">
@@ -50,7 +51,7 @@
           <span class="eyebrow">{{ 'sections.cart.subtotal' | t }}</span>
           <strong>{{ cart.total_price | money }}</strong>
         </div>
-        <a class="button button--secondary" href="{{ routes.cart_url }}">View cart</a>
+        <a class="button button--secondary" href="{{ routes.cart_url }}">{{ 'sections.cart.view_cart' | t }}</a>
         <a class="button" href="{{ routes.cart_url }}/checkout">{{ 'sections.cart.checkout' | t }}</a>
       </footer>
     {%- endif -%}

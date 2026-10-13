@@ -3,24 +3,24 @@
   <span aria-hidden="true">/</span>
   {%- if template.name == 'product' -%}
     {%- if collection -%}
-      <a href="{{ collection.url }}">{{ collection.title }}</a>
+      <a href="{{ collection.url }}">{{ collection.title | escape }}</a>
       <span aria-hidden="true">/</span>
     {%- elsif product.collections.first -%}
-      <a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a>
+      <a href="{{ product.collections.first.url }}">{{ product.collections.first.title | escape }}</a>
       <span aria-hidden="true">/</span>
     {%- endif -%}
-    <span>{{ product.title }}</span>
+    <span>{{ product.title | escape }}</span>
   {%- elsif template.name == 'collection' -%}
-    <span>{{ collection.title }}</span>
+    <span>{{ collection.title | escape }}</span>
   {%- elsif template.name == 'page' -%}
-    <span>{{ page.title }}</span>
+    <span>{{ page.title | escape }}</span>
   {%- elsif template.name == 'blog' -%}
-    <span>{{ blog.title }}</span>
+    <span>{{ blog.title | escape }}</span>
   {%- elsif template.name == 'article' -%}
-    <a href="{{ blog.url }}">{{ blog.title }}</a>
+    <a href="{{ blog.url }}">{{ blog.title | escape }}</a>
     <span aria-hidden="true">/</span>
-    <span>{{ article.title }}</span>
+    <span>{{ article.title | escape }}</span>
   {%- else -%}
-    <span>{{ page_title }}</span>
+    <span>{{ page_title | escape }}</span>
   {%- endif -%}
 </nav>

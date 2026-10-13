@@ -22,21 +22,26 @@
       <h2>{{ section.settings.form_heading }}</h2>
       {%- form 'contact', class: 'ae-contact-form' -%}
         {%- if form.posted_successfully? -%}
-          <div class="ae-form-status">{{ section.settings.success_text }}</div>
+          <div class="ae-form-status" role="status">{{ section.settings.success_text }}</div>
         {%- endif -%}
         {%- if form.errors -%}
-          <div class="ae-form-status">{{ form.errors | default_errors }}</div>
+          <div class="ae-form-status" role="alert">{{ form.errors | default_errors }}</div>
         {%- endif -%}
-        <input class="field" type="text" name="contact[name]" placeholder="Name" required>
-        <input class="field" type="email" name="contact[email]" placeholder="Email" required>
-        <input class="field" type="text" name="contact[vehicle]" placeholder="Vehicle">
-        <select class="field" name="contact[topic]">
+        <label class="visually-hidden" for="ContactName">Name</label>
+        <input id="ContactName" class="field" type="text" name="contact[name]" placeholder="Name" autocomplete="name" value="{{ form.name | escape }}" required>
+        <label class="visually-hidden" for="ContactEmail">Email</label>
+        <input id="ContactEmail" class="field" type="email" name="contact[email]" placeholder="Email" autocomplete="email" value="{{ form.email | escape }}" required>
+        <label class="visually-hidden" for="ContactVehicle">Vehicle</label>
+        <input id="ContactVehicle" class="field" type="text" name="contact[vehicle]" placeholder="Vehicle">
+        <label class="visually-hidden" for="ContactTopic">Topic</label>
+        <select id="ContactTopic" class="field" name="contact[topic]">
           <option value="Fitment check">Fitment check</option>
           <option value="Order support">Order support</option>
           <option value="Build advice">Build advice</option>
           <option value="Wholesale">Wholesale</option>
         </select>
-        <textarea class="field" name="contact[body]" placeholder="Tell us what you need" required></textarea>
+        <label class="visually-hidden" for="ContactBody">Message</label>
+        <textarea id="ContactBody" class="field" name="contact[body]" placeholder="Tell us what you need" required>{{ form.body | escape }}</textarea>
         <button class="button" type="submit">{{ section.settings.button_label }}</button>
       {%- endform -%}
     </div>

@@ -433,7 +433,7 @@ summary:focus-visible {
 
 .site-header--sticky {
   position: sticky;
-  top: 38px;
+  top: var(--announcement-height, 0px);
   will-change: transform;
   backface-visibility: hidden;
 }
@@ -446,7 +446,7 @@ summary:focus-visible {
   position: relative;
   min-height: 92px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 200px minmax(0, 1fr);
   align-items: center;
   gap: 24px;
   transition: min-height 220ms ease;
@@ -531,16 +531,16 @@ summary:focus-visible {
 }
 
 .header-logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
   z-index: 24;
-  width: min(34vw, 320px);
-  min-width: 220px;
+  width: 200px;
+  min-width: 0;
   min-height: 78px;
   display: grid;
   place-items: center;
-  transform: translate(-50%, -50%);
+  transform: none;
 }
 
 .site-nav {
@@ -556,8 +556,8 @@ summary:focus-visible {
   .site-nav > a,
   .site-nav .nav-dropdown,
   .header-actions {
-    opacity: 0;
-    visibility: hidden;
+    opacity: 1;
+    visibility: visible;
     transition: opacity 180ms ease, visibility 0s linear 180ms;
   }
 
@@ -585,15 +585,15 @@ summary:focus-visible {
 
   .template-product .header-actions [data-garage-toggle],
   .template-product .header-actions [data-search-toggle] {
-    width: 0;
+    width: 42px;
     min-width: 0;
-    border-width: 0;
+    border-width: 1px;
     padding: 0;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
     overflow: hidden;
-    transform: translateY(-4px);
+    transform: none;
     transition:
       width 180ms ease,
       border-width 180ms ease,
@@ -1052,10 +1052,10 @@ select option:hover {
   margin: 8px 0 18px;
   color: #fff;
   font-family: var(--font-heading);
-  font-size: clamp(3rem, 8vw, 7.9rem);
+  font-size: 112px;
   font-weight: 900;
   line-height: 0.84;
-  letter-spacing: -0.018em;
+  letter-spacing: 0;
   text-transform: uppercase;
   font-feature-settings: "ss01", "kern" 1;
   text-rendering: optimizeLegibility;
@@ -2172,6 +2172,11 @@ select option:hover {
   justify-items: center;
 }
 
+.product-page > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .product-gallery {
   display: grid;
   gap: 14px;
@@ -2734,6 +2739,23 @@ body.is-gallery-lightbox-open {
   height: auto;
   margin-right: auto;
   margin-left: auto;
+}
+
+.product-description iframe,
+.product-description video {
+  max-width: 100%;
+}
+
+.product-description iframe {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.product-description table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .product-description__trust {
@@ -4008,11 +4030,11 @@ body.is-cart-open {
   }
 
   .site-nav {
-    position: fixed;
-    inset: 0 auto 0 0;
+    position: absolute;
+    inset: 0 auto auto calc((100vw - 100%) / -2);
     width: min(82vw, 360px);
     height: 100vh;
-    height: 100dvh;
+    height: calc(100dvh - var(--announcement-height, 0px));
     flex-direction: column;
     justify-content: start;
     gap: 0;
@@ -4118,6 +4140,10 @@ body.is-cart-open {
     grid-template-columns: 1fr;
   }
 
+  .product-page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .vehicle-finder__form,
   .garage-form,
   .collection-tools__search,
@@ -4135,6 +4161,13 @@ body.is-cart-open {
 }
 
 @media (max-width: 640px) {
+  .product-card::before,
+  .collection-card::before,
+  .article-card::before,
+  .ae-build-card::before {
+    inset: 0;
+  }
+
   .page-width {
     width: min(100% - 24px, var(--page-width));
   }
@@ -4263,7 +4296,7 @@ body.is-cart-open {
   }
 
   .site-header--sticky {
-    top: 46px;
+    top: var(--announcement-height, 0px);
   }
 
   .promo-tiles,
@@ -5166,6 +5199,167 @@ select option:hover,
   margin: 16px 0 0;
   color: var(--color-muted);
   font-size: 0.78rem;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  --announcement-height: 0px;
+}
+
+body.has-ticker {
+  --announcement-height: 45px;
+}
+
+@media (min-width: 991px) {
+  .site-nav {
+    flex-wrap: wrap;
+  }
+
+  .header-actions {
+    grid-column: 3;
+  }
+}
+
+@media (min-width: 991px) and (max-width: 1200px) {
+  .site-nav {
+    gap: 10px;
+  }
+
+  .site-nav a,
+  .nav-dropdown summary {
+    font-size: 12px;
+  }
+
+  .header-logo,
+  .site-logo img {
+    max-width: 200px;
+  }
+}
+
+.form-error {
+  color: #ff9d91;
+  overflow-wrap: anywhere;
+}
+
+.button > svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+.product-gallery__zoom-button svg {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 24px;
+  height: 24px;
+  color: var(--color-text);
+}
+
+.cart-drawer__error {
+  margin: 12px 20px;
+}
+
+.product-info h1,
+.cart-drawer__title,
+.ae-card h3,
+.rte {
+  overflow-wrap: anywhere;
+}
+
+.newsletter-form {
+  flex-wrap: wrap;
+}
+
+.newsletter-form [role="status"],
+.newsletter-form [role="alert"] {
+  flex-basis: 100%;
+}
+
+.garage-drawer {
+  max-height: calc(100dvh - 92px - var(--announcement-height, 0px));
+  overflow-y: auto;
+}
+
+.no-js .hero h1 .hero-typewriter__reserve {
+  display: none;
+}
+
+.no-js .hero h1 .hero-typewriter__line {
+  width: auto;
+  max-width: 100%;
+}
+
+.no-js .hero h1 .hero-typewriter__typing {
+  position: static;
+  width: auto;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 990px) {
+  .no-js .mobile-menu-trigger,
+  .no-js [data-search-toggle],
+  .no-js [data-garage-toggle] {
+    display: none;
+  }
+
+  .no-js .site-nav {
+    position: static;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 16px;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .hero h1 {
+    font-size: 72px;
+  }
+}
+
+@media (max-width: 640px) {
+  body.has-ticker {
+    --announcement-height: 47px;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .hero__actions .button {
+    padding: 13px 16px;
+    gap: 8px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .site-header__inner {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+  }
+
+  .header-logo {
+    position: relative;
+    grid-column: 2;
+    top: auto;
+    left: auto;
+    width: min(132px, 100%);
+    justify-self: center;
+    transform: none;
+  }
+
+  .site-logo img {
+    max-width: 100%;
+  }
 }
 
 body.is-popup-open {
