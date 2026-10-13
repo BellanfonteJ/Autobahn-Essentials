@@ -1,5 +1,9 @@
 {%- assign dropdown_label = label | default: 'Contacts' -%}
-{%- assign returns_url = '/pages/returns' -%}
+{%- assign returns_url = routes.root_url | append: 'pages/shipping-returns' -%}
+{%- assign contact_url = routes.root_url | append: 'pages/contact' -%}
+{%- if pages['contact'] != blank -%}
+  {%- assign contact_url = pages['contact'].url -%}
+{%- endif -%}
 {%- if pages['shipping-returns'] != blank -%}
   {%- assign returns_url = pages['shipping-returns'].url -%}
 {%- elsif pages['returns'] != blank -%}
@@ -12,7 +16,7 @@
     <span class="nav-dropdown__chevron" aria-hidden="true"></span>
   </summary>
   <div class="nav-dropdown__menu">
-    <a href="/contact">Contact Us</a>
+    <a href="{{ contact_url }}">Contact Us</a>
     <a href="{{ returns_url }}">Returns</a>
   </div>
 </details>

@@ -1,4 +1,55 @@
+# Autobahn Essentials
+
+Custom Shopify Online Store 2.0 theme for European automotive performance parts. Shopify renders the Liquid templates directly; no frontend build step is required.
+
+## Local Development
+
+Open this repository folder in VS Code. With Node.js and pnpm installed, run:
+
+```sh
+pnpm install --frozen-lockfile
+pnpm theme:dev --store autobahnessentials.myshopify.com --theme 167398703161 --ignore 'assets/*.png' --nodelete
+```
+
+Complete Shopify's browser sign-in with an account that has Themes permission. The command targets the existing unpublished **Autobahn Essentials - Bug Fix Preview**, not the live theme.
+
+Open [http://127.0.0.1:9292](http://127.0.0.1:9292) in a browser, or use VS Code's **Browser: Open Integrated Browser** command and enter that URL. Older VS Code versions may provide **Simple Browser: Show** instead. Saving theme code updates the preview while the development server runs. Restart the command after closing the server; stop it with Ctrl+C.
+
+The PNG exclusion avoids re-uploading unchanged large images after intermittent connection failures. It does not synchronize new or edited PNG files. Upload those explicitly to the unpublished theme with `pnpm shopify theme push --store autobahnessentials.myshopify.com --theme 167398703161 --only assets/FILE.png --nodelete`.
+
+- [Shopify preview](https://autobahnessentials.myshopify.com/?preview_theme_id=167398703161)
+- [Preview theme editor](https://admin.shopify.com/store/autobahnessentials/themes/167398703161/editor)
+
+GitHub pushes and Shopify publication are separate operations. The bug-fix branch does not replace `main`, and this preview workflow does not publish the live theme. Review existing merchant settings before any full theme upload.
+
+## Verification
+
+```sh
+pnpm theme:check
+pnpm test
+pnpm theme:package
+```
+
+The current bug-fix pass has 27 passing browser regression tests and no Shopify Theme Check errors or warnings. Tests render the real Liquid source with representative Shopify data and mocked cart responses. They cover variants, cart failures and quantities, keyboard focus, escaping, garage preferences, and responsive layouts.
+
+Tests use installed Google Chrome on macOS or Playwright Chromium. If neither is available, run `pnpm exec playwright install chromium`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for another compatible Chromium installation. Set `THEME_SCREENSHOTS=1` to capture test screenshots in the ignored `.tools/screenshots/` folder.
+
+Real-store preview checks also verified product variants, cart add/update/remove, gallery navigation, mobile layout, and the contact page. Checkout, email delivery, and complete installed-app workflows remain unverified. No order was placed. See [BUGFIXES.md](BUGFIXES.md) for the full scope and remaining store-content tasks: footer menus, the Builds template assignment, and repeated imported descriptions. Garage matching is a browsing aid, not verified vehicle compatibility.
+
 ## Changelog
+
+### October 13, 2026
+
+#### Theme Bug Fixes and Regression Coverage
+
+- Updated variant prices, sale prices, SKU, availability, images, purchase controls, and restock forms when selecting options; multi-variant products require option selection before quick purchase.
+- Serialized cart requests, exposed failures without duplicate submissions, restored rejected quantities, and used locale-aware routes and returned currency.
+- Improved keyboard focus and Escape behavior for cart, gallery, mobile navigation, search, and garage controls; made hidden dialogs inert.
+- Fixed narrow-screen header, hero, product-video, fitment-table, and related-card overflow; retained usable navigation without JavaScript.
+- Synchronized garage preferences and dependent fields, reduced false-positive fitment claims, and simplified vehicle searches.
+- Escaped product/cart/search content and variant JSON, added accessible form feedback, and preserved authored product descriptions.
+- Replaced the 15.6 MB fallback hero download with responsive WebP images of approximately 30 KB, 75 KB, and 193 KB.
+- Added 27 browser regression tests and an authenticated, unpublished Shopify preview. The published theme remains unchanged.
 
 ### May 25th
 

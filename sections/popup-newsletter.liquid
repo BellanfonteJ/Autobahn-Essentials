@@ -8,6 +8,7 @@
     aria-modal="true"
     aria-labelledby="PopupNewsletterHeading"
     hidden
+    inert
   >
     <div class="popup-newsletter__backdrop" data-popup-close></div>
 
@@ -35,7 +36,7 @@
         {%- endif -%}
 
         <div class="popup-newsletter__form-wrap" data-popup-form-wrap>
-          {%- form 'customer', class: 'popup-newsletter__form', novalidate: 'novalidate' -%}
+          {%- form 'customer', id: 'PopupNewsletter', class: 'popup-newsletter__form' -%}
             <input type="hidden" name="contact[tags]" value="newsletter, popup-discount">
             <label class="visually-hidden" for="PopupNewsletterEmail">Email</label>
             <div class="popup-newsletter__row">
@@ -53,9 +54,9 @@
             </div>
 
             {%- if form.errors -%}
-              <p class="popup-newsletter__error">
+              <div class="popup-newsletter__error" data-popup-error role="alert">
                 {{ form.errors | default_errors }}
-              </p>
+              </div>
             {%- endif -%}
 
             {%- if form.posted_successfully? -%}
@@ -95,19 +96,28 @@
       }
 
       function open() {
+        if (document.querySelector('[role="dialog"][aria-hidden="false"]') || document.body.classList.contains('is-menu-open')) {
+          setTimeout(open, 1000);
+          return;
+        }
         popup.hidden = false;
+        popup.inert = false;
         popup.setAttribute('aria-hidden', 'false');
         document.body.classList.add('is-popup-open');
+        popup.dispatchEvent(new CustomEvent('ae:open-modal', { bubbles: true }));
         var input = popup.querySelector('input[type="email"]');
         if (input) setTimeout(function () { input.focus(); }, 50);
       }
 
       function close() {
+        popup.dispatchEvent(new CustomEvent('ae:modal-closed', { bubbles: true }));
         popup.setAttribute('aria-hidden', 'true');
         popup.hidden = true;
         document.body.classList.remove('is-popup-open');
         markDismissed();
       }
+
+      popup.addEventListener('ae:close-modal', close);
 
       popup.addEventListener('click', function (evt) {
         if (evt.target.closest('[data-popup-close]')) close();
@@ -119,9 +129,17 @@
 
       // if Shopify reloaded with the success state, persist & show briefly
       var success = popup.querySelector('[data-popup-success]');
-      var urlParams = new URLSearchParams(window.location.search);
-      if (success || urlParams.get('customer_posted') === 'true') {
+      if (success && window.location.hash && window.location.hash !== '#PopupNewsletter') {
         markSignedUp();
+        return;
+      }
+      if (success) {
+        markSignedUp();
+        open();
+        return;
+      }
+
+      if (popup.querySelector('[data-popup-error]')) {
         open();
         return;
       }

@@ -14,10 +14,17 @@
           {% render 'icon', icon: 'instagram' %}
           <span>@autobahnessentials</span>
         </a>
-        {%- form 'customer', class: 'newsletter-form' -%}
+        {%- form 'customer', id: 'FooterNewsletter', class: 'newsletter-form' -%}
           <input type="hidden" name="contact[tags]" value="newsletter">
-          <input class="field" type="email" name="contact[email]" placeholder="{{ 'newsletter.label' | t }}" required>
+          <label class="visually-hidden" for="FooterNewsletterEmail">{{ 'newsletter.label' | t }}</label>
+          <input id="FooterNewsletterEmail" class="field" type="email" name="contact[email]" placeholder="{{ 'newsletter.label' | t }}" autocomplete="email" required>
           <button class="button" type="submit">{{ 'newsletter.button_label' | t }}</button>
+          {%- if form.posted_successfully? -%}
+            <p role="status">{{ 'newsletter.success' | t }}</p>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <div role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
         {%- endform -%}
       </div>
 

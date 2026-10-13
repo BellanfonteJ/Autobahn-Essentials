@@ -26,8 +26,10 @@
       <form class="collection-tools__search" action="{{ routes.search_url }}" method="get" data-vehicle-finder>
         <input type="hidden" name="type" value="product">
         <input type="hidden" name="q" value="">
-        <input class="field" type="text" name="vehicle_model" placeholder="Search this category by vehicle or part">
-        <select class="select" name="part_type">
+        <label class="visually-hidden" for="CollectionSearchQuery">Vehicle or part</label>
+        <input id="CollectionSearchQuery" class="field" type="text" name="vehicle_model" placeholder="Search this category by vehicle or part">
+        <label class="visually-hidden" for="CollectionPartType">Part type</label>
+        <select id="CollectionPartType" class="select" name="part_type">
           <option value="">Part type</option>
           <option>Downpipes</option>
           <option>Turbo upgrade</option>
@@ -53,12 +55,12 @@
         class="garage-fitment-filter"
         data-fitment-filter-controls
         data-empty-message="No parts in this view match your saved garage."
-        data-ready-template="Showing fits for [vehicle]. Matching parts appear first."
+        data-ready-template="Potential matches for [vehicle] appear first on this page. Confirm fitment before ordering."
         data-empty-garage-message="Save a vehicle in My Garage to filter this collection."
       >
         <label class="garage-fitment-filter__toggle">
           <input type="checkbox" data-fitment-filter-toggle>
-          <span>Show only parts for my garage</span>
+          <span>Show potential matches for my garage</span>
         </label>
         <button class="button button--secondary" type="button" data-garage-open>My Garage</button>
         <p data-fitment-filter-status>Save a vehicle in My Garage to filter this collection.</p>
@@ -72,7 +74,7 @@
             {% render 'product-card', product: product %}
           {%- endfor -%}
         </div>
-        <div class="empty-state" data-fitment-empty hidden>No parts in this view match your saved garage.</div>
+        <div class="empty-state" data-fitment-empty hidden>No potential matches on this page. Try another page or contact us to confirm fitment.</div>
 
         {%- if paginate.pages > 1 -%}
           <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">

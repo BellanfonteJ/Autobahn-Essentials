@@ -29,7 +29,7 @@
             fetchpriority="high"
             sizes="(min-width: 990px) 58vw, 100vw"
           >
-          <button class="product-gallery__zoom-button" type="button" data-gallery-open aria-label="Open product image gallery"></button>
+          <button class="product-gallery__zoom-button" type="button" data-gallery-open aria-label="Open product image gallery">{% render 'icon', icon: 'search' %}</button>
           <div class="product-gallery__magnifier" data-gallery-magnifier aria-hidden="true"></div>
           <div class="product-gallery__cursor-dot" data-gallery-cursor-dot aria-hidden="true"></div>
         {%- else -%}
@@ -39,7 +39,7 @@
 
       {%- if gallery_images.size > 1 -%}
         <div class="product-thumbs">
-          {%- for media in gallery_images limit: 5 -%}
+          {%- for media in gallery_images -%}
             {%- assign thumb_image = media.preview_image -%}
             {%- assign is_active_thumb = false -%}
             {%- if media.id == product.featured_media.id -%}
@@ -53,6 +53,7 @@
               aria-label="{{ thumb_image.alt | default: product.title | escape }}"
               aria-current="{% if is_active_thumb %}true{% else %}false{% endif %}"
               data-gallery-thumb
+              data-media-id="{{ media.id }}"
               data-gallery-thumb-src="{{ thumb_image | image_url: width: 1400 }}"
               data-gallery-lightbox-src="{{ thumb_image | image_url: width: 2400 }}"
               data-gallery-thumb-srcset="
@@ -78,7 +79,7 @@
       {%- endif -%}
 
       {%- if featured_image -%}
-        <div class="product-gallery-lightbox" data-gallery-lightbox role="dialog" aria-modal="true" aria-label="Product image gallery" aria-hidden="true">
+        <div class="product-gallery-lightbox" data-gallery-lightbox role="dialog" aria-modal="true" aria-label="Product image gallery" aria-hidden="true" inert>
           <button class="product-gallery-lightbox__backdrop" type="button" data-gallery-lightbox-close aria-label="Close product image gallery"></button>
           <div class="product-gallery-lightbox__frame">
             <div class="product-gallery-lightbox__bar">
@@ -105,21 +106,24 @@
       {%- endif -%}
     </div>
 
-    <div class="product-info">
+    <div class="product-info" data-product-info>
       {%- assign current_variant = product.selected_or_first_available_variant -%}
       {%- if product.vendor != blank -%}
-        <div class="eyebrow">{{ product.vendor }}</div>
+        <div class="eyebrow">{{ product.vendor | escape }}</div>
       {%- endif -%}
-      <h1>{{ product.title }}</h1>
+      <h1>{{ product.title | escape }}</h1>
 
-      <div class="stock-counter">
+      <div class="stock-counter" data-product-stock aria-live="polite">
         {%- if current_variant.available -%}
           {%- if current_variant.inventory_management and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= section.settings.low_stock_threshold -%}
             <span class="stock-counter__dot stock-counter__dot--hot"></span>
             <span>{{ 'products.product.low_stock' | t: count: current_variant.inventory_quantity }}</span>
-          {%- else -%}
+          {%- elsif current_variant.inventory_management and current_variant.inventory_quantity > 0 -%}
             <span class="stock-counter__dot"></span>
             <span>{{ 'products.product.in_stock' | t }}</span>
+          {%- else -%}
+            <span class="stock-counter__dot"></span>
+            <span>{{ 'products.product.available_to_order' | t }}</span>
           {%- endif -%}
         {%- else -%}
           <span class="stock-counter__dot stock-counter__dot--out"></span>
@@ -128,7 +132,7 @@
       </div>
       {% render 'fitment-badge', product: product, context: 'product' %}
 
-      {%- form 'product', product, class: 'product-form', data-product-form: '' -%}
+      {%- form 'product', product, class: 'product-form', data-product-form: '', data-variant-available: current_variant.available -%}
         {%- if product.has_only_default_variant -%}
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
         {%- else -%}
@@ -136,8 +140,8 @@
             <label class="form-label" for="ProductSelect-{{ section.id }}">{{ 'products.product.variant' | t }}</label>
             <select class="select" id="ProductSelect-{{ section.id }}" name="id">
               {%- for variant in product.variants -%}
-                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
-                  {{ variant.title }}{% unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}
+                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
+                  {{ variant.title | escape }}{% unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}
                 </option>
               {%- endfor -%}
             </select>
@@ -150,8 +154,8 @@
         </div>
 
         <div class="product-buy-row">
-          {% render 'price', product: product %}
-          <button class="button" type="submit" name="add" data-atc-main{% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+          <div data-product-price aria-live="polite">{% render 'price', product: product, use_variant: true %}</div>
+          <button class="button" type="submit" name="add" data-atc-main data-label-available="{{ 'products.product.add_to_cart' | t | escape }}" data-label-unavailable="{{ 'products.product.sold_out' | t | escape }}"{% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
             {%- if product.selected_or_first_available_variant.available -%}
               {{ 'products.product.add_to_cart' | t }}
             {%- else -%}
@@ -160,8 +164,42 @@
           </button>
         </div>
 
-        {{ form | payment_button }}
+        <div data-product-payment{% unless current_variant.available %} hidden{% endunless %}>{{ form | payment_button }}</div>
+        <p class="form-error" data-product-error role="alert" hidden></p>
       {%- endform -%}
+
+      {%- capture product_variants_json -%}
+        [
+          {%- for variant in product.variants -%}
+            {%- capture variant_price -%}{% render 'price', product: product, variant: variant, use_variant: true %}{%- endcapture -%}
+            {%- assign stock_state = 'available' -%}
+            {%- capture stock_label -%}
+              {%- if variant.available == false -%}
+                {%- assign stock_state = 'out' -%}
+                {{- 'products.product.sold_out' | t -}}
+              {%- elsif variant.inventory_management and variant.inventory_quantity > 0 and variant.inventory_quantity <= section.settings.low_stock_threshold -%}
+                {%- assign stock_state = 'hot' -%}
+                {{- 'products.product.low_stock' | t: count: variant.inventory_quantity -}}
+              {%- elsif variant.inventory_management and variant.inventory_quantity > 0 -%}
+                {{- 'products.product.in_stock' | t -}}
+              {%- else -%}
+                {{- 'products.product.available_to_order' | t -}}
+              {%- endif -%}
+            {%- endcapture -%}
+            {
+              "id": {{ variant.id | json }},
+              "title": {{ variant.title | json }},
+              "available": {{ variant.available | json }},
+              "sku": {{ variant.sku | default: 'Contact for SKU' | json }},
+              "priceHTML": {{ variant_price | json }},
+              "stockLabel": {{ stock_label | json }},
+              "stockState": {{ stock_state | json }},
+              "imageId": {{ variant.featured_media.id | json }}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+      {%- endcapture -%}
+      <template data-product-variants>{{ product_variants_json | escape }}</template>
 
       <div class="trust-row">
         <div class="trust-pill">
@@ -182,17 +220,23 @@
         <div class="rte product-description" data-product-description>{{ product.description }}</div>
       {%- endif -%}
 
-      {%- unless current_variant.available -%}
-        {%- form 'contact', class: 'back-in-stock-form' -%}
+        {%- form 'contact', id: 'BackInStockForm', class: 'back-in-stock-form' -%}
+        <div data-back-in-stock{% if current_variant.available %}{% unless form.posted_successfully? or form.errors %} hidden{% endunless %}{% endif %}>
           <input type="hidden" name="contact[tags]" value="back-in-stock, {{ product.handle }}">
           <input type="hidden" name="contact[body]" value="Back in stock request for {{ product.title | escape }}">
+          {%- if form.posted_successfully? -%}
+            <p role="status">Your request was received.</p>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <div role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
           <label class="form-label" for="BackInStock-{{ section.id }}">{{ 'products.product.back_in_stock' | t }}</label>
           <div class="search-form">
             <input class="field" id="BackInStock-{{ section.id }}" type="email" name="contact[email]" placeholder="{{ 'newsletter.label' | t }}" required>
             <button class="button" type="submit">{{ 'newsletter.button_label' | t }}</button>
           </div>
+      </div>
         {%- endform -%}
-      {%- endunless -%}
 
       <div class="product-tabs">
         <details open>
@@ -202,19 +246,19 @@
               <tbody>
                 <tr>
                   <th>SKU</th>
-                  <td>{{ current_variant.sku | default: 'Contact for SKU' }}</td>
+                  <td data-product-sku>{{ current_variant.sku | default: 'Contact for SKU' | escape }}</td>
                 </tr>
                 <tr>
                   <th>Category</th>
-                  <td>{{ product.type | default: 'Performance parts' }}</td>
+                  <td>{{ product.type | default: 'Performance parts' | escape }}</td>
                 </tr>
                 <tr>
                   <th>Brand</th>
-                  <td>{{ product.vendor | default: shop.name }}</td>
+                  <td>{{ product.vendor | default: shop.name | escape }}</td>
                 </tr>
                 <tr>
                   <th>Build Style</th>
-                  <td>{{ product.metafields.custom.build_style.value | default: 'OEM+ / Performance' }}</td>
+                  <td>{{ product.metafields.custom.build_style.value | default: 'OEM+ / Performance' | escape }}</td>
                 </tr>
               </tbody>
             </table>

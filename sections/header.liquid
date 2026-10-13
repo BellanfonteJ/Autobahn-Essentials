@@ -31,7 +31,6 @@
       {%- if section.settings.menu.links.size > 0 -%}
         {%- assign has_home_link = false -%}
         {%- assign has_builds_link = false -%}
-        {%- assign has_ae_blog_link = false -%}
         {%- assign ae_blog_url = '/pages/ae-blog' -%}
         {%- assign has_contacts_link = false -%}
 
@@ -63,7 +62,6 @@
         {%- for link in section.settings.menu.links -%}
           {%- assign link_title = link.title | downcase | strip -%}
           {%- if link_title contains 'blog' -%}
-            {%- assign has_ae_blog_link = true -%}
             {%- assign ae_blog_url = link.url -%}
             {%- break -%}
           {%- endif -%}
@@ -75,6 +73,7 @@
           {%- if link_title contains 'contact' -%}
             {%- assign has_contacts_link = true -%}
             {% render 'contacts-dropdown', label: 'Contacts' %}
+            {%- break -%}
           {%- endif -%}
         {%- endfor -%}
         {%- unless has_contacts_link -%}
@@ -133,7 +132,8 @@
   <div id="HeaderSearch" class="search-drawer" data-search-drawer>
     <div class="page-width">
       <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
-        <input class="field" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+        <label class="visually-hidden" for="HeaderSearchQuery">{{ 'general.search.search' | t }}</label>
+        <input id="HeaderSearchQuery" class="field" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
         <button class="button" type="submit">{{ 'general.search.submit' | t }}</button>
       </form>
     </div>

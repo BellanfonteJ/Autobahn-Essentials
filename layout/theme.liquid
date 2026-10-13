@@ -14,10 +14,10 @@
     {%- endif -%}
 
     <title>
-      {{ page_title }}
-      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {{ page_title | escape }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' | escape }}"{% endif -%}
       {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name | escape }}{% endunless -%}
     </title>
 
     {%- if page_description -%}
@@ -61,7 +61,8 @@
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
   </head>
 
-  <body class="template-{{ template.name | handle }}">
+  <body class="template-{{ template.name | handle }}{% if settings.show_ticker %} has-ticker{% endif %}">
+    {% render 'theme-config' %}
     <a class="skip-to-content-link button button--secondary" href="#MainContent">
       {{ 'accessibility.skip_to_content' | t }}
     </a>

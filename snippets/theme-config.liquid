@@ -1,0 +1,21 @@
+<script type="application/json" data-theme-config>
+  {
+    "root": {{ routes.root_url | json }},
+    "currency": {{ cart.currency.iso_code | default: shop.currency | json }},
+    "cartUrl": {{ routes.cart_url | json }},
+    "allProductsUrl": {{ routes.all_products_collection_url | json }},
+    "messages": {
+      "cartError": {{ 'sections.cart.error' | t | json }},
+      "addedButRefreshFailed": {{ 'sections.cart.added_refresh_error' | t | json }},
+      "empty": {{ 'sections.cart.empty' | t | json }},
+      "continueShopping": {{ 'general.continue_shopping' | t | json }},
+      "decrease": {{ 'sections.cart.decrease' | t | json }},
+      "increase": {{ 'sections.cart.increase' | t | json }},
+      "quantity": {{ 'products.product.quantity.label' | t | json }},
+      "remove": {{ 'sections.cart.remove' | t | json }},
+      "subtotal": {{ 'sections.cart.subtotal' | t | json }},
+      "viewCart": {{ 'sections.cart.view_cart' | t | json }},
+      "checkout": {{ 'sections.cart.checkout' | t | json }}
+    }
+  }
+</script>

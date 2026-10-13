@@ -22,25 +22,31 @@
       <form class="ae-fitment-form" action="{{ routes.search_url }}" method="get" role="search" data-vehicle-finder data-garage-save>
         <input type="hidden" name="type" value="product">
         <input type="hidden" name="q" value="">
-        <select class="select" name="vehicle_year">
+        <label class="visually-hidden" for="FitmentYear-{{ section.id }}">Year</label>
+        <select id="FitmentYear-{{ section.id }}" class="select" name="vehicle_year">
           <option value="">Year</option>
         </select>
-        <select class="select" name="vehicle_make">
+        <label class="visually-hidden" for="FitmentMake-{{ section.id }}">Make</label>
+        <select id="FitmentMake-{{ section.id }}" class="select" name="vehicle_make">
           <option value="">Make</option>
           <option>BMW</option>
           <option>Audi</option>
           <option>Volkswagen</option>
         </select>
-        <select class="select" name="vehicle_model">
+        <label class="visually-hidden" for="FitmentModel-{{ section.id }}">Model</label>
+        <select id="FitmentModel-{{ section.id }}" class="select" name="vehicle_model">
           <option value="">Model</option>
         </select>
-        <select class="select" name="vehicle_chassis">
+        <label class="visually-hidden" for="FitmentChassis-{{ section.id }}">Chassis</label>
+        <select id="FitmentChassis-{{ section.id }}" class="select" name="vehicle_chassis">
           <option value="">Chassis</option>
         </select>
-        <select class="select" name="vehicle_trim">
+        <label class="visually-hidden" for="FitmentTrim-{{ section.id }}">Trim / Engine</label>
+        <select id="FitmentTrim-{{ section.id }}" class="select" name="vehicle_trim">
           <option value="">Trim / Engine</option>
         </select>
-        <select class="select" name="part_type">
+        <label class="visually-hidden" for="FitmentPart-{{ section.id }}">Part type</label>
+        <select id="FitmentPart-{{ section.id }}" class="select" name="part_type">
           <option value="">Part type</option>
           <option>Downpipes</option>
           <option>Turbo upgrade</option>

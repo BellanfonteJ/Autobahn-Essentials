@@ -28,12 +28,12 @@
                 <td>
                   <div class="cart-item">
                     {%- if item.image -%}
-                      {{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: item.image.alt | escape }}
+                      {{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: item.image.alt }}
                     {%- endif -%}
                     <div>
-                      <h3 class="product-card__title"><a href="{{ item.url }}">{{ item.product.title }}</a></h3>
+                      <h3 class="product-card__title"><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h3>
                       {%- unless item.product.has_only_default_variant -%}
-                        <p>{{ item.variant.title }}</p>
+                        <p>{{ item.variant.title | escape }}</p>
                       {%- endunless -%}
                       <a class="eyebrow" href="{{ item.url_to_remove }}">{{ 'sections.cart.remove' | t }}</a>
                     </div>
@@ -50,7 +50,7 @@
 
         <div class="cart-note">
           <label class="form-label" for="CartNote">{{ 'sections.cart.note' | t }}</label>
-          <textarea class="field" id="CartNote" name="note" rows="4" placeholder="{{ 'sections.cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+          <textarea class="field" id="CartNote" name="note" rows="4" placeholder="{{ 'sections.cart.note_placeholder' | t }}">{{ cart.note | escape }}</textarea>
         </div>
 
         <div class="cart-footer">
