@@ -22,6 +22,20 @@ The PNG exclusion avoids re-uploading unchanged large images after intermittent 
 
 GitHub pushes and Shopify publication are separate operations. The bug-fix branch does not replace `main`, and this preview workflow does not publish the live theme. Review existing merchant settings before any full theme upload.
 
+## GitHub and VS Code Sync
+
+The new garage updates are maintained on `codex/theme-bug-fixes` in [slimeraps/Autobahn-Essentials](https://github.com/slimeraps/Autobahn-Essentials/tree/codex/theme-bug-fixes), based on current `main` at `1b1a312`. The earlier motion and close-icon fixes were merged into `main` through PR #48. New branch pushes are not automatically merged into `main` or published to Shopify.
+
+For an existing checkout, preserve or commit any local work before switching branches, then run:
+
+```sh
+git fetch origin
+git switch codex/theme-bug-fixes
+git pull --ff-only origin codex/theme-bug-fixes
+```
+
+Open that checkout in VS Code and start the Local Development command above. Git pulls update your files; the running Shopify development server updates the unpublished preview when those files change. The original product CSV is not committed; the generated fitment catalog, importer, and review report are included.
+
 ## Verification
 
 ```sh
@@ -30,19 +44,44 @@ pnpm test
 pnpm theme:package
 ```
 
-The current suite has 33 passing browser regression tests and no Shopify Theme Check errors or warnings. Tests render the real Liquid source with representative Shopify data and mocked cart responses. They cover variants, cart failures and quantities, keyboard focus, escaping, garage preferences, responsive layouts, normal/reduced motion, theme-editor section reloads, and single close icons.
+The current suite has 49 regression tests: 45 browser checks and four CSV-import checks. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, and single close icons. Import tests require Python 3; set `PYTHON_EXECUTABLE` to select another Python installation.
 
 Tests use installed Google Chrome on macOS or Playwright Chromium. If neither is available, run `pnpm exec playwright install chromium`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for another compatible Chromium installation. Set `THEME_SCREENSHOTS=1` to capture test screenshots in the ignored `.tools/screenshots/` folder.
 
-Real-store preview checks also verified product variants, cart add/update/remove, gallery navigation, mobile layout, and the contact page. Checkout, email delivery, and complete installed-app workflows remain unverified. No order was placed. See [BUGFIXES.md](BUGFIXES.md) for the full scope and remaining store-content tasks: footer menus, the Builds template assignment, and repeated imported descriptions. Garage matching is a browsing aid, not verified vehicle compatibility.
+Earlier real-store preview checks verified product variants, cart add/update/remove, gallery navigation, mobile layout, and the contact page. The new CSV-backed garage is verified by browser fixtures, including the actual imported catalog; its complete real-store workflow still needs a preview check. Checkout, email delivery, and complete installed-app workflows remain unverified. No order was placed. See [BUGFIXES.md](BUGFIXES.md) for the full scope and remaining store-content tasks. Garage matching is a browsing aid, not a compatibility guarantee.
+
+## My Garage Fitment Data
+
+The garage uses explicit product-description fitment tables, keyed by product handle. It no longer guesses from product titles, tags, or broad platform aliases. Make, model, chassis, engine, and submodel/drive selectors share the same catalog; selecting a parent resets its dependent fields without clearing the independently entered year.
+
+The October 14 export contains 190 products. The import excludes three unpublished drafts, extracts 258 configurations for 130 published products, and leaves 57 published products without usable rows. Missing/ambiguous rows and description restrictions are listed in [FITMENT-IMPORT.md](FITMENT-IMPORT.md); 95 products require review. Prices, costs, inventory, SKUs, image URLs, and raw descriptions are not copied into the fitment asset.
+
+Model-year ranges are **not supplied**. Year is optional, and badges explicitly require year confirmation. A listed model/engine is not a guaranteed fit, and "not listed" is not proof of incompatibility. Unknown products are excluded from the match-only view but remain available in ordinary browsing.
+
+Collection/search filtering checks every paginated page using Shopify section rendering, preserving locale, collection tags, sort order, and search terms. It never presents a partially loaded collection as complete. Failed or invalid responses restore unfiltered results with a Retry button. Collections over 50 pages also fall back to unfiltered browsing.
+
+Complete vehicles are saved locally, synchronize between tabs, and can be cleared. Invalid legacy selections must be updated. If browser storage is blocked, the vehicle remains available for the current page and finder links carry the ordinary vehicle preference in the URL; no persistent-save claim is made. Without JavaScript, shoppers can still browse all parts.
+
+To refresh the catalog from a Shopify export:
+
+```sh
+python3 scripts/import-fitment.py /path/to/products_export.csv
+pnpm theme:check
+pnpm test
+```
+
+This regenerates `assets/fitment-data.js` and `FITMENT-IMPORT.md`. Keep the source CSV outside the repository. Review flagged rows before changing any compatibility claims. A separate, verified supplier year-range file is needed for exact model-year matching; this importer does not infer ranges from titles.
 
 ## Changelog
 
 ### October 14, 2026
 
+- Rebuilt My Garage around the supplied CSV's explicit fitment tables. Added validated cascading selectors, saved-vehicle synchronization, transparent unknown/restricted badges, and full collection/search pagination with failure recovery.
+- Added 12 garage browser tests and four importer tests, bringing the suite to 49. Updated responsive drawer controls and retained ordinary shopping when fitment data, storage, or JavaScript is unavailable.
+- Added a reproducible CSV importer and a fitment review report. No live product data, prices, inventory, or customer records were changed. These edits remain on the working bug-fix branch and unpublished preview, not the live theme.
 - Removed a duplicate close-icon case so newsletter, cart, and gallery buttons render a single X. Added a regression test and verified newsletter dismissal.
-- Verified all 33 browser regression tests and a clean Shopify Theme Check. The close-icon fix and motion improvements remain on the bug-fix branch and unpublished preview; the live theme is unchanged.
-- Based the follow-up on current `main` after the initial storefront fixes were merged in PR #47. Follow-up changes are kept on `codex/theme-bug-fixes` for review rather than pushed directly to `main`.
+- Verified all 33 browser regression tests and a clean Shopify Theme Check for the close-icon and motion fixes, subsequently merged into `main` through PR #48. Shopify publication remains separate.
+- Based the garage follow-up on current `main` at `1b1a312`, after PR #47 and PR #48 were merged. New changes are kept on `codex/theme-bug-fixes` for review rather than pushed directly to `main`.
 
 ### October 13, 2026
 

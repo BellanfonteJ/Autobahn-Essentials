@@ -399,8 +399,9 @@ summary:focus-visible {
 
 .vehicle-finder__form {
   display: grid;
-  grid-template-columns: 0.72fr 1fr 1fr 0.9fr 1.1fr 1.15fr auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
+  align-items: end;
 }
 
 .vehicle-finder__right {
@@ -973,8 +974,8 @@ summary:focus-visible {
 .garage-drawer__intro h2 {
   margin: 5px 0 6px;
   color: #fff;
-  font-size: clamp(1.2rem, 2vw, 1.8rem);
-  line-height: 1;
+  font-size: 20px;
+  line-height: 1.2;
   text-transform: uppercase;
 }
 
@@ -984,9 +985,15 @@ summary:focus-visible {
   font-size: 0.92rem;
 }
 
+.garage-drawer__intro {
+  position: relative;
+  padding-right: 56px;
+  overflow-wrap: anywhere;
+}
+
 .garage-form {
   display: grid;
-  grid-template-columns: 0.68fr 0.95fr 0.95fr 1fr 0.9fr auto auto auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   align-items: center;
 }
@@ -998,6 +1005,52 @@ summary:focus-visible {
 .garage-drawer__close {
   width: 48px;
   height: 48px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.garage-field {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.garage-field label {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.garage-field .select:disabled {
+  opacity: 0.55;
+}
+
+.garage-form__message,
+.garage-form__actions {
+  grid-column: 1 / -1;
+}
+
+.garage-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.garage-form__actions .button {
+  width: auto;
+  flex: 1 1 auto;
+}
+
+.garage-form__actions .garage-drawer__close {
+  flex: 0 0 48px;
+}
+
+.no-js [data-garage-save],
+.no-js [data-garage-toggle],
+.no-js [data-garage-open],
+.no-js [data-fitment-filter-controls] {
+  display: none;
 }
 
 .field,
@@ -3556,7 +3609,7 @@ body.is-gallery-lightbox-open {
 }
 
 .ae-fitment-form {
-  grid-template-columns: repeat(6, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: end;
 }
 
@@ -4289,7 +4342,6 @@ body.is-cart-open {
   .ae-grid-2,
   .ae-grid-3,
   .ae-grid-4,
-  .garage-form,
   .ae-fitment-form,
   .ae-policy-row {
     grid-template-columns: 1fr;
@@ -4299,8 +4351,10 @@ body.is-cart-open {
     padding: 16px 0;
   }
 
-  .garage-form .button {
-    width: 100%;
+  .garage-form__actions .button {
+    flex-basis: calc(50% - 4px);
+    padding-inline: 12px;
+    white-space: normal;
   }
 
   .garage-drawer__close {

@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { test, before, after } = require('node:test');
 const { chromium } = require('playwright');
-const { root, product, variants, renderSection, context, mount } = require('./helpers/theme.cjs');
+const { root, product, variants, fitmentData, renderSection, context, mount } = require('./helpers/theme.cjs');
 
 let browser;
 before(async () => {
@@ -305,13 +305,13 @@ test('empty-cart Continue shopping follows its collection link', async () => {
   });
 });
 
-const garage = { make: 'BMW', year: '2017', model: '3 Series', chassis: 'F30', trim: 'B58' };
+const garage = { make: 'BMW', year: '2017', model: '340i', chassis: 'F30', trim: 'B58', variant: '' };
 async function saveAudi(page) {
   await page.locator('[data-garage-toggle]').click();
   const form = page.locator('[data-garage-form]');
   await form.locator('[name="vehicle_make"]').selectOption('Audi');
   assert.equal(await form.locator('[name="vehicle_model"]').inputValue(), '');
-  await form.locator('[name="vehicle_year"]').selectOption('2019');
+  await form.locator('[name="vehicle_year"]').fill('2019');
   await form.locator('[name="vehicle_model"]').selectOption('S4');
   await form.locator('[name="vehicle_chassis"]').selectOption('B9');
   await form.locator('[name="vehicle_trim"]').selectOption('3.0T');
@@ -336,17 +336,16 @@ test('garage and filter preferences work when browser storage is disabled', asyn
     assert.equal(await page.locator('[data-fitment-filter-toggle]').isChecked(), true);
     assert.equal(await page.locator('[data-product-card]').isVisible(), false);
     assert.equal(await page.locator('[data-fitment-empty]').isVisible(), true);
-    assert.match(await page.locator('[data-garage-title]').textContent(), /Audi B9/);
+    assert.match(await page.locator('[data-garage-title]').textContent(), /Audi S4 \(B9\)/);
   });
 });
 
-test('fitment does not confirm matches based on a year, wrong engine, broad alias or exclusion', async () => {
+test('fitment uses complete explicit rows and never claims a model year is verified', async () => {
   await withPage({ garage }, async (page) => {
-    const sources = ['BMW 2017 G80 S58 intake', 'BMW F30 N55 pipe', 'Audi B9 intake', 'BMW F30 pipe does not fit 340i', 'BMW F30 2012-2015 pipe', 'BMW F22 240i intake'];
-    const states = await page.evaluate((sources) => sources.map((source) => getFitmentState(source, readGarage())), sources);
-    assert.deepEqual(states, sources.map(() => 'check'));
-    assert.equal(await page.evaluate(() => getFitmentState('BMW F30 B58 2012-2019 pipe', readGarage())), 'fit');
-    assert.match(await page.locator('[data-fitment-badge-text]').textContent(), /Possible fit/);
+    const states = await page.evaluate(() => ['wrong', 'cross', 'missing', 'restricted', 'test-part'].map((handle) => AEGarage.state(handle)));
+    assert.deepEqual(states, ['not-listed', 'not-listed', 'unknown', 'review', 'listed']);
+    assert.match(await page.locator('[data-fitment-badge-text]').textContent(), /confirm year/);
+    assert.equal(await page.locator('.fitment-badge.is-fit').count(), 0);
   });
 });
 
@@ -355,7 +354,216 @@ test('vehicle search does not require every engine and model alias simultaneousl
     await page.locator('[data-vehicle-finder] [name="part_type"]').selectOption('Intercooler');
     await page.locator('[data-vehicle-finder] button[type="submit"]').click();
     await page.waitForURL('**/search?**');
-    assert.equal(new URL(page.url()).searchParams.get('q'), 'F30 Intercooler');
+    assert.equal(new URL(page.url()).searchParams.get('q'), 'Intercooler');
+    assert.equal(await page.evaluate(() => localStorage.getItem('autobahn:garageFitOnly')), 'true');
+  });
+});
+
+test('garage rejects partial selections and asks legacy saved vehicles to be updated', async () => {
+  await withPage({ template: 'collection', garage: { ...garage, model: '3 Series' } }, async (page) => {
+    assert.match(await page.locator('[data-garage-title]').textContent(), /Update your saved vehicle/);
+    assert.equal(await page.locator('[data-fitment-filter-toggle]').isDisabled(), true);
+    await page.locator('[data-garage-toggle]').click();
+    const form = page.locator('[data-garage-form]');
+    await form.locator('[name="vehicle_make"]').selectOption('Audi');
+    await form.evaluate((form) => form.dispatchEvent(new Event('submit', { cancelable: true })));
+    assert.match(await form.locator('[data-garage-error]').textContent(), /complete listed vehicle/);
+    assert.equal(await page.locator('[data-garage-drawer]').isVisible(), true);
+    assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('autobahn:garage')).model), '3 Series');
+  });
+});
+
+test('selecting model, chassis and engine preserves the independently entered year', async () => {
+  await withPage({ garage }, async (page) => {
+    await page.locator('[data-garage-toggle]').click();
+    const form = page.locator('[data-garage-form]');
+    await form.locator('[name="vehicle_make"]').selectOption('Audi');
+    assert.equal(await form.locator('[name="vehicle_year"]').inputValue(), '2017');
+    assert.equal(await form.locator('[name="vehicle_chassis"]').isDisabled(), true);
+    await form.locator('[name="vehicle_model"]').selectOption('S4');
+    await form.locator('[name="vehicle_chassis"]').selectOption('B9');
+    await form.locator('[name="vehicle_trim"]').selectOption('3.0T');
+    assert.equal(await form.locator('[name="vehicle_year"]').inputValue(), '2017');
+    await form.locator('[name="vehicle_year"]').fill('3000');
+    await form.evaluate((form) => form.dispatchEvent(new Event('submit', { cancelable: true })));
+    assert.equal(await page.locator('[data-garage-drawer]').isVisible(), true);
+    assert.equal(await page.evaluate(() => AEGarage.read().make), 'BMW');
+  });
+});
+
+test('saved garage survives reload and responds to another tab changing storage', async () => {
+  await withPage({ garage }, async (page) => {
+    await saveAudi(page);
+    await page.reload();
+    assert.equal(await page.locator('[data-garage-form] [name="vehicle_model"]').inputValue(), 'S4');
+    await page.evaluate(() => {
+      localStorage.setItem('autobahn:garage', JSON.stringify({ make: 'BMW', model: '335i', chassis: 'E90', trim: 'N54', year: '2008' }));
+      window.dispatchEvent(new StorageEvent('storage', { key: 'autobahn:garage' }));
+    });
+    assert.match(await page.locator('[data-garage-title]').textContent(), /335i.*E90.*N54/);
+    assert.equal(await page.locator('[data-garage-form] [name="vehicle_trim"]').inputValue(), 'N54');
+    await page.reload();
+    assert.equal(await page.locator('[data-garage-form] [name="vehicle_model"]').inputValue(), '335i');
+  });
+});
+
+test('actual CSV catalog lists explicit N54 and N55 alternatives without title guessing', async () => {
+  const vehicle = { make: 'BMW', model: '335i', chassis: 'E90', trim: 'N54', year: '2008' };
+  await withPage({ actualFitment: true, garage: vehicle }, async (page) => {
+    const states = await page.evaluate(() => ({
+      downpipe: AEGarage.state('bmw-135i-n54-3-catless-downpipes'),
+      intercooler: AEGarage.state('135i-5-intercooler-fmic'),
+      n55Downpipe: AEGarage.state('bmw-135i-n54-3-catless-downpipes', { ...AEGarage.read(), trim: 'N55' }),
+      n55Intercooler: AEGarage.state('135i-5-intercooler-fmic', { ...AEGarage.read(), trim: 'N55' }),
+      unknown: AEGarage.state('bootmod3-n63t3-bmw-g-series-m550-750i-m850i-x5m50i-x6m50i-x7m50i-tune'),
+    }));
+    assert.ok(['listed', 'review'].includes(states.downpipe));
+    assert.ok(['listed', 'review'].includes(states.intercooler));
+    assert.equal(states.n55Downpipe, 'not-listed');
+    assert.ok(['listed', 'review'].includes(states.n55Intercooler));
+    assert.equal(states.unknown, 'unknown');
+  });
+});
+
+test('missing catalog fails closed and does not disable ordinary shopping', async () => {
+  await withPage({ template: 'collection', garage, fitmentData: { version: 1, vehicles: [], products: {} } }, async (page) => {
+    assert.equal(await page.locator('[data-fitment-filter-toggle]').isDisabled(), true);
+    assert.equal(await page.locator('[data-product-card]').isVisible(), true);
+    await page.locator('[data-garage-toggle]').click();
+    await page.locator('[data-garage-form]').evaluate((form) => form.dispatchEvent(new Event('submit', { cancelable: true })));
+    assert.match(await page.locator('[data-garage-error]').textContent(), /unavailable/);
+  });
+});
+
+test('storage-blocked finder navigation carries a validated vehicle without claiming persistence', async () => {
+  await withPage({ storageBlocked: true, finder: true }, async (page) => {
+    await saveAudi(page);
+    assert.match(await page.locator('[data-garage-summary]').textContent(), /this page only/);
+    await page.locator('[data-vehicle-finder] button[type="submit"]').click();
+    await page.waitForURL('**/collections/all?**');
+    const selection = JSON.parse(new URL(page.url()).searchParams.get('ae_vehicle'));
+    assert.equal(selection.model, 'S4');
+    assert.equal(await page.evaluate(() => AEGarage.read().model), 'S4');
+    await page.locator('[data-vehicle-clear]').click();
+    assert.equal(new URL(page.url()).searchParams.has('ae_vehicle'), false);
+  });
+});
+
+test('garage fields and actions fit phone, tablet and desktop without overlap', async () => {
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await withPage({ actualFitment: true, viewport: { width, height: 844 } }, async (page) => {
+      await page.locator('[data-garage-toggle]').click();
+      const form = page.locator('[data-garage-form]');
+      await form.locator('[name="vehicle_make"]').selectOption('BMW');
+      await form.locator('[name="vehicle_model"]').selectOption('335i');
+      await form.locator('[name="vehicle_chassis"]').selectOption('E90');
+      await form.locator('[name="vehicle_trim"]').selectOption('N54');
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      assert.deepEqual(await form.locator('.garage-field').evaluateAll((fields) => fields.filter((field) => field.scrollWidth > field.clientWidth).map((field) => field.textContent)), []);
+      const overlap = await form.locator('.garage-field, .garage-form__actions').evaluateAll((items) => {
+        const boxes = items.map((item) => item.getBoundingClientRect());
+        return boxes.some((a, index) => boxes.slice(index + 1).some((b) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1));
+      });
+      assert.equal(overlap, false);
+      if (process.env.THEME_SCREENSHOTS) {
+        fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/garage-csv-${width}.png`) });
+      }
+      await page.locator('[data-garage-close]').click();
+      assert.equal(await page.locator('[data-garage-toggle]').evaluate((element) => element === document.activeElement), true);
+    });
+  }
+});
+
+async function collectionPage(number, handle) {
+  return renderSection('main-collection-product-grid', context({
+    paginate: { pages: 2, current_page: number },
+    collection: { products: [{ ...product, handle, url: '/products/' + handle }], products_count: 2 },
+  }));
+}
+
+test('garage filtering includes later pages and restores pagination and original order when disabled', async () => {
+  await withPage({ template: 'collection', garage, paginate: { pages: 2 }, collection: { products: [{ ...product, handle: 'wrong' }] } }, async (page) => {
+    let requestURL;
+    await page.evaluate(() => history.replaceState({}, '', '/fr/collections/bmw/Charge-pipe?sort_by=price-ascending'));
+    await page.route('**/*section_id=*', async (route) => {
+      requestURL = new URL(route.request().url());
+      await route.fulfill({ contentType: 'text/html', body: await collectionPage(2, 'test-part') });
+    });
+    await page.locator('[data-fitment-filter-toggle]').check();
+    await page.waitForFunction(() => document.querySelector('[data-fitment-grid]').getAttribute('aria-busy') === 'false');
+    assert.equal(await page.locator('[data-product-card]:visible').count(), 1);
+    assert.equal(await page.locator('[data-product-card]:visible').getAttribute('data-product-handle'), 'test-part');
+    assert.equal(requestURL.pathname, '/fr/collections/bmw/Charge-pipe');
+    assert.equal(requestURL.searchParams.get('sort_by'), 'price-ascending');
+    assert.equal(requestURL.searchParams.get('page'), '2');
+    assert.equal(await page.locator('[data-fitment-pagination]').isVisible(), false);
+    await page.locator('[data-fitment-filter-toggle]').uncheck();
+    assert.equal(await page.locator('[data-product-card]').count(), 1);
+    assert.equal(await page.locator('[data-product-card]').getAttribute('data-product-handle'), 'wrong');
+    assert.equal(await page.locator('[data-fitment-pagination]').getAttribute('hidden'), null);
+  });
+});
+
+test('page-loading failures show unfiltered products and support retry without partial results', async () => {
+  await withPage({ template: 'collection', garage, paginate: { pages: 2 } }, async (page) => {
+    let fail = true;
+    await page.route('**/*section_id=*', async (route) => route.fulfill({
+      status: fail ? 500 : 200, contentType: 'text/html', body: fail ? 'Unavailable' : await collectionPage(2, 'wrong'),
+    }));
+    await page.locator('[data-fitment-filter-toggle]').check();
+    await page.locator('[data-fitment-retry]').waitFor({ state: 'visible' });
+    assert.equal(await page.locator('[data-product-card]:visible').count(), 1);
+    assert.equal(await page.locator('[data-fitment-filter-toggle]').isChecked(), false);
+    assert.match(await page.locator('[data-fitment-filter-status]').textContent(), /unfiltered/);
+    fail = false;
+    await page.locator('[data-fitment-retry]').click();
+    await page.waitForFunction(() => document.querySelector('[data-fitment-grid]').getAttribute('aria-busy') === 'false');
+    assert.equal(await page.locator('[data-fitment-filter-toggle]').isChecked(), true);
+    assert.equal(await page.locator('[data-fitment-retry]').isVisible(), false);
+    assert.equal(await page.locator('[data-product-card]:visible').count(), 1);
+  });
+});
+
+test('invalid section responses and excessive page counts do not masquerade as no matches', async () => {
+  for (const pages of [2, 51]) {
+    await withPage({ template: 'collection', garage, paginate: { pages } }, async (page) => {
+      await page.route('**/*section_id=*', (route) => route.fulfill({ contentType: 'text/html', body: '<section>Missing grid</section>' }));
+      await page.locator('[data-fitment-filter-toggle]').click();
+      await page.locator('[data-fitment-retry]').waitFor({ state: 'visible' });
+      assert.equal(await page.locator('[data-product-card]:visible').count(), 1);
+      assert.equal(await page.locator('[data-fitment-empty]').isVisible(), false);
+    });
+  }
+});
+
+test('turning the filter off during loading prevents stale results from replacing the original grid', async () => {
+  await withPage({ template: 'collection', garage, paginate: { pages: 2 } }, async (page) => {
+    let release;
+    const held = new Promise((resolve) => { release = resolve; });
+    await page.route('**/*section_id=*', async (route) => {
+      await held;
+      await route.fulfill({ contentType: 'text/html', body: await collectionPage(2, 'wrong') }).catch(() => {});
+    });
+    await page.locator('[data-fitment-filter-toggle]').check();
+    assert.equal(await page.locator('[data-fitment-grid]').getAttribute('aria-busy'), 'true');
+    await page.locator('[data-fitment-filter-toggle]').uncheck();
+    release();
+    await page.waitForFunction(() => document.querySelector('[data-fitment-grid]').getAttribute('aria-busy') === 'false');
+    assert.equal(await page.locator('[data-product-card]').count(), 1);
+    assert.equal(await page.locator('[data-product-card]').getAttribute('data-product-handle'), 'test-part');
+    assert.equal(await page.locator('[data-fitment-retry]').isVisible(), false);
+  });
+});
+
+test('submodel restrictions and explicit engine alternatives remain separate configurations', async () => {
+  const restricted = structuredClone(fitmentData);
+  restricted.vehicles.push({ make: 'Audi', model: 'A3', chassis: '8P', engine: '2.0T', variant: 'FWD', years: null });
+  restricted.products.drive = { records: [4], review: false };
+  await withPage({ fitmentData: restricted, garage: { make: 'Audi', model: 'A3', chassis: '8P', trim: '2.0T', variant: 'FWD' } }, async (page) => {
+    assert.equal(await page.evaluate(() => AEGarage.state('drive')), 'listed');
+    assert.equal(await page.evaluate(() => AEGarage.state('drive', { ...AEGarage.read(), variant: 'AWD' })), 'empty');
+    assert.equal(await page.locator('[data-garage-form] [name="vehicle_variant"]').inputValue(), 'FWD');
   });
 });
 

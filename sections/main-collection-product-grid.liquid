@@ -54,30 +54,28 @@
       <div
         class="garage-fitment-filter"
         data-fitment-filter-controls
-        data-empty-message="No parts in this view match your saved garage."
-        data-ready-template="Potential matches for [vehicle] appear first on this page. Confirm fitment before ordering."
-        data-empty-garage-message="Save a vehicle in My Garage to filter this collection."
       >
         <label class="garage-fitment-filter__toggle">
           <input type="checkbox" data-fitment-filter-toggle>
-          <span>Show potential matches for my garage</span>
+          <span>Show listed model / engine matches</span>
         </label>
         <button class="button button--secondary" type="button" data-garage-open>My Garage</button>
+        <button class="button button--secondary" type="button" data-fitment-retry hidden>Retry</button>
         <p data-fitment-filter-status>Save a vehicle in My Garage to filter this collection.</p>
       </div>
     </div>
 
     {%- paginate collection.products by section.settings.products_per_page -%}
       {%- if collection.products.size > 0 -%}
-        <div class="product-grid" data-fitment-grid>
+        <div class="product-grid" data-fitment-grid data-fitment-section="{{ section.id }}" data-fitment-pages="{{ paginate.pages }}" data-fitment-page="{{ paginate.current_page | default: 1 }}" data-fitment-url="{{ collection.url | escape }}">
           {%- for product in collection.products -%}
             {% render 'product-card', product: product %}
           {%- endfor -%}
         </div>
-        <div class="empty-state" data-fitment-empty hidden>No potential matches on this page. Try another page or contact us to confirm fitment.</div>
+        <div class="empty-state" data-fitment-empty hidden>No listed model / engine matches. Products without fitment data are excluded; contact us to confirm compatibility.</div>
 
         {%- if paginate.pages > 1 -%}
-          <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+          <nav class="pagination" data-fitment-pagination role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
             {{ paginate | default_pagination }}
           </nav>
         {%- endif -%}

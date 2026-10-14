@@ -17,35 +17,11 @@
           <input type="hidden" name="type" value="product">
           <input type="hidden" name="q" value="">
 
-          <label class="visually-hidden" for="FinderYear-{{ section.id }}">Year</label>
-          <select class="select" id="FinderYear-{{ section.id }}" name="vehicle_year">
-            <option value="">Year</option>
-          </select>
+        {%- assign field_prefix = 'Finder-' | append: section.id -%}
+        {% render 'garage-fields', prefix: field_prefix %}
 
-          <label class="visually-hidden" for="FinderMake-{{ section.id }}">Make</label>
-          <select class="select" id="FinderMake-{{ section.id }}" name="vehicle_make">
-            <option value="">Make</option>
-            <option>BMW</option>
-            <option>Audi</option>
-            <option>Volkswagen</option>
-          </select>
-
-          <label class="visually-hidden" for="FinderModel-{{ section.id }}">Model</label>
-          <select class="select" id="FinderModel-{{ section.id }}" name="vehicle_model">
-            <option value="">Model</option>
-          </select>
-
-          <label class="visually-hidden" for="FinderChassis-{{ section.id }}">Chassis</label>
-          <select class="select" id="FinderChassis-{{ section.id }}" name="vehicle_chassis">
-            <option value="">Chassis</option>
-          </select>
-
-          <label class="visually-hidden" for="FinderTrim-{{ section.id }}">Trim / Engine</label>
-          <select class="select" id="FinderTrim-{{ section.id }}" name="vehicle_trim">
-            <option value="">Trim / Engine</option>
-          </select>
-
-          <label class="visually-hidden" for="FinderPart-{{ section.id }}">Part type</label>
+        <div class="garage-field">
+          <label for="FinderPart-{{ section.id }}">Part type</label>
           <select class="select" id="FinderPart-{{ section.id }}" name="part_type">
             <option value="">Part type</option>
             <option>Downpipes</option>
@@ -55,12 +31,14 @@
             <option>Exterior styling</option>
             <option>Interior accessories</option>
           </select>
+        </div>
 
           <button class="button" type="submit">
             {{ section.settings.button_label }}
             {% render 'icon', icon: 'search' %}
           </button>
         </form>
+        <noscript><p>Vehicle matching requires JavaScript. <a href="{{ routes.all_products_collection_url }}">Browse all parts</a> or contact us for fitment confirmation.</p></noscript>
       </div>
     </div>
   </div>
