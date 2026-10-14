@@ -30,7 +30,7 @@ pnpm test
 pnpm theme:package
 ```
 
-The current bug-fix pass has 27 passing browser regression tests and no Shopify Theme Check errors or warnings. Tests render the real Liquid source with representative Shopify data and mocked cart responses. They cover variants, cart failures and quantities, keyboard focus, escaping, garage preferences, and responsive layouts.
+The current suite has 33 passing browser regression tests and no Shopify Theme Check errors or warnings. Tests render the real Liquid source with representative Shopify data and mocked cart responses. They cover variants, cart failures and quantities, keyboard focus, escaping, garage preferences, responsive layouts, normal/reduced motion, theme-editor section reloads, and single close icons.
 
 Tests use installed Google Chrome on macOS or Playwright Chromium. If neither is available, run `pnpm exec playwright install chromium`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for another compatible Chromium installation. Set `THEME_SCREENSHOTS=1` to capture test screenshots in the ignored `.tools/screenshots/` folder.
 
@@ -38,7 +38,22 @@ Real-store preview checks also verified product variants, cart add/update/remove
 
 ## Changelog
 
+### October 14, 2026
+
+- Removed a duplicate close-icon case so newsletter, cart, and gallery buttons render a single X. Added a regression test and verified newsletter dismissal.
+- Verified all 33 browser regression tests and a clean Shopify Theme Check. The close-icon fix and motion improvements remain on the bug-fix branch and unpublished preview; the live theme is unchanged.
+- Based the follow-up on current `main` after the initial storefront fixes were merged in PR #47. Follow-up changes are kept on `codex/theme-bug-fixes` for review rather than pushed directly to `main`.
+
 ### October 13, 2026
+
+#### Motion Polish
+
+- Added one-time, lightly staggered entrances to upcoming cards and section headings across browsing and editorial pages, rather than only the homepage.
+- Kept above-the-fold content immediate and all content visible when JavaScript or Intersection Observer is unavailable. Entrances stop on keyboard focus or a live reduced-motion preference change.
+- Separated entrance movement from existing hover transforms so card interactions still work. No scroll handlers, external animation library, permanent GPU hints, or layout-size animations were added.
+- Added short search/garage entrances, gallery/newsletter opening transitions, button-icon hover movement, and cart-count feedback after confirmed updates.
+- Added five regression tests, bringing the suite to 32. Motion checks include phone, tablet, desktop, cart actions, keyboard focus, and Shopify section load/unload behavior.
+- Motion additions are maintained on `codex/theme-bug-fixes` and synchronized to the unpublished preview. Publishing the live Shopify theme remains a separate step.
 
 #### Theme Bug Fixes and Regression Coverage
 

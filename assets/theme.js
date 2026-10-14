@@ -77,60 +77,70 @@ let garageMemory;
 let garageFitOnlyMemory;
 
 const initScrollReveal = () => {
-  if (!document.body.classList.contains('template-index')) return;
-
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
   const revealSelectors = [
-    '.main-content > .shopify-section > .section',
-    '.main-content > .shopify-section > .section--tight',
-    '.main-content > .shopify-section > .ae-page-hero',
     '.section-heading',
     '.collection-card',
     '.product-card',
     '.promo-tile',
     '.build-card',
+    '.ae-build-card',
     '.ae-page-card',
+    '.ae-card',
+    '.ae-blog-post',
+    '.spec-item',
     '.feature-list__item',
-    '.trust-pill',
   ];
-  const revealItems = Array.from(document.querySelectorAll(revealSelectors.join(',')))
-    .filter((element) => !element.closest('.site-header, .site-footer, .garage-drawer, .search-drawer, .cart-drawer, .product-gallery-lightbox, .popup-newsletter'));
+  const selector = revealSelectors.join(',');
+  const observer = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
+    entries.forEach(({ target, isIntersecting }) => {
+      if (!isIntersecting) return;
+      target.classList.add('is-scroll-revealed');
+      observer.unobserve(target);
+    });
+  }, { rootMargin: '0px 0px 72px 0px', threshold: 0.05 }) : null;
 
-  if (!revealItems.length) return;
+  const register = (scope) => {
+    const items = Array.from(scope.querySelectorAll(selector));
+    if (scope.matches?.(selector)) items.unshift(scope);
+    items.forEach((element) => {
+      if (element.classList.contains('scroll-reveal') || !element.closest('.main-content') ||
+          element.closest('.product-info, .product-gallery, [role="dialog"]')) return;
+      const siblings = Array.from(element.parentElement.children).filter((child) => child.matches(selector));
+      element.style.setProperty('--scroll-reveal-delay', `${Math.min(siblings.indexOf(element), 4) * 40}ms`);
+      element.classList.add('scroll-reveal');
 
-  revealItems.forEach((element, index) => {
-    const group = element.parentElement;
-    const siblings = group
-      ? Array.from(group.children).filter((child) => revealItems.includes(child))
-      : [];
-    const siblingIndex = siblings.indexOf(element);
-    const delayIndex = siblingIndex >= 0 ? siblingIndex % 6 : index % 6;
-
-    element.style.setProperty('--scroll-reveal-delay', `${delayIndex * 70}ms`);
-    element.classList.add('scroll-reveal');
-  });
-
-  const reveal = (element) => {
-    element.classList.add('is-scroll-revealed');
+      // Above-the-fold content stays immediate; only upcoming content gets an entrance.
+      if (motionPreference.matches || !observer || element.getBoundingClientRect().top < window.innerHeight) {
+        element.classList.add('is-scroll-revealed', 'is-motion-complete');
+      } else {
+        observer.observe(element);
+      }
+    });
   };
 
-  if (reducedMotion || !('IntersectionObserver' in window)) {
-    revealItems.forEach(reveal);
-    return;
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      reveal(entry.target);
-      observer.unobserve(entry.target);
-    });
-  }, {
-    rootMargin: '0px 0px -12% 0px',
-    threshold: 0.12,
+  document.addEventListener('animationend', (event) => {
+    if (event.animationName === 'ae-content-enter') event.target.classList.add('is-motion-complete');
   });
-
-  revealItems.forEach((element) => observer.observe(element));
+  document.addEventListener('focusin', (event) => {
+    const item = event.target.closest('.scroll-reveal');
+    if (!item) return;
+    observer?.unobserve(item);
+    item.classList.add('is-scroll-revealed', 'is-motion-complete');
+  });
+  motionPreference.addEventListener('change', () => {
+    if (!motionPreference.matches) return;
+    observer?.disconnect();
+    document.querySelectorAll('.scroll-reveal').forEach((element) => {
+      element.classList.add('is-scroll-revealed', 'is-motion-complete');
+    });
+  });
+  document.addEventListener('shopify:section:load', (event) => register(event.target));
+  document.addEventListener('shopify:section:unload', (event) => {
+    event.target.querySelectorAll('.scroll-reveal').forEach((element) => observer?.unobserve(element));
+    if (event.target.matches('.scroll-reveal')) observer?.unobserve(event.target);
+  });
+  register(document);
 };
 
 const initHeroTypewriterSequence = () => {
@@ -1443,9 +1453,15 @@ function closeCartDrawer() {
 
 function updateCartCount(count) {
   cartCountEls.forEach((el) => {
+    const changed = el.textContent !== String(count);
     el.textContent = String(count);
     if (count > 0) el.removeAttribute('hidden');
     else el.setAttribute('hidden', '');
+    if (changed && count > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.classList.remove('is-count-updated');
+      void el.offsetWidth;
+      el.classList.add('is-count-updated');
+    }
   });
 }
 

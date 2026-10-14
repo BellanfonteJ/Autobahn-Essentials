@@ -1,6 +1,6 @@
 # Theme Bug Fixes
 
-Based on `origin/main` at `5ddc954`. Changes are on `codex/theme-bug-fixes`.
+The initial fixes were based on `origin/main` at `5ddc954` and merged through PR #47. Motion and close-icon follow-ups are on `codex/theme-bug-fixes`, based on current `origin/main` at `2b8d9df`.
 
 ## Fixed
 
@@ -25,12 +25,13 @@ Based on `origin/main` at `5ddc954`. Changes are on `codex/theme-bug-fixes`.
 - Mobile navigation and cart links remain usable without JavaScript.
 - Product-description content stays in its authored order instead of being removed or moved using broad keyword guesses.
 - Button icons have stable dimensions.
+- Newsletter, cart, and gallery close buttons render a single X rather than duplicate icons.
 - Fixed-width product-description videos and fitment tables no longer widen the mobile gallery and purchase panel. Product-card glow stays inside mobile cards.
 - Responsive hero WebP assets are approximately 30 KB, 75 KB and 193 KB, replacing the 15.6 MB fallback download.
 
 ## Verification
 
-All 27 browser regression tests pass. Shopify Theme Check reports no errors or warnings. Desktop and mobile screenshots were inspected.
+All 33 browser regression tests pass, including five additional motion tests and a single-close-icon test. Shopify Theme Check reports no errors or warnings. Desktop and mobile screenshots were inspected.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -68,3 +69,11 @@ Store-level checks verified real catalog rendering, variant price/URL/SKU update
 Checkout, email delivery, complete installed-app workflows, collection assignments, and page/template assignments still require verification. The text-based garage matcher remains a browsing aid, not a verified fitment database. Restock requests remain contact requests and require a store workflow for notifications.
 
 Changes are maintained on `codex/theme-bug-fixes`, separate from `main`. They have not been published as the live Shopify theme.
+
+## Motion Additions
+
+Upcoming cards and section headings have short, one-time entrances with staggered timing. Search, garage, gallery and newsletter panels have opening motion; cart-count feedback only runs when a confirmed count changes. Button icons have a small fine-pointer hover response.
+
+Content is visible by default. Above-the-fold content, product galleries, descriptions, prices, and purchase forms do not receive scroll entrances. Keyboard focus cancels a card entrance. Reduced-motion preferences suppress the new effects, including preference changes while the page is open. Theme-editor section load/unload events register and release observer targets.
+
+Normal-motion tests cover 320, 390, 768, 1024 and 1440 pixel widths, unchanged card dimensions, hover behavior, cart quantity/removal, keyboard focus, observer/JavaScript fallbacks and theme-editor events. Card-glow bleed is bounded to prevent horizontal overflow at intermediate widths. Motion changes and the single-close-icon fix are maintained on `codex/theme-bug-fixes` and synced to the unpublished preview; they have not been published as the live theme.
