@@ -26,6 +26,12 @@ The development command does not publish the live theme. However, pushes to a Sh
 
 The collection, footer and Builds updates are maintained on `codex/theme-bug-fixes` in [slimeraps/Autobahn-Essentials](https://github.com/slimeraps/Autobahn-Essentials/tree/codex/theme-bug-fixes), based on `main` at `5c2575b` after the garage merge in PR #49. The earlier motion and close-icon fixes were merged through PR #48.
 
+### October 14 Review Status
+
+The tested theme modernization was pushed in [commit `576c3ae`](https://github.com/slimeraps/Autobahn-Essentials/commit/576c3ae). [Review the branch changes against main](https://github.com/slimeraps/Autobahn-Essentials/compare/main...codex/theme-bug-fixes). Verification passed all 68 tests, Shopify Theme Check and theme packaging.
+
+The GitHub integration denied permission to create a draft pull request, so no new PR was created. The changes remain on the review branch; no main merge or live theme publication was performed. Outstanding app approval, catalog review, fitment and checkout/email checks are tracked in [RELEASE-READINESS.md](RELEASE-READINESS.md).
+
 **Release warning:** Shopify Admin currently links the live theme to [BellanfonteJ/Autobahn-Essentials/main](https://github.com/BellanfonteJ/Autobahn-Essentials/tree/main), not the `slimeraps` repository used by this checkout. A read-only live layout download did not contain the garage scripts. The connection and reset controls were not changed. Do not merge into the connected repository or reset its theme without reviewing the complete diff and authorizing the resulting live update. See [RELEASE-READINESS.md](RELEASE-READINESS.md).
 
 For an existing checkout, preserve or commit any local work before switching branches, then run:
