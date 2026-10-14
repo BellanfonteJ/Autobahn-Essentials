@@ -22,30 +22,10 @@
       <form class="ae-fitment-form" action="{{ routes.search_url }}" method="get" role="search" data-vehicle-finder data-garage-save>
         <input type="hidden" name="type" value="product">
         <input type="hidden" name="q" value="">
-        <label class="visually-hidden" for="FitmentYear-{{ section.id }}">Year</label>
-        <select id="FitmentYear-{{ section.id }}" class="select" name="vehicle_year">
-          <option value="">Year</option>
-        </select>
-        <label class="visually-hidden" for="FitmentMake-{{ section.id }}">Make</label>
-        <select id="FitmentMake-{{ section.id }}" class="select" name="vehicle_make">
-          <option value="">Make</option>
-          <option>BMW</option>
-          <option>Audi</option>
-          <option>Volkswagen</option>
-        </select>
-        <label class="visually-hidden" for="FitmentModel-{{ section.id }}">Model</label>
-        <select id="FitmentModel-{{ section.id }}" class="select" name="vehicle_model">
-          <option value="">Model</option>
-        </select>
-        <label class="visually-hidden" for="FitmentChassis-{{ section.id }}">Chassis</label>
-        <select id="FitmentChassis-{{ section.id }}" class="select" name="vehicle_chassis">
-          <option value="">Chassis</option>
-        </select>
-        <label class="visually-hidden" for="FitmentTrim-{{ section.id }}">Trim / Engine</label>
-        <select id="FitmentTrim-{{ section.id }}" class="select" name="vehicle_trim">
-          <option value="">Trim / Engine</option>
-        </select>
-        <label class="visually-hidden" for="FitmentPart-{{ section.id }}">Part type</label>
+        {%- assign field_prefix = 'Fitment-' | append: section.id -%}
+        {% render 'garage-fields', prefix: field_prefix %}
+        <div class="garage-field">
+        <label for="FitmentPart-{{ section.id }}">Part type</label>
         <select id="FitmentPart-{{ section.id }}" class="select" name="part_type">
           <option value="">Part type</option>
           <option>Downpipes</option>
@@ -55,8 +35,10 @@
           <option>Exterior styling</option>
           <option>Interior accessories</option>
         </select>
+        </div>
         <button class="button" type="submit">{{ section.settings.search_label }}</button>
       </form>
+      <noscript><p>Vehicle matching requires JavaScript. <a href="{{ routes.all_products_collection_url }}">Browse all parts</a> or contact us for fitment confirmation.</p></noscript>
     </div>
 
     <div class="ae-grid-3">

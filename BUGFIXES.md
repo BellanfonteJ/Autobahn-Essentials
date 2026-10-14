@@ -1,6 +1,6 @@
 # Theme Bug Fixes
 
-The initial fixes were based on `origin/main` at `5ddc954` and merged through PR #47. Motion and close-icon follow-ups are on `codex/theme-bug-fixes`, based on current `origin/main` at `2b8d9df`.
+The initial fixes were based on `origin/main` at `5ddc954` and merged through PR #47. Motion and close-icon follow-ups were merged through PR #48. The new CSV-backed garage updates are on `codex/theme-bug-fixes`, based on current `origin/main` at `1b1a312`.
 
 ## Fixed
 
@@ -16,7 +16,8 @@ The initial fixes were based on `origin/main` at `5ddc954` and merged through PR
 - Header navigation is discoverable on every template. The logo and controls no longer overlap on narrow screens.
 - The header offset follows the ticker setting, including when the ticker is disabled.
 - Saved vehicles update every finder, dependent selectors reset correctly, and preferences still work when storage is unavailable.
-- Fitment matching rejects obvious engine, make, year and exclusion conflicts. Labels say Possible fit because text matching cannot confirm compatibility.
+- Fitment matching uses explicit per-product model/chassis/engine/submodel rows instead of keywords. Missing and restricted data are clearly labeled; model-year ranges are unavailable and never claimed as verified.
+- Match-only collection/search views include later product pages, preserve locale/tags/sorting, and restore unfiltered browsing with Retry on incomplete or failed page loads.
 - Vehicle searches no longer combine every vehicle alias as required search words.
 - Contact and returns navigation use the theme's page destinations.
 - Newsletter, contact and restock forms expose submission feedback and accessible labels.
@@ -31,7 +32,7 @@ The initial fixes were based on `origin/main` at `5ddc954` and merged through PR
 
 ## Verification
 
-All 33 browser regression tests pass, including five additional motion tests and a single-close-icon test. Shopify Theme Check reports no errors or warnings. Desktop and mobile screenshots were inspected.
+All 49 regression tests pass: 45 browser tests and four CSV-import checks. Shopify Theme Check reports no errors or warnings. Desktop and mobile fixture screenshots were inspected, including the CSV-backed garage at 320, 390, 768, 1024 and 1440 pixels.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -42,7 +43,7 @@ pnpm theme:package
 
 Browser tests render the actual Liquid files using LiquidJS with representative Shopify data and mocked cart responses. They cover desktop and mobile widths from 320 to 1440 pixels, JavaScript-disabled navigation, failed requests, focus behavior, and escaping.
 
-The tests use installed Google Chrome on macOS or Playwright Chromium elsewhere. Run `pnpm exec playwright install chromium` if neither is available. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to use another compatible Chromium binary. Set `THEME_SCREENSHOTS=1` to capture viewport screenshots under `.tools/screenshots/`.
+The tests use installed Google Chrome on macOS or Playwright Chromium elsewhere, plus Python 3 for CSV import checks. Run `pnpm exec playwright install chromium` if neither browser is available. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` or `PYTHON_EXECUTABLE` to select compatible runtime binaries. Set `THEME_SCREENSHOTS=1` to capture viewport screenshots under `.tools/screenshots/`.
 
 ## Shopify Preview
 
@@ -66,7 +67,19 @@ Store-level checks verified real catalog rendering, variant price/URL/SKU update
 - The Builds page currently renders a generic empty page. The Git template `page.builds` is available in the preview, but the Shopify page template assignment needs review before changing the live site.
 - Some imported product descriptions repeat large content sections and supplier links. Correct the product content in Shopify rather than deleting it heuristically in theme JavaScript.
 
-Checkout, email delivery, complete installed-app workflows, collection assignments, and page/template assignments still require verification. The text-based garage matcher remains a browsing aid, not a verified fitment database. Restock requests remain contact requests and require a store workflow for notifications.
+Checkout, email delivery, complete installed-app workflows, collection assignments, and page/template assignments still require verification. The CSV-backed garage remains a browsing aid: exact model-year compatibility and the complete new real-store garage workflow still need verification. Restock requests remain contact requests and require a store workflow for notifications.
+
+## CSV-Backed Garage
+
+The October 14 import includes 187 published products, with 258 explicit configurations across 130 products. Three unpublished drafts are excluded. The 57 products without usable rows remain unknown; 95 products have missing/ambiguous table data or description restrictions requiring review. See [FITMENT-IMPORT.md](FITMENT-IMPORT.md).
+
+The shared selector requires a complete listed model and engine, with chassis/submodel where supplied. Changing Make no longer clears Year, and Chassis is selected before Engine. Saves update every finder and survive reloads; clearing removes shared preferences. Cross-tab changes update the UI. Blocked storage is reported as page-only, and finder URLs can carry validated vehicle preferences.
+
+Badges distinguish listed, restricted, not-listed, unknown, and incomplete selections without claiming guaranteed compatibility. Years are optional because the export lacks year ranges. No fitment is inferred from titles, and alternative engines are only expanded when both explicit engine codes are present.
+
+Collection and search page loading is bounded, cancellable, deduplicated by handle, and atomic. Failures, invalid responses, excessive page counts, or interrupted filters cannot silently hide ordinary results or apply stale selections. New cards retain delegated purchase handlers and existing motion behavior.
+
+The source export stays outside Git. The generated asset contains only public handles, configurations, review flags, and provenance counts/hash, not commercial CSV columns. Refresh it with `python3 scripts/import-fitment.py /path/to/products_export.csv`. No product descriptions, prices, inventory, or live theme settings were edited.
 
 Changes are maintained on `codex/theme-bug-fixes`, separate from `main`. They have not been published as the live Shopify theme.
 

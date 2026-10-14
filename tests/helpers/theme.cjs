@@ -64,7 +64,7 @@ engine.registerTag('form', {
 engine.registerTag('paginate', {
   parse(token, tokens) { parseBlock(this, tokens, 'endpaginate'); },
   *render(ctx, emitter) {
-    ctx.push({ paginate: { pages: 1 } });
+    ctx.push({ paginate: { pages: 1, current_page: 1, ...ctx.get(['_paginate']) } });
     try { yield this.liquid.renderer.renderTemplates(this.templates, ctx, emitter); }
     finally { ctx.pop(); }
   },
@@ -81,7 +81,7 @@ const variants = [
   { id: 103, title: 'Limited', available: false, price: 17500, compare_at_price: 0, sku: 'AE-LIMITED', inventory_management: 'shopify', inventory_quantity: 0, featured_media: media[6] },
 ];
 const product = {
-  id: 100, title: 'BMW F30 Charge Pipe', url: '/products/test-part', type: 'Charge pipe', vendor: 'AE',
+  id: 100, handle: 'test-part', title: 'BMW F30 Charge Pipe', url: '/products/test-part', type: 'Charge pipe', vendor: 'AE',
   available: true, has_only_default_variant: false, price_varies: true, price: 10000, compare_at_price: 0,
   variants, selected_or_first_available_variant: variants[0], media, featured_media: media[0], tags: ['BMW', 'F30'],
   description: '<p>ARM Motorsports charge pipe performance details.</p><p>Installation details.</p>',
@@ -98,7 +98,8 @@ function context(options = {}) {
     page_title: 'Autobahn Essentials', canonical_url: 'http://theme.test/', current_page: 1,
     template: { name: options.template || 'product' }, product: { ...product, ...options.product },
     pages: {}, search: { performed: true, terms: 'charge pipe', results_count: 1, results: [{ ...product, object_type: 'product' }], ...options.search },
-    collection: { title: 'BMW', url: '/collections/bmw', products_count: 1, products: [product], all_tags: [], sort_options: [] },
+    collection: { title: 'BMW', url: '/collections/bmw', products_count: 1, products: [product], all_tags: [], sort_options: [], ...options.collection },
+    _paginate: options.paginate || {},
     _formStates: options.formStates || {},
   };
 }
@@ -140,6 +141,9 @@ async function mount(page, options = {}) {
   await page.route('http://theme.test/**', async (route) => {
     const pathname = new URL(route.request().url()).pathname;
     if (pathname.startsWith('/assets/')) {
+      if (pathname === '/assets/fitment-data.js' && !options.actualFitment) {
+        return route.fulfill({ contentType: 'text/javascript', body: `window.AEFitmentData = ${JSON.stringify(options.fitmentData || fitmentData)};` });
+      }
       const file = path.join(root, pathname.slice(1));
       const contentType = { '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' }[path.extname(file)];
       await route.fulfill({ body: fs.readFileSync(file), contentType });
@@ -147,7 +151,11 @@ async function mount(page, options = {}) {
       await route.fulfill({ body: html, contentType: 'text/html' });
     }
   });
-  if (options.garage) await page.addInitScript((garage) => localStorage.setItem('autobahn:garage', JSON.stringify(garage)), options.garage);
+  if (options.garage) await page.addInitScript((garage) => {
+    if (sessionStorage.getItem('garageFixtureSeeded')) return;
+    localStorage.setItem('autobahn:garage', JSON.stringify(garage));
+    sessionStorage.setItem('garageFixtureSeeded', 'true');
+  }, options.garage);
   if (options.storageBlocked) await page.addInitScript(() => {
     Object.defineProperty(window, 'localStorage', { get() { throw new Error('Storage is unavailable'); } });
   });
@@ -157,4 +165,15 @@ async function mount(page, options = {}) {
   return errors;
 }
 
-module.exports = { root, read, product, variants, context, renderSection, renderPage, mount };
+const fitmentData = {
+  version: 1,
+  vehicles: [
+    { make: 'BMW', model: '340i', chassis: 'F30', engine: 'B58', variant: '', years: null },
+    { make: 'Audi', model: 'S4', chassis: 'B9', engine: '3.0T', variant: '', years: null },
+    { make: 'BMW', model: '335i', chassis: 'F30', engine: 'N55', variant: '', years: null },
+    { make: 'BMW', model: '335i', chassis: 'E90', engine: 'N54', variant: '', years: null },
+  ],
+  products: { 'test-part': { records: [0], review: false }, wrong: { records: [2], review: false }, restricted: { records: [0], review: true }, cross: { records: [1, 2], review: false } },
+};
+
+module.exports = { root, read, product, variants, fitmentData, context, renderSection, renderPage, mount };

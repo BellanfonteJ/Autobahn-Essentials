@@ -1,0 +1,5 @@
+Handle,Title,Body (HTML),Published,Status,Variant SKU,Variant Price,Cost per item
+explicit,Test pipe,"<table><tr><th>Make</th><th>Chassis</th><th>Model</th><th>Engine</th></tr><tr><td>BMW</td><td>E90</td><td>335i</td><td>N54/N55</td></tr><tr><td>BMW</td><td>E90</td><td>335i</td><td>N54/N55</td></tr></table>",TRUE,active,PRIVATE-SKU,123.45,67.89
+partial,Partial rows,"<table><tr><th>Make</th><th>Model</th><th>Submodel</th><th>Engine</th></tr><tr><td>AUDI</td><td>A3 8P</td><td>FWD</td><td>2.0T</td></tr><tr><td>BWM</td><td>F30</td><td>335i</td><td>N55</td></tr></table><p>Warning: not compatible with AWD.</p>",TRUE,active,PRIVATE-SKU,123.45,67.89
+guessed,BMW F30 N55 2017,"<p>BMW F30 N55 titles alone are not fitment tables.</p>",TRUE,active,PRIVATE-SKU,123.45,67.89
+draft,Draft part,"<table><tr><th>Make</th><th>Model</th><th>Engine</th></tr><tr><td>BMW</td><td>335i</td><td>N54</td></tr></table>",FALSE,draft,PRIVATE-SKU,123.45,67.89

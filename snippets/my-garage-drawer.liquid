@@ -2,72 +2,25 @@
   id="MyGarage"
   class="garage-drawer"
   data-garage-drawer
-  data-garage-empty-title="No vehicle saved"
-  data-garage-empty-summary="Save your vehicle details to check fitment across the shop."
-  data-garage-saved-title-template="Your [vehicle]"
-  data-garage-saved-summary="Fitment badges are using this saved vehicle."
 >
   <div class="page-width garage-drawer__inner">
     <div class="garage-drawer__intro">
       <div class="eyebrow">My Garage</div>
       <h2 data-garage-title>No vehicle saved</h2>
       <p data-garage-summary>Save your vehicle details to check fitment across the shop.</p>
-    </div>
-
-    <form class="garage-form" data-garage-form>
-      <label class="visually-hidden" for="GarageYear">Year</label>
-      <select
-        class="select"
-        id="GarageYear"
-        name="vehicle_year"
-        data-garage-input="year"
-      >
-        <option value="">Year</option>
-      </select>
-
-      <label class="visually-hidden" for="GarageMake">Make</label>
-      <select class="select" id="GarageMake" name="vehicle_make" data-garage-input="make">
-        <option value="">Make</option>
-        <option>BMW</option>
-        <option>Audi</option>
-        <option>Volkswagen</option>
-      </select>
-
-      <label class="visually-hidden" for="GarageModel">Model</label>
-      <select
-        class="select"
-        id="GarageModel"
-        name="vehicle_model"
-        data-garage-input="model"
-      >
-        <option value="">Model</option>
-      </select>
-
-      <label class="visually-hidden" for="GarageTrim">Trim / Engine</label>
-      <select
-        class="select"
-        id="GarageTrim"
-        name="vehicle_trim"
-        data-garage-input="trim"
-      >
-        <option value="">Trim / Engine</option>
-      </select>
-
-      <label class="visually-hidden" for="GarageChassis">Chassis</label>
-      <select
-        class="select"
-        id="GarageChassis"
-        name="vehicle_chassis"
-        data-garage-input="chassis"
-      >
-        <option value="">Chassis</option>
-      </select>
-
-      <button class="button" type="submit">Save Vehicle</button>
-      <button class="button button--secondary" type="button" data-garage-clear>Clear</button>
       <button class="icon-button garage-drawer__close" type="button" data-garage-close aria-label="Close My Garage">
         {% render 'icon', icon: 'close' %}
       </button>
+    </div>
+
+    <form class="garage-form" data-garage-form>
+      {% render 'garage-fields', prefix: 'Garage' %}
+
+      <div class="garage-form__actions">
+        <button class="button" type="submit">Save Vehicle</button>
+        <button class="button button--secondary" type="button" data-garage-shop>Find Parts</button>
+        <button class="button button--secondary" type="button" data-garage-clear>Clear</button>
+      </div>
     </form>
   </div>
 </div>

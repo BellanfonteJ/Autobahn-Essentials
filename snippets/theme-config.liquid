@@ -4,6 +4,7 @@
     "currency": {{ cart.currency.iso_code | default: shop.currency | json }},
     "cartUrl": {{ routes.cart_url | json }},
     "allProductsUrl": {{ routes.all_products_collection_url | json }},
+    "searchUrl": {{ routes.search_url | json }},
     "messages": {
       "cartError": {{ 'sections.cart.error' | t | json }},
       "addedButRefreshFailed": {{ 'sections.cart.added_refresh_error' | t | json }},
