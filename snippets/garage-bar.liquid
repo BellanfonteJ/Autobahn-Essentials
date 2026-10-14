@@ -1,0 +1,18 @@
+<div class="garage-bar" data-garage-bar>
+  <div class="page-width garage-bar__inner">
+    <div class="garage-bar__vehicle">
+      {% render 'icon', icon: 'garage' %}
+      <div>
+        <span class="garage-bar__label">{{ 'garage.eyebrow' | t }}</span>
+        <span data-garage-bar-vehicle>{{ 'garage.empty_title' | t }}</span>
+      </div>
+    </div>
+    <span class="garage-bar__note" data-garage-bar-note hidden>{{ 'garage.year_unverified' | t }}</span>
+    <div class="garage-bar__actions">
+      <button class="garage-bar__change" type="button" data-garage-open data-garage-bar-change>{{ 'garage.choose' | t }}</button>
+      <button class="icon-button" type="button" data-garage-clear data-garage-bar-clear aria-label="{{ 'garage.clear_saved' | t }}" title="{{ 'garage.clear_saved' | t }}" hidden>
+        {% render 'icon', icon: 'close' %}
+      </button>
+    </div>
+  </div>
+</div>

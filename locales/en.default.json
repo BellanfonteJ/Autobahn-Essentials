@@ -90,6 +90,16 @@
     }
   },
   "collections": {
+    "filters": {
+      "title": "Filters",
+      "close": "Close filters",
+      "apply": "Apply filters",
+      "minimum": "Minimum",
+      "maximum": "Maximum",
+      "clear": "Clear filters",
+      "active": "Active filters",
+      "remove": "Remove filter"
+    },
     "general": {
       "title": "Collections",
       "view_all": "View collection",
@@ -100,6 +110,10 @@
     }
   },
   "garage": {
+    "choose": "Choose vehicle",
+    "change": "Change",
+    "clear_saved": "Clear saved vehicle",
+    "year_unverified": "Year fitment unverified",
     "eyebrow": "My Garage",
     "empty_title": "No vehicle saved",
     "empty_summary": "Save your vehicle to check product fitment across the shop.",

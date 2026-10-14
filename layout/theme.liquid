@@ -58,9 +58,17 @@
       }
     </style>
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'browsing.css' | asset_url | stylesheet_tag }}
+    {%- if page.handle == 'builds' -%}
+      {{ 'builds.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
     <script src="{{ 'fitment-data.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'garage.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    {%- if template.name == 'collection' -%}
+      {{ 'collection.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
   </head>
 
   <body class="template-{{ template.name | handle }}{% if settings.show_ticker %} has-ticker{% endif %}">
@@ -72,6 +80,7 @@
     {% section 'header' %}
 
     <main id="MainContent" class="main-content" role="main" tabindex="-1">
+      {% render 'garage-bar' %}
       {{ content_for_layout }}
     </main>
 

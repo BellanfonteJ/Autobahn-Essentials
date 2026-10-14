@@ -29,6 +29,284 @@ const cart = (quantity = 1) => ({
 });
 const json = (route, body, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
 
+const nativeFilters = () => {
+  const value = (param_name, value, label, count, active = false) => ({ param_name, value, label, count, active, url_to_remove: '/collections/bmw?sort_by=best-selling' });
+  return [
+    { label: 'Availability', type: 'boolean', values: [value('filter.v.availability', '1', 'Available', 12), value('filter.v.availability', '0', 'Unavailable', 0)], active_values: [] },
+    { label: 'Brand', type: 'list', values: [value('filter.p.vendor', 'ARM Motorsports', 'ARM Motorsports', 8), value('filter.p.vendor', 'Autobahn Essentials', 'Autobahn Essentials', 4)], active_values: [] },
+    { label: 'Part type', type: 'list', values: [value('filter.p.product_type', 'Charge pipe', 'Charge pipe', 8)], active_values: [] },
+    { label: 'Price', type: 'price_range', min_value: { param_name: 'filter.v.price.gte', value: null }, max_value: { param_name: 'filter.v.price.lte', value: null }, range_max: 89999, active_values: [], url_to_remove: '/collections/bmw?sort_by=best-selling' },
+  ];
+};
+
+test('native filters submit repeated brands and prices while preserving locale, tags and sorting', async () => {
+  await withPage({ template: 'collection', collection: { filters: nativeFilters() } }, async (page) => {
+    await page.evaluate(() => history.replaceState({}, '', '/fr/collections/bmw/Charge-pipe?sort_by=price-descending&page=3&ae_vehicle=saved'));
+    const form = page.locator('[data-collection-filter-form]');
+    await form.locator('[name="filter.p.vendor"]').nth(0).check();
+    await form.locator('[name="filter.p.vendor"]').nth(1).check();
+    await form.locator('[data-price-min]').fill('100.25');
+    await form.locator('[data-price-max]').fill('200.50');
+    assert.equal(await form.locator('[name="filter.v.availability"][value="0"]').isDisabled(), true);
+    await form.locator('button[type="submit"]').click();
+    await page.waitForURL('**/*filter.p.vendor*');
+    const url = new URL(page.url());
+    assert.equal(url.pathname, '/fr/collections/bmw/Charge-pipe');
+    assert.deepEqual(url.searchParams.getAll('filter.p.vendor'), ['ARM Motorsports', 'Autobahn Essentials']);
+    assert.equal(url.searchParams.get('filter.v.price.gte'), '100.25');
+    assert.equal(url.searchParams.get('filter.v.price.lte'), '200.50');
+    assert.equal(url.searchParams.get('ae_vehicle'), 'saved');
+    assert.equal(url.searchParams.get('sort_by'), 'price-descending');
+    assert.equal(url.searchParams.has('page'), false);
+  });
+});
+
+test('sorting preserves existing repeated filters and resetting filters preserves other URL state', async () => {
+  await withPage({ template: 'collection', collection: { filters: nativeFilters() } }, async (page) => {
+    await page.evaluate(() => history.replaceState({}, '', '/collections/bmw/Charge-pipe?filter.p.vendor=ARM&filter.p.vendor=AE&filter.v.price.gte=0&filter.v.price.lte=200&page=2&ae_vehicle=saved'));
+    await page.locator('#SortBy').selectOption('price-ascending');
+    await page.waitForURL('**/*sort_by=price-ascending*');
+    const url = new URL(page.url());
+    assert.deepEqual(url.searchParams.getAll('filter.p.vendor'), ['ARM', 'AE']);
+    assert.equal(url.searchParams.get('filter.v.price.gte'), '0');
+    assert.equal(url.searchParams.has('page'), false);
+    await page.locator('[data-collection-facets] [data-facet-reset]').click();
+    await page.waitForURL('**/*sort_by=price-ascending*');
+    const cleared = new URL(page.url());
+    assert.equal([...cleared.searchParams.keys()].some((key) => key.startsWith('filter.')), false);
+    assert.equal(cleared.pathname, '/collections/bmw/Charge-pipe');
+    assert.equal(cleared.searchParams.get('ae_vehicle'), 'saved');
+  });
+});
+
+test('price range validation can be corrected without trapping the filter form', async () => {
+  await withPage({ template: 'collection', collection: { filters: nativeFilters() } }, async (page) => {
+    const form = page.locator('[data-collection-filter-form]');
+    await form.locator('[data-price-min]').fill('200');
+    await form.locator('[data-price-max]').fill('100');
+    await form.locator('button[type="submit"]').click();
+    assert.equal(await form.locator('[data-price-max]').evaluate((element) => element.validity.customError), true);
+    assert.match(page.url(), /products\/test-part$/);
+    await form.locator('[data-price-max]').fill('300');
+    await form.locator('button[type="submit"]').click();
+    await page.waitForURL('**/*filter.v.price.lte=300*');
+  });
+});
+
+test('active zero-priced ranges and zero-count selected values remain removable and labels are escaped', async () => {
+  const filters = nativeFilters();
+  filters[1].values[0].label = '<img src=x onerror=alert(1)> Brand';
+  filters[1].values[0].active = true;
+  filters[1].values[0].count = 0;
+  filters[1].active_values = [filters[1].values[0]];
+  filters[3].min_value.value = 0;
+  filters[3].max_value.value = 10000;
+  await withPage({ template: 'collection', collection: { filters } }, async (page) => {
+    assert.equal(await page.locator('[data-collection-facets] [name="filter.p.vendor"]').first().isEnabled(), true);
+    assert.equal(await page.locator('[data-collection-facets] [name="filter.p.vendor"]').first().isChecked(), true);
+    assert.equal(await page.locator('[data-price-min]').inputValue(), '0');
+    assert.equal(await page.locator('.collection-active-filter').count(), 2);
+    assert.match(await page.locator('.collection-active-filters').textContent(), /\$0\.00 - \$100\.00/);
+    assert.equal(await page.locator('.collection-facets img, .collection-active-filters img').count(), 0);
+    const duplicateIds = await page.locator('[data-collection-facets] input[id]').evaluateAll((inputs) => inputs.map((input) => input.id).filter((id, index, ids) => ids.indexOf(id) !== index));
+    assert.deepEqual(duplicateIds, []);
+  });
+});
+
+test('mobile filter drawer traps focus, closes on Escape and restores the trigger', async () => {
+  await withPage({ template: 'collection', viewport: { width: 390, height: 844 }, collection: { filters: nativeFilters() } }, async (page) => {
+    const panel = page.locator('[data-collection-facets]');
+    const opener = page.locator('[data-facet-open]');
+    assert.equal(await panel.evaluate((element) => element.inert), true);
+    await opener.click();
+    assert.equal(await panel.getAttribute('role'), 'dialog');
+    assert.equal(await panel.getAttribute('aria-modal'), 'true');
+    await panel.locator('[data-facet-reset]').focus();
+    await page.keyboard.press('Tab');
+    assert.equal(await panel.evaluate((element) => element.contains(document.activeElement)), true);
+    await page.keyboard.press('Escape');
+    assert.equal(await panel.isVisible(), false);
+    assert.equal(await opener.evaluate((element) => element === document.activeElement), true);
+    await opener.click();
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.waitForFunction(() => !document.querySelector('[data-collection-facets]').hasAttribute('role'));
+    assert.equal(await panel.evaluate((element) => element.inert), false);
+    assert.equal(await panel.getAttribute('role'), null);
+    assert.equal(await page.locator('body').evaluate((element) => element.classList.contains('is-facets-open')), false);
+  });
+});
+
+test('native filters and sorting remain usable without JavaScript and empty filter catalogs hide controls', async () => {
+  await withPage({ template: 'collection', javaScriptEnabled: false, viewport: { width: 390, height: 844 }, collection: { filters: nativeFilters() } }, async (page) => {
+    assert.equal(await page.locator('[data-collection-facets]').isVisible(), true);
+    assert.equal(await page.locator('[data-facet-open]').isVisible(), false);
+    await page.locator('[name="filter.p.vendor"]').first().check();
+    await page.locator('[data-collection-filter-form] button[type="submit"]').click();
+    await page.waitForURL('**/*filter.p.vendor=*');
+    assert.equal(new URL(page.url()).searchParams.get('filter.p.vendor'), 'ARM Motorsports');
+    assert.equal(await page.locator('[data-collection-sort] noscript button').isVisible(), true);
+    assert.equal(await page.locator('[data-garage-bar]').isVisible(), false);
+  });
+  await withPage({ template: 'collection' }, async (page) => {
+    assert.equal(await page.locator('[data-collection-facets], [data-facet-open]').count(), 0);
+  });
+});
+
+test('garage bar reflects saves, clear actions, invalid legacy vehicles and cross-tab changes', async () => {
+  await withPage({ garage }, async (page) => {
+    assert.match(await page.locator('[data-garage-bar-vehicle]').textContent(), /340i.*F30.*B58/);
+    assert.match(await page.locator('[data-garage-bar-note]').textContent(), /unverified/);
+    await page.locator('[data-garage-bar-change]').click();
+    assert.equal(await page.locator('[data-garage-drawer]').isVisible(), true);
+    await page.locator('[data-garage-close]').click();
+    await page.locator('[data-garage-bar-clear]').click();
+    assert.match(await page.locator('[data-garage-bar-vehicle]').textContent(), /No vehicle saved/);
+    assert.equal(await page.locator('[data-garage-bar-clear]').isVisible(), false);
+    await page.evaluate(() => {
+      localStorage.setItem('autobahn:garage', JSON.stringify({ make: 'BMW', model: '3 Series' }));
+      dispatchEvent(new StorageEvent('storage', { key: 'autobahn:garage' }));
+    });
+    assert.match(await page.locator('[data-garage-bar-vehicle]').textContent(), /Update your saved vehicle/);
+    assert.equal(await page.locator('[data-garage-bar-note]').isVisible(), false);
+  });
+});
+
+test('garage bar stays below the sticky header and follows its hidden and resized state', async () => {
+  await withPage({ garage, cards: true, cardsCount: 12 }, async (page) => {
+    await page.evaluate(() => scrollTo(0, 450));
+    await page.waitForFunction(() => document.querySelector('.site-header').classList.contains('is-scrolled'));
+    const bar = page.locator('[data-garage-bar]');
+    const top = await bar.evaluate((element) => element.getBoundingClientRect().top);
+    assert.ok(top >= 0);
+    await page.locator('[data-garage-toggle]').focus();
+    await page.waitForFunction(() => !document.querySelector('.site-header').classList.contains('is-hidden'));
+    await page.waitForFunction(() => Math.abs(document.querySelector('[data-garage-bar]').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom) < 2);
+    await page.setViewportSize({ width: 390, height: 844 });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  });
+});
+
+test('collection layout, cards and mobile drawer fit all supported viewports with visible image pixels', async () => {
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    const products = [
+      { ...product, title: 'BMW 335i N54 Charge Pipe - OEM Diverter Valves', has_only_default_variant: true },
+      { ...product, handle: 'wrong', title: 'BMW F30 N55 Charge Pipe with Extended Installation Hardware', vendor: 'ARM Motorsports' },
+      { ...product, handle: 'unknown', title: 'Carbon Fiber Double Slat Grille for BMW F06 / F12 / F13', available: false, metafields: { custom: { badge: 'New' } } },
+    ];
+    await withPage({ template: 'collection', garage, viewport: { width, height: 900 }, collection: { filters: nativeFilters(), products, products_count: 3 } }, async (page) => {
+      const grid = page.locator('[data-fitment-grid]');
+      await grid.scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => {
+        const bar = document.querySelector('[data-garage-bar]').getBoundingClientRect();
+        const header = document.querySelector('.site-header').getBoundingClientRect();
+        const ticker = document.querySelector('.announcement-bar')?.getBoundingClientRect();
+        return bar.top >= Math.max(0, header.bottom, ticker?.bottom || 0) - 2;
+      });
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      assert.equal(await page.locator('.product-card').last().locator('.product-card__badge').textContent(), 'Sold out');
+      assert.deepEqual(await page.locator('.product-card__info').evaluateAll((items) => items.filter((item) => item.scrollWidth > item.clientWidth).map((item) => item.textContent)), []);
+      const imageContent = await page.locator('.product-card__image').first().evaluate((image) => {
+        const canvas = document.createElement('canvas'); canvas.width = canvas.height = 16;
+        const ctx = canvas.getContext('2d'); ctx.drawImage(image, 0, 0, 16, 16);
+        const pixels = ctx.getImageData(0, 0, 16, 16).data;
+        return image.complete && image.naturalWidth > 0 && new Set(Array.from(pixels)).size > 10;
+      });
+      assert.equal(imageContent, true);
+      if (process.env.THEME_SCREENSHOTS) {
+        fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/collection-modern-${width}.png`) });
+      }
+      if (width <= 990) {
+        await page.locator('[data-facet-open]').click();
+        assert.equal(await page.locator('[data-collection-facets]').evaluate((element) => element.scrollWidth <= element.clientWidth), true);
+        if (process.env.THEME_SCREENSHOTS) await page.screenshot({ path: path.join(root, `.tools/screenshots/collection-filters-${width}.png`) });
+        await page.keyboard.press('Escape');
+      }
+    });
+  }
+});
+
+test('garage bar stays at the viewport edge when Shopify header wrappers have scrolled away', async () => {
+  await withPage({ shopifyHeaderWrapper: true, garage, cards: true, cardsCount: 12 }, async (page) => {
+    await page.evaluate(() => scrollTo(0, 800));
+    await page.waitForFunction(() => Math.abs(document.querySelector('[data-garage-bar]').getBoundingClientRect().top) < 2);
+    assert.equal(await page.locator('[data-garage-bar-change]').isVisible(), true);
+    await page.locator('[data-garage-bar-change]').click();
+    assert.equal(await page.locator('[data-garage-drawer]').isVisible(), true);
+  });
+});
+
+test('card starting prices use the product minimum and do not imply a discount on unrelated variants', async () => {
+  await withPage({ cards: true, product: { price: 8000, price_varies: true, compare_at_price: 10000, selected_or_first_available_variant: variants[1] } }, async (page) => {
+    assert.equal((await page.locator('.product-card .price').textContent()).trim(), 'From $80.00');
+    assert.equal(await page.locator('.product-card .price s').count(), 0);
+    assert.equal(await page.locator('.product-card__badge').count(), 0);
+    assert.match(await page.locator('[data-product-price]').textContent(), /\$150\.00/);
+  });
+});
+
+test('legacy Search-only footer menus receive distinct existing Shop, Support and Company links', async () => {
+  const pages = Object.fromEntries(['contact', 'fitment', 'shipping-returns', 'faq', 'about', 'builds', 'ae-blog'].map((handle) => [handle, { url: '/pages/' + handle }]));
+  const blocks = ['Shop', 'Support', 'Company'].map((heading) => ({ settings: { heading, menu: { links: [{ title: 'Search', url: '/search' }] } } }));
+  await withPage({ pages, footerBlocks: blocks }, async (page) => {
+    const groups = page.locator('.site-footer__grid > div');
+    const links = await groups.evaluateAll((groups) => groups.slice(1).map((group) => Array.from(group.querySelectorAll('a'), (link) => link.textContent)));
+    assert.deepEqual(links, [['All Parts', 'BMW', 'Audi', 'Volkswagen', 'Accessories'], ['Contact Us', 'Fitment Guide', 'Shipping & Returns', 'FAQ'], ['About Us', 'Builds', 'Autobahn Blog']]);
+    assert.equal(await page.locator('.footer-links a[href="/search"]').count(), 0);
+  });
+});
+
+test('custom footer menus remain unchanged and fallback never links to missing pages', async () => {
+  const custom = [{ settings: { heading: 'Support', menu: { links: [{ title: 'Warranty & <Help>', url: '/pages/warranty' }] } } }];
+  await withPage({ footerBlocks: custom }, async (page) => {
+    assert.equal(await page.locator('.footer-links a').count(), 1);
+    assert.equal(await page.locator('.footer-links a').textContent(), 'Warranty & <Help>');
+    assert.equal(await page.locator('.footer-links a').getAttribute('href'), '/pages/warranty');
+  });
+  await withPage({ footerBlocks: [{ settings: { heading: 'Support', menu: { links: [] } } }], shop: { policies: [{ title: 'Refund policy', body: 'Terms', url: '/policies/refund-policy' }] } }, async (page) => {
+    assert.equal(await page.locator('.footer-links a').count(), 1);
+    assert.equal(await page.locator('.footer-links a').getAttribute('href'), '/policies/refund-policy');
+  });
+});
+
+test('empty generic Builds pages render the proper experience without changing authored page content', async () => {
+  await withPage({ template: 'page', page: { handle: 'builds', title: 'Builds', content: '' } }, async (page) => {
+    assert.equal(await page.locator('.builds-hero h1').textContent(), 'Autobahn Builds');
+    assert.equal(await page.locator('.builds-platform').count(), 3);
+    assert.match(await page.locator('.builds-content').textContent(), /No builds shared yet/);
+    assert.equal(await page.locator('.builds-story').count(), 0);
+  });
+  await withPage({ template: 'page', page: { handle: 'builds', title: 'Our Builds', content: '<p>Existing merchant-owned build story.</p>' } }, async (page) => {
+    assert.equal(await page.locator('.builds-hero').count(), 0);
+    assert.match(await page.locator('main .rte').textContent(), /Existing merchant-owned/);
+  });
+});
+
+test('customer build gallery includes only tagged published stories with real supplied images', async () => {
+  const story = { title: 'Customer BMW build', url: '/blogs/autobahn-blog/customer-bmw', image: { asset: 'brand-bmw-m4.jpg', alt: 'Customer-supplied car photo' }, tags: ['Build'], excerpt: 'Owner-authored modifications.' };
+  const blogs = { 'autobahn-blog': { articles: [story, { ...story, title: 'Not a build', tags: ['News'] }, { ...story, title: 'Missing photo', image: null }] } };
+  await withPage({ template: 'builds', blogs, pages: { contact: { url: '/pages/contact' } } }, async (page) => {
+    assert.equal(await page.locator('.builds-story').count(), 1);
+    assert.equal(await page.locator('.builds-story h3').textContent(), 'Customer BMW build');
+    assert.match(await page.locator('.builds-story p').textContent(), /Owner-authored/);
+    assert.equal(await page.getByRole('link', { name: 'Submit Your Build', exact: true }).getAttribute('href'), '/pages/contact');
+  });
+});
+
+test('Builds images and content fit mobile, tablet and desktop without overlap', async () => {
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await withPage({ template: 'builds', viewport: { width, height: 900 } }, async (page) => {
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      assert.equal(await page.locator('.builds-hero__image').evaluate((image) => image.complete && image.naturalWidth > 0), true);
+      assert.equal(await page.locator('.builds-hero h1').evaluate((heading) => heading.scrollWidth <= heading.clientWidth), true);
+      if (process.env.THEME_SCREENSHOTS) {
+        fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/builds-${width}.png`) });
+      }
+    });
+  }
+});
+
 test('newsletter, cart, and gallery close buttons each render a single X', async () => {
   await withPage({ popup: true, formStates: { PopupNewsletter: { errors: true } } }, async (page) => {
     for (const selector of ['.popup-newsletter__close', '.cart-drawer__header button', '.product-gallery-lightbox__close']) {

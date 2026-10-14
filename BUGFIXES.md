@@ -1,6 +1,6 @@
 # Theme Bug Fixes
 
-The initial fixes were based on `origin/main` at `5ddc954` and merged through PR #47. Motion and close-icon follow-ups were merged through PR #48. The new CSV-backed garage updates are on `codex/theme-bug-fixes`, based on current `origin/main` at `1b1a312`.
+The initial fixes were based on `origin/main` at `5ddc954` and merged through PR #47. Motion and close-icon follow-ups were merged through PR #48; the CSV-backed garage was merged through PR #49. Collection, footer and Builds follow-ups are on `codex/theme-bug-fixes`, based on `origin/main` at `5c2575b`. Shopify's live GitHub connection targets the separate `BellanfonteJ` repository; see [RELEASE-READINESS.md](RELEASE-READINESS.md).
 
 ## Fixed
 
@@ -32,7 +32,7 @@ The initial fixes were based on `origin/main` at `5ddc954` and merged through PR
 
 ## Verification
 
-All 49 regression tests pass: 45 browser tests and four CSV-import checks. Shopify Theme Check reports no errors or warnings. Desktop and mobile fixture screenshots were inspected, including the CSV-backed garage at 320, 390, 768, 1024 and 1440 pixels.
+All 68 regression tests pass: 61 browser tests, four CSV-import checks and three catalog-audit checks. Shopify Theme Check reports no errors or warnings. Desktop and mobile fixture screenshots were inspected, including the CSV-backed garage and Builds page at 320, 390, 768, 1024 and 1440 pixels.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -63,11 +63,11 @@ Store-level checks verified real catalog rendering, variant price/URL/SKU update
 
 ## Store Content Follow-Up
 
-- All three footer menu blocks currently use a menu containing only Search. Assign distinct Shop, Support, and Company menus in the preview editor.
-- The Builds page currently renders a generic empty page. The Git template `page.builds` is available in the preview, but the Shopify page template assignment needs review before changing the live site.
-- Some imported product descriptions repeat large content sections and supplier links. Correct the product content in Shopify rather than deleting it heuristically in theme JavaScript.
+- Legacy Search-only footer menus now receive distinct existing Shop, Support and Company links. Custom menus remain untouched. Actual menu assignment remains a merchant setup task.
+- The empty generic Builds page now receives the complete Builds experience in the unpublished preview. Assign `page.builds` in Shopify for editor-configurable media and source settings after checking the live template impact.
+- The read-only [catalog audit](CATALOG-REVIEW.md) identified five description candidates. The reviewed duplicate profile-through-warranty block on `135i-5-intercooler-fmic` was backed up and removed in Shopify Admin; one profile and one fitment table were verified in the preview. Other candidates need individual review. Product content changes are store-wide, unlike theme preview edits.
 
-Checkout, email delivery, complete installed-app workflows, collection assignments, and page/template assignments still require verification. The CSV-backed garage remains a browsing aid: exact model-year compatibility and the complete new real-store garage workflow still need verification. Restock requests remain contact requests and require a store workflow for notifications.
+Checkout, email delivery, complete installed-app workflows, collection assignments, and page/template assignments still require verification. Cart add/update/remove passed with the original empty cart restored; checkout failed to load through the local preview. Admin showed Shopify Payments accepting payments, inactive PayPal and free US economy shipping. No payment, shipping, account or notification setting was changed. Exact model-year compatibility remains unverified because no supplier year file is available. Restock requests remain contact requests and require a store workflow for notifications.
 
 ## CSV-Backed Garage
 
@@ -82,6 +82,16 @@ Collection and search page loading is bounded, cancellable, deduplicated by hand
 The source export stays outside Git. The generated asset contains only public handles, configurations, review flags, and provenance counts/hash, not commercial CSV columns. Refresh it with `python3 scripts/import-fitment.py /path/to/products_export.csv`. No product descriptions, prices, inventory, or live theme settings were edited.
 
 Changes are maintained on `codex/theme-bug-fixes`, separate from `main`. They have not been published as the live Shopify theme.
+
+## Collection Modernization
+
+Native configured collection filters now render in a desktop sidebar or mobile drawer. Repeated selections, active filters, zero-priced bounds, zero-count active options, locale/tagged paths, sort state, and pagination resets are covered by tests. Mobile filters reuse the theme's focus trapping, Escape handling, and focus restoration; desktop resizing removes modal state. Empty filter catalogs do not display nonfunctional controls, and no-JavaScript browsing remains usable.
+
+Product cards use consistent light image surfaces, full readable titles, quieter badges, aligned purchase controls, and correct minimum starting prices. Sold-out status outranks promotional badges, and multi-variant products still require choosing options.
+
+The persistent vehicle bar updates from the existing garage state, retains year warnings, and offers Change/Clear controls. It follows real rendered header/ticker geometry rather than assuming fixed header heights.
+
+Real-store checks verified the mobile Availability/Price drawer, desktop sidebar, price filtering, and combined garage matching across filtered pages. Brand and Product Type are theme-supported but still require Search & Discovery configuration. That app presented a permission update, which was left pending explicit approval. Supplier labels also need current-data review before normalization. Browsing changes have not been published to the live theme.
 
 ## Motion Additions
 

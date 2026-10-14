@@ -1,3 +1,7 @@
+{%- if page.handle == 'builds' and page.content == blank -%}
+  {% render 'breadcrumbs' %}
+  {% render 'builds-content', section: section %}
+{%- else -%}
 {% render 'breadcrumbs' %}
 
 <section class="section">
@@ -11,6 +15,7 @@
     <div class="rte">{{ page.content }}</div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
