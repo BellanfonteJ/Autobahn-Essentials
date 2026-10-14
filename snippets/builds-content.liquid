@@ -1,0 +1,68 @@
+{%- liquid
+  assign hero_image = section.settings.hero_image
+  assign build_heading = section.settings.heading | default: 'Autobahn Builds'
+  assign build_text = section.settings.text | default: 'Performance starts with the right platform.'
+  assign build_blog = section.settings.blog | default: blogs['autobahn-blog']
+-%}
+<section class="builds-hero">
+  {%- if hero_image != blank -%}
+    {{ hero_image | image_url: width: 1800 | image_tag: class: 'builds-hero__image', loading: 'eager', sizes: '100vw', alt: '' }}
+  {%- else -%}
+    <img class="builds-hero__image" src="{{ 'fallback-hero-bmw-m4.jpg' | asset_url }}" alt="" width="1600" height="900" fetchpriority="high">
+  {%- endif -%}
+  <div class="page-width builds-hero__content">
+    <h1>{{ build_heading | escape }}</h1>
+    <p>{{ build_text | escape }}</p>
+    <a class="button" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">{{ section.settings.primary_label | default: 'Shop Build Parts' | escape }} {% render 'icon', icon: 'arrow' %}</a>
+  </div>
+</section>
+<section class="section builds-content">
+  <div class="page-width">
+    <div class="section-heading"><h2>Browse by Platform</h2></div>
+    <div class="builds-platforms">
+      {%- assign handles = 'bmw,audi,vw' | split: ',' -%}
+      {%- assign labels = 'BMW,Audi,Volkswagen' | split: ',' -%}
+      {%- assign images = 'brand-bmw-m4.jpg,brand-audi-rs6.jpg,brand-volkswagen-golf-r.jpg' | split: ',' -%}
+      {%- for handle in handles -%}
+        {%- assign target = collections[handle] -%}
+        {%- if target != blank -%}
+          <a class="builds-platform" href="{{ target.url }}">
+            {%- if target.image != blank -%}
+              {{ target.image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', alt: '' }}
+            {%- else -%}
+              <img src="{{ images[forloop.index0] | asset_url }}" alt="" width="900" height="600" loading="lazy">
+            {%- endif -%}
+            <h3>{{ labels[forloop.index0] }}</h3>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    {%- assign build_count = 0 -%}
+    {%- capture build_stories -%}
+      {%- for article in build_blog.articles -%}
+        {%- assign tags = article.tags | join: ',' | downcase | split: ',' -%}
+        {%- if tags contains 'build' or tags contains 'customer build' -%}
+          {%- if article.image != blank -%}
+            {%- assign build_count = build_count | plus: 1 -%}
+            <article class="builds-story">
+              <a href="{{ article.url }}" aria-label="{{ article.title | escape }}">
+                {{ article.image | image_url: width: 1000 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', alt: article.image.alt }}
+              </a>
+              <h3><a href="{{ article.url }}">{{ article.title | escape }}</a></h3>
+              <p>{{ article.excerpt | default: article.content | strip_html | truncatewords: 35 | escape }}</p>
+              <a href="{{ article.url }}">View Build {% render 'icon', icon: 'arrow' %}</a>
+            </article>
+            {%- if build_count >= 12 -%}{%- break -%}{%- endif -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    <div class="section-heading builds-content__stories-heading"><h2>Customer Builds</h2></div>
+    {%- if build_count > 0 -%}
+      <div class="builds-stories">{{ build_stories }}</div>
+    {%- else -%}
+      <p>No builds shared yet.</p>
+    {%- endif -%}
+    {%- if pages['contact'] != blank -%}<a class="button button--secondary" href="{{ pages['contact'].url }}">Submit Your Build</a>{%- endif -%}
+  </div>
+</section>

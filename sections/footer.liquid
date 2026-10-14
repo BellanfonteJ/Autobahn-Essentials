@@ -32,9 +32,7 @@
         <div {{ block.shopify_attributes }}>
           <h3>{{ block.settings.heading }}</h3>
           <ul class="footer-links">
-            {%- for link in block.settings.menu.links -%}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {%- endfor -%}
+            {% render 'footer-menu-links', block: block %}
           </ul>
         </div>
       {%- endfor -%}
@@ -80,6 +78,19 @@
           "id": "menu",
           "label": "Menu",
           "default": "footer"
+        },
+        {
+          "type": "select",
+          "id": "fallback_role",
+          "label": "Default navigation group",
+          "info": "Used when the selected menu is empty or contains only the default Search link.",
+          "default": "auto",
+          "options": [
+            { "value": "auto", "label": "Match heading" },
+            { "value": "shop", "label": "Shop" },
+            { "value": "support", "label": "Support" },
+            { "value": "company", "label": "Company" }
+          ]
         }
       ]
     }

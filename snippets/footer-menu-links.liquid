@@ -1,0 +1,55 @@
+{%- liquid
+  assign fallback_role = block.settings.fallback_role | default: 'auto'
+  if fallback_role == 'auto'
+    assign heading = block.settings.heading | downcase | strip
+    case heading
+      when 'support'
+        assign fallback_role = 'support'
+      when 'company'
+        assign fallback_role = 'company'
+      else
+        assign fallback_role = 'shop'
+    endcase
+  endif
+  assign menu_links = block.settings.menu.links
+  assign use_fallback = false
+  if menu_links.size == 0 or menu_links == blank
+    assign use_fallback = true
+  elsif menu_links.size == 1 and menu_links.first.url == routes.search_url
+    assign use_fallback = true
+  endif
+-%}
+{%- unless use_fallback -%}
+  {%- for link in menu_links -%}
+    <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+  {%- endfor -%}
+{%- else -%}
+  {%- case fallback_role -%}
+    {%- when 'support' -%}
+      {%- assign page_handles = 'contact,fitment,shipping-returns,faq' | split: ',' -%}
+      {%- assign page_labels = 'Contact Us,Fitment Guide,Shipping & Returns,FAQ' | split: ',' -%}
+    {%- when 'company' -%}
+      {%- assign page_handles = 'about,builds,ae-blog' | split: ',' -%}
+      {%- assign page_labels = 'About Us,Builds,Autobahn Blog' | split: ',' -%}
+    {%- else -%}
+      <li><a href="{{ routes.all_products_collection_url }}">All Parts</a></li>
+      {%- assign collection_handles = 'bmw,audi,vw,accessories' | split: ',' -%}
+      {%- for handle in collection_handles -%}
+        {%- assign target = collections[handle] -%}
+        {%- if target != blank -%}
+          <li><a href="{{ target.url }}">{{ target.title | escape }}</a></li>
+        {%- endif -%}
+      {%- endfor -%}
+  {%- endcase -%}
+  {%- for handle in page_handles -%}
+    {%- assign target = pages[handle] -%}
+    {%- if target != blank -%}
+      <li><a href="{{ target.url }}">{{ page_labels[forloop.index0] | escape }}</a></li>
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if fallback_role == 'support' -%}
+    {%- for policy in shop.policies -%}
+      {%- if policy.body != blank -%}<li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>{%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endunless -%}

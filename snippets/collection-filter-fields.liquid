@@ -1,0 +1,29 @@
+{%- for filter in collection.filters -%}
+  {%- assign filter_index = forloop.index -%}
+  <details class="collection-facet" open>
+    <summary>{{ filter.label | escape }}<span aria-hidden="true">+</span></summary>
+    <div class="collection-facet__values">
+      {%- if filter.type == 'price_range' -%}
+        <p class="collection-facet__currency">{{ cart.currency.iso_code | default: shop.currency }}</p>
+        <div class="collection-facet__price">
+          <div>
+            <label for="Filter-{{ section.id }}-{{ forloop.index }}-min">{{ 'collections.filters.minimum' | t }}</label>
+            <input class="field" id="Filter-{{ section.id }}-{{ forloop.index }}-min" type="number" inputmode="decimal" step="any" min="0" max="{{ filter.range_max | divided_by: 100.0 }}" name="{{ filter.min_value.param_name | escape }}" {% if filter.min_value.value != nil %}value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %} placeholder="0" data-price-min>
+          </div>
+          <div>
+            <label for="Filter-{{ section.id }}-{{ forloop.index }}-max">{{ 'collections.filters.maximum' | t }}</label>
+            <input class="field" id="Filter-{{ section.id }}-{{ forloop.index }}-max" type="number" inputmode="decimal" step="any" min="0" max="{{ filter.range_max | divided_by: 100.0 }}" name="{{ filter.max_value.param_name | escape }}" {% if filter.max_value.value != nil %}value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %} placeholder="{{ filter.range_max | divided_by: 100.0 }}" data-price-max>
+          </div>
+        </div>
+      {%- else -%}
+        {%- for value in filter.values -%}
+          <label class="collection-facet__option" for="Filter-{{ section.id }}-{{ filter_index }}-{{ forloop.index }}">
+            <input id="Filter-{{ section.id }}-{{ filter_index }}-{{ forloop.index }}" type="checkbox" name="{{ value.param_name | escape }}" value="{{ value.value | escape }}"{% if value.active %} checked{% elsif value.count == 0 %} disabled{% endif %}>
+            <span>{{ value.label | escape }}</span>
+            <span class="collection-facet__count">{{ value.count }}</span>
+          </label>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </details>
+{%- endfor -%}

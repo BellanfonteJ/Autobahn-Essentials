@@ -1,88 +1,94 @@
 {% render 'breadcrumbs' %}
+{%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+{%- assign has_filters = false -%}
+{%- if collection.filters.size > 0 -%}{%- assign has_filters = true -%}{%- endif -%}
 
-<section class="section">
+<section class="section collection-browser">
   <div class="page-width">
-    <div class="section-heading">
+    <div class="section-heading collection-browser__heading">
       <div>
-        <div class="eyebrow">{{ collection.products_count }} {{ 'products.product.products' | t | default: 'products' }}</div>
-        <h1>{{ collection.title }}</h1>
-        {%- if collection.description != blank -%}
-          <div class="rte">{{ collection.description }}</div>
-        {%- endif -%}
-      </div>
-
-      <form method="get">
-        <label class="visually-hidden" for="SortBy">{{ 'collections.sorting.title' | t }}</label>
-        <select class="select" id="SortBy" name="sort_by" onchange="this.form.submit()">
-          {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-          {%- for option in collection.sort_options -%}
-            <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name }}</option>
-          {%- endfor -%}
-        </select>
-      </form>
-    </div>
-
-    <div class="collection-tools">
-      <form class="collection-tools__search" action="{{ routes.search_url }}" method="get" data-vehicle-finder>
-        <input type="hidden" name="type" value="product">
-        <input type="hidden" name="q" value="">
-        <label class="visually-hidden" for="CollectionSearchQuery">Vehicle or part</label>
-        <input id="CollectionSearchQuery" class="field" type="text" name="vehicle_model" placeholder="Search this category by vehicle or part">
-        <label class="visually-hidden" for="CollectionPartType">Part type</label>
-        <select id="CollectionPartType" class="select" name="part_type">
-          <option value="">Part type</option>
-          <option>Downpipes</option>
-          <option>Turbo upgrade</option>
-          <option>Intercooler</option>
-          <option>Carbon fiber</option>
-          <option>Interior accessories</option>
-        </select>
-        <button class="button" type="submit">{{ 'general.search.submit' | t }}</button>
-      </form>
-
-      <div class="collection-filter-chips" aria-label="Collection filters">
-        <a href="{{ collection.url }}" class="filter-chip{% unless current_tags %} is-active{% endunless %}">All</a>
-        {%- for tag in collection.all_tags limit: 8 -%}
-          {%- if current_tags contains tag -%}
-            <span class="filter-chip is-active">{{ tag }}</span>
-          {%- else -%}
-            {{ tag | link_to_tag: tag | replace: '<a ', '<a class="filter-chip" ' }}
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-
-      <div
-        class="garage-fitment-filter"
-        data-fitment-filter-controls
-      >
-        <label class="garage-fitment-filter__toggle">
-          <input type="checkbox" data-fitment-filter-toggle>
-          <span>Show listed model / engine matches</span>
-        </label>
-        <button class="button button--secondary" type="button" data-garage-open>My Garage</button>
-        <button class="button button--secondary" type="button" data-fitment-retry hidden>Retry</button>
-        <p data-fitment-filter-status>Save a vehicle in My Garage to filter this collection.</p>
+        <div class="eyebrow">{{ collection.products_count }} {{ 'products.product.products' | t }}</div>
+        <h1>{{ collection.title | escape }}</h1>
+        {%- if collection.description != blank -%}<div class="rte">{{ collection.description }}</div>{%- endif -%}
       </div>
     </div>
 
-    {%- paginate collection.products by section.settings.products_per_page -%}
-      {%- if collection.products.size > 0 -%}
-        <div class="product-grid" data-fitment-grid data-fitment-section="{{ section.id }}" data-fitment-pages="{{ paginate.pages }}" data-fitment-page="{{ paginate.current_page | default: 1 }}" data-fitment-url="{{ collection.url | escape }}">
-          {%- for product in collection.products -%}
-            {% render 'product-card', product: product %}
-          {%- endfor -%}
-        </div>
-        <div class="empty-state" data-fitment-empty hidden>No listed model / engine matches. Products without fitment data are excluded; contact us to confirm compatibility.</div>
-
-        {%- if paginate.pages > 1 -%}
-          <nav class="pagination" data-fitment-pagination role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
-            {{ paginate | default_pagination }}
-          </nav>
-        {%- endif -%}
-      {%- else -%}
-        <div class="empty-state">{{ 'collections.general.no_matches' | t }}</div>
+    <div class="collection-browser__toolbar">
+      {%- if has_filters -%}
+        <button class="button button--secondary collection-browser__filter-open" type="button" data-facet-open aria-expanded="false" aria-controls="CollectionFilters-{{ section.id }}">
+          {% render 'icon', icon: 'menu' %} {{ 'collections.filters.title' | t }}
+        </button>
       {%- endif -%}
-    {%- endpaginate -%}
+      <form class="collection-browser__search" action="{{ routes.search_url }}" method="get" role="search">
+        <input type="hidden" name="type" value="product">
+        <label class="visually-hidden" for="CollectionSearchQuery">{{ 'general.search.search' | t }}</label>
+        <input id="CollectionSearchQuery" class="field" type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}">
+        <button class="icon-button" type="submit" aria-label="{{ 'general.search.submit' | t }}" title="{{ 'general.search.submit' | t }}">{% render 'icon', icon: 'search' %}</button>
+      </form>
+      <form class="collection-browser__sort" method="get" data-collection-sort>
+        {% render 'collection-sort-fields', collection: collection %}
+        <label for="SortBy">{{ 'collections.sorting.title' | t }}</label>
+        <select class="select" id="SortBy" name="sort_by">
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+          {%- endfor -%}
+        </select>
+        <noscript><button class="button button--secondary" type="submit">{{ 'collections.filters.apply' | t }}</button></noscript>
+      </form>
+    </div>
+
+    {% render 'collection-active-filters', collection: collection %}
+
+    <div class="collection-browser__layout{% if has_filters %} collection-browser__layout--filtered{% endif %}">
+      {%- if has_filters -%}
+        <div class="collection-facets__backdrop" data-facet-backdrop hidden></div>
+        <aside id="CollectionFilters-{{ section.id }}" class="collection-facets" data-collection-facets aria-labelledby="CollectionFiltersTitle-{{ section.id }}">
+          <div class="collection-facets__heading">
+            <h2 id="CollectionFiltersTitle-{{ section.id }}">{{ 'collections.filters.title' | t }}</h2>
+            <button class="icon-button" type="button" data-facet-close aria-label="{{ 'collections.filters.close' | t }}" title="{{ 'collections.filters.close' | t }}">{% render 'icon', icon: 'close' %}</button>
+          </div>
+          <form method="get" data-collection-filter-form>
+            <input type="hidden" name="sort_by" value="{{ sort_by | escape }}">
+            {% render 'collection-filter-fields', collection: collection, section: section %}
+            <div class="collection-facets__actions">
+              <button class="button button--full" type="submit">{{ 'collections.filters.apply' | t }}</button>
+              <a href="{{ collection.url }}" data-facet-reset>{{ 'collections.filters.clear' | t }}</a>
+            </div>
+          </form>
+        </aside>
+      {%- endif -%}
+
+      <div class="collection-browser__results">
+        <div class="garage-fitment-filter" data-fitment-filter-controls>
+          <label class="garage-fitment-filter__toggle">
+            <input type="checkbox" data-fitment-filter-toggle>
+            <span>Show listed model / engine matches</span>
+          </label>
+          <button class="button button--secondary" type="button" data-garage-open>My Garage</button>
+          <button class="button button--secondary" type="button" data-fitment-retry hidden>Retry</button>
+          <p data-fitment-filter-status role="status">Save a vehicle in My Garage to filter this collection.</p>
+        </div>
+
+        {%- paginate collection.products by section.settings.products_per_page -%}
+          {%- if collection.products.size > 0 -%}
+            <div class="product-grid" data-fitment-grid data-fitment-section="{{ section.id }}" data-fitment-pages="{{ paginate.pages }}" data-fitment-page="{{ paginate.current_page | default: 1 }}" data-fitment-url="{{ collection.url | escape }}">
+              {%- for product in collection.products -%}
+                {% render 'product-card', product: product %}
+              {%- endfor -%}
+            </div>
+            <div class="empty-state" data-fitment-empty hidden>No listed model / engine matches. Products without fitment data are excluded; contact us to confirm compatibility.</div>
+            {%- if paginate.pages > 1 -%}
+              <nav class="pagination" data-fitment-pagination aria-label="{{ 'general.pagination.label' | t }}">{{ paginate | default_pagination }}</nav>
+            {%- endif -%}
+          {%- else -%}
+            <div class="empty-state">
+              <p>{{ 'collections.general.no_matches' | t }}</p>
+              {%- if has_filters -%}<a href="{{ collection.url }}" data-facet-reset>{{ 'collections.filters.clear' | t }}</a>{%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endpaginate -%}
+      </div>
+    </div>
   </div>
 </section>
 

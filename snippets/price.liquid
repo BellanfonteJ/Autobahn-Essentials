@@ -2,6 +2,13 @@
   assign target = variant | default: product.selected_or_first_available_variant
   assign compare_at_price = target.compare_at_price
   assign price = target.price
+  if use_variant != true
+    assign price = product.price
+    assign compare_at_price = product.compare_at_price
+    if product.price_varies
+      assign compare_at_price = 0
+    endif
+  endif
 -%}
 
 <div class="price">

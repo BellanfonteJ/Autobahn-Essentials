@@ -11,13 +11,13 @@
       <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" width="1800" height="1000" loading="lazy" class="product-card__image">
     {%- endif -%}
 
-    {%- if product.metafields.custom.badge != blank -%}
-      <span class="product-card__badge">{{ product.metafields.custom.badge.value | default: product.metafields.custom.badge }}</span>
+    {%- if product.available == false -%}
+      <span class="product-card__badge product-card__badge--muted">{{ 'products.product.sold_out' | t }}</span>
+    {%- elsif product.metafields.custom.badge != blank -%}
+      <span class="product-card__badge">{{ product.metafields.custom.badge.value | default: product.metafields.custom.badge | escape }}</span>
     {%- elsif product.tags contains 'New' -%}
       <span class="product-card__badge">New</span>
-    {%- elsif product.available == false -%}
-      <span class="product-card__badge">{{ 'products.product.sold_out' | t }}</span>
-    {%- elsif product.compare_at_price > product.price -%}
+    {%- elsif product.price_varies == false and product.compare_at_price > product.price -%}
       <span class="product-card__badge">{{ 'products.product.on_sale' | t }}</span>
     {%- endif -%}
   </a>
@@ -37,7 +37,7 @@
         <button class="button button--full" type="submit">{{ 'products.product.quick_buy' | t }}</button>
       {%- endform -%}
     {%- elsif product.available -%}
-      <a class="button button--full" href="{{ product.url }}">{{ 'products.product.choose_options' | t }}</a>
+      <a class="button button--secondary button--full" href="{{ product.url }}">{{ 'products.product.choose_options' | t }}</a>
     {%- else -%}
       <a class="button button--secondary button--full" href="{{ product.url }}">{{ 'products.product.view_details' | t }}</a>
     {%- endif -%}

@@ -90,15 +90,19 @@ const product = {
 
 function context(options = {}) {
   return {
-    shop: { name: 'Autobahn Essentials', currency: 'USD', email: 'support@example.test' },
+    shop: { name: 'Autobahn Essentials', currency: 'USD', email: 'support@example.test', policies: [], ...options.shop },
     settings: { ...config, ...options.settings },
     routes: { root_url: '/', cart_url: '/cart', search_url: '/search', collections_url: '/collections', all_products_collection_url: '/collections/all', ...options.routes },
     request: { locale: { iso_code: 'en-US' } },
     cart: { item_count: 0, items: [], total_price: 0, currency: { iso_code: 'USD' }, ...options.cart },
     page_title: 'Autobahn Essentials', canonical_url: 'http://theme.test/', current_page: 1,
-    template: { name: options.template || 'product' }, product: { ...product, ...options.product },
-    pages: {}, search: { performed: true, terms: 'charge pipe', results_count: 1, results: [{ ...product, object_type: 'product' }], ...options.search },
-    collection: { title: 'BMW', url: '/collections/bmw', products_count: 1, products: [product], all_tags: [], sort_options: [], ...options.collection },
+    template: { name: ['builds', 'page'].includes(options.template) ? 'page' : options.template || 'product' }, product: { ...product, ...options.product },
+    page: { handle: options.template === 'builds' ? 'builds' : 'example', title: 'Example', content: '', ...options.page },
+    pages: options.pages || {},
+    blogs: options.blogs || {},
+    collections: options.collections || { bmw: { title: 'BMW', url: '/collections/bmw' }, audi: { title: 'Audi', url: '/collections/audi' }, vw: { title: 'Volkswagen', url: '/collections/vw' }, accessories: { title: 'Accessories', url: '/collections/accessories' } },
+    search: { performed: true, terms: 'charge pipe', results_count: 1, results: [{ ...product, object_type: 'product' }], ...options.search },
+    collection: { title: 'BMW', url: '/collections/bmw', products_count: 1, products: [product], all_tags: [], filters: [], default_sort_by: 'best-selling', sort_options: [{ value: 'best-selling', name: 'Best selling' }, { value: 'price-ascending', name: 'Price, low to high' }, { value: 'price-descending', name: 'Price, high to low' }], ...options.collection },
     _paginate: options.paginate || {},
     _formStates: options.formStates || {},
   };
@@ -117,7 +121,7 @@ async function renderSection(name, ctx, overrides = {}) {
 async function renderPage(options = {}) {
   const ctx = context(options);
   const template = options.template || 'product';
-  const name = { product: 'main-product', index: 'hero-autobahn', collection: 'main-collection-product-grid', search: 'main-search', cart: 'main-cart-items', contact: 'page-contact-autobahn', fitment: 'page-fitment-autobahn', password: 'main-password' }[template];
+  const name = { page: 'main-page', builds: 'page-builds-autobahn', product: 'main-product', index: 'hero-autobahn', collection: 'main-collection-product-grid', search: 'main-search', cart: 'main-cart-items', contact: 'page-contact-autobahn', fitment: 'page-fitment-autobahn', password: 'main-password' }[template];
   const popupSettings = { ...config.sections['popup-newsletter'].settings, enabled: Boolean(options.popup), delay_seconds: options.popupDelay ?? 30 };
   let content = await renderSection(name, ctx);
   if (options.finder) content += await renderSection('vehicle-finder', ctx);
@@ -128,8 +132,8 @@ async function renderPage(options = {}) {
   const shell = read(template === 'password' ? 'layout/password.liquid' : 'layout/theme.liquid').replace(/{% section '([^']+)' %}/g, (_, section) => `{{ ${section.replace(/-/g, '_')}_html }}`);
   return engine.parseAndRender(shell, {
     ...ctx, content_for_layout: content,
-    header_html: await renderSection('header', ctx),
-    footer_html: await renderSection('footer', ctx),
+    header_html: options.shopifyHeaderWrapper ? `<div id="shopify-section-header" class="shopify-section">${await renderSection('header', ctx)}</div>` : await renderSection('header', ctx),
+    footer_html: await renderSection('footer', ctx, { blocks: options.footerBlocks || [] }),
     popup_newsletter_html: await renderSection('popup-newsletter', ctx, { settings: popupSettings }),
   }, { globals: ctx });
 }

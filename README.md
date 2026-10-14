@@ -20,11 +20,13 @@ The PNG exclusion avoids re-uploading unchanged large images after intermittent 
 - [Shopify preview](https://autobahnessentials.myshopify.com/?preview_theme_id=167398703161)
 - [Preview theme editor](https://admin.shopify.com/store/autobahnessentials/themes/167398703161/editor)
 
-GitHub pushes and Shopify publication are separate operations. The bug-fix branch does not replace `main`, and this preview workflow does not publish the live theme. Review existing merchant settings before any full theme upload.
+The development command does not publish the live theme. However, pushes to a Shopify-connected branch update its linked theme automatically, including a live theme. Review existing merchant settings and the connected repository before any merge, reset, reconnection or full theme upload.
 
 ## GitHub and VS Code Sync
 
-The new garage updates are maintained on `codex/theme-bug-fixes` in [slimeraps/Autobahn-Essentials](https://github.com/slimeraps/Autobahn-Essentials/tree/codex/theme-bug-fixes), based on current `main` at `1b1a312`. The earlier motion and close-icon fixes were merged into `main` through PR #48. New branch pushes are not automatically merged into `main` or published to Shopify.
+The collection, footer and Builds updates are maintained on `codex/theme-bug-fixes` in [slimeraps/Autobahn-Essentials](https://github.com/slimeraps/Autobahn-Essentials/tree/codex/theme-bug-fixes), based on `main` at `5c2575b` after the garage merge in PR #49. The earlier motion and close-icon fixes were merged through PR #48.
+
+**Release warning:** Shopify Admin currently links the live theme to [BellanfonteJ/Autobahn-Essentials/main](https://github.com/BellanfonteJ/Autobahn-Essentials/tree/main), not the `slimeraps` repository used by this checkout. A read-only live layout download did not contain the garage scripts. The connection and reset controls were not changed. Do not merge into the connected repository or reset its theme without reviewing the complete diff and authorizing the resulting live update. See [RELEASE-READINESS.md](RELEASE-READINESS.md).
 
 For an existing checkout, preserve or commit any local work before switching branches, then run:
 
@@ -44,11 +46,11 @@ pnpm test
 pnpm theme:package
 ```
 
-The current suite has 49 regression tests: 45 browser checks and four CSV-import checks. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, and single close icons. Import tests require Python 3; set `PYTHON_EXECUTABLE` to select another Python installation.
+The current suite has 68 regression tests: 61 browser checks, four CSV-import checks and three read-only catalog-audit checks. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content and single close icons. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
 
 Tests use installed Google Chrome on macOS or Playwright Chromium. If neither is available, run `pnpm exec playwright install chromium`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for another compatible Chromium installation. Set `THEME_SCREENSHOTS=1` to capture test screenshots in the ignored `.tools/screenshots/` folder.
 
-Earlier real-store preview checks verified product variants, cart add/update/remove, gallery navigation, mobile layout, and the contact page. The new CSV-backed garage is verified by browser fixtures, including the actual imported catalog; its complete real-store workflow still needs a preview check. Checkout, email delivery, and complete installed-app workflows remain unverified. No order was placed. See [BUGFIXES.md](BUGFIXES.md) for the full scope and remaining store-content tasks. Garage matching is a browsing aid, not a compatibility guarantee.
+Real-store preview checks verified product variants, cart add/update/remove, gallery navigation, mobile layout, contact navigation, combined native/garage filters, the Builds page and distinct footer links. Checkout failed to load through the local preview; email delivery and complete installed-app workflows remain unverified. No order was placed. See [BUGFIXES.md](BUGFIXES.md) and [RELEASE-READINESS.md](RELEASE-READINESS.md) for remaining work. Garage matching is a browsing aid, not a compatibility guarantee.
 
 ## My Garage Fitment Data
 
@@ -72,9 +74,36 @@ pnpm test
 
 This regenerates `assets/fitment-data.js` and `FITMENT-IMPORT.md`. Keep the source CSV outside the repository. Review flagged rows before changing any compatibility claims. A separate, verified supplier year-range file is needed for exact model-year matching; this importer does not infer ranges from titles.
 
+## Collection Browsing
+
+Collections have a native Shopify filter sidebar on desktop and a keyboard-accessible filter drawer on mobile. The theme renders the configured `collection.filters` rather than inventing filter values. Availability and Price were present in the real-store preview; Brand and Product Type need to be enabled in Shopify Search & Discovery to appear. Those are store-wide settings and were not changed by this preview update. See [Shopify's filter setup guide](https://help.shopify.com/en/manual/online-store/storefront-search/search-and-discovery-filters).
+
+Applying filters resets pagination while preserving sorting, locale, tagged collection paths, and vehicle URL preferences. Sorting preserves repeated filter values and price ranges. Active filters can be removed individually or cleared; invalid price ranges expose native validation and can be corrected. Filtering and sorting also work without JavaScript.
+
+A compact My Garage bar stays visible while browsing, with Change/Clear controls and the model-year warning. It follows the rendered header position, including Shopify's section wrapper, resized headers, and hidden navigation. Product cards retain full titles, clear starting prices, restrained fitment labels, consistent image surfaces, and unchanged quick-buy/variant behavior. A sold-out label takes priority over decorative merchandising badges.
+
+Real-preview checks verified Availability/Price controls, a USD 100-200 price range returning 35 products, and eight listed garage matches across that filtered collection's pages. Temporary price and match-only filters were cleared afterward; the saved vehicle was preserved. No order was placed and no theme was published. Separate catalog content maintenance is recorded below.
+
+## Footer, Builds and Catalog Review
+
+Empty or legacy Search-only footer menus now use distinct Shop, Support and Company links to existing collections, pages and published policies. Custom merchant menus remain unchanged. The footer editor offers an explicit fallback role; real Shopify menus still need merchant assignment for full editorial control.
+
+The Builds template has configurable hero media and a blog source, platform browsing and customer stories. Only published articles tagged `build` or `customer build` with an image are included. No invented customer builds appear. An empty generic `/pages/builds` page receives the same experience until its Shopify template assignment is reviewed; authored page content is preserved.
+
+Run `python3 scripts/audit-catalog.py /path/to/products_export.csv` for a read-only supplier/description review. [CATALOG-REVIEW.md](CATALOG-REVIEW.md) flags five products with repeated substantial parsed HTML fragments in the supplied export. Similar but nonidentical content may not be detected; flags are review candidates, not deletion instructions. No raw descriptions or commercial CSV columns are committed.
+
+The current `135i-5-intercooler-fmic` description was backed up locally and its manually reviewed second profile-through-warranty block was removed in Shopify Admin. Preview verification confirmed one profile and one unchanged fitment table. This is a **store-wide product content edit**, not an unpublished-theme-only change. Other candidates and supplier normalization await current-data review; no prices, stock or compatibility claims were changed.
+
 ## Changelog
 
 ### October 14, 2026
+
+- Added native collection filtering with a desktop sidebar, mobile focus-managed drawer, active filter removal, sort preservation, price validation, and no-JavaScript support.
+- Refined product cards and added a persistent My Garage bar with Change/Clear controls and year-fitment warnings. Card starting prices use the product minimum without implying unrelated variant discounts.
+- Rebuilt the empty Builds page with platform links, configurable hero/blog sources and a genuine customer-story gallery; repaired Search-only footer fallbacks without replacing custom menus.
+- Added 16 browsing/footer/Builds browser checks and three catalog audit checks, bringing the suite to 68. Added a read-only content review and a launch-readiness checklist.
+- Verified the Shopify GitHub connection targets the separate `BellanfonteJ` repository. Kept the live connection, live theme, shipping rates and payment setup unchanged.
+- Removed a manually reviewed duplicate description block from the 135i 5-inch intercooler in Shopify, preserving its unique content and fitment rows. This content maintenance affects all themes.
 
 - Rebuilt My Garage around the supplied CSV's explicit fitment tables. Added validated cascading selectors, saved-vehicle synchronization, transparent unknown/restricted badges, and full collection/search pagination with failure recovery.
 - Added 12 garage browser tests and four importer tests, bringing the suite to 49. Updated responsive drawer controls and retained ordinary shopping when fitment data, storage, or JavaScript is unavailable.

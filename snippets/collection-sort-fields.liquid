@@ -1,0 +1,13 @@
+{%- for filter in collection.filters -%}
+  {%- for value in filter.active_values -%}
+    <input type="hidden" name="{{ value.param_name | escape }}" value="{{ value.value | escape }}">
+  {%- endfor -%}
+  {%- if filter.type == 'price_range' -%}
+    {%- if filter.min_value.value != nil -%}
+      <input type="hidden" name="{{ filter.min_value.param_name | escape }}" value="{{ filter.min_value.value | divided_by: 100.0 }}">
+    {%- endif -%}
+    {%- if filter.max_value.value != nil -%}
+      <input type="hidden" name="{{ filter.max_value.param_name | escape }}" value="{{ filter.max_value.value | divided_by: 100.0 }}">
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}

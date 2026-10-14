@@ -132,7 +132,12 @@
         : value === 'review' ? 'Listed model / engine - check restrictions and year'
         : 'Listed model / engine - confirm year';
       (badge.querySelector('[data-fitment-badge-text]') || badge).textContent = label;
+      if (badge.classList.contains('fitment-badge--card')) {
+        const compact = { empty: 'Check fitment', unknown: 'Fitment unknown - confirm', 'not-listed': 'Not listed for your vehicle', review: 'Listed - check year & restrictions', listed: 'Listed - confirm year' };
+        (badge.querySelector('[data-fitment-badge-text]') || badge).textContent = compact[value];
+      }
       badge.setAttribute('aria-label', label);
+      badge.title = label;
       badge.classList.remove('is-fit', 'is-check', 'is-empty');
       badge.classList.add(value === 'empty' ? 'is-empty' : 'is-check');
       badge.dataset.fitmentState = value;
@@ -255,6 +260,16 @@
     toggle?.classList.toggle('has-garage', ready);
     const indicator = toggle?.querySelector('[data-garage-indicator]');
     if (indicator) indicator.hidden = !ready;
+    document.querySelectorAll('[data-garage-bar]').forEach((bar) => {
+      const vehicle = bar.querySelector('[data-garage-bar-vehicle]');
+      if (vehicle) vehicle.textContent = ready ? format(garage) : Object.values(garage).some(Boolean) ? 'Update your saved vehicle' : 'No vehicle saved';
+      const note = bar.querySelector('[data-garage-bar-note]');
+      if (note) note.hidden = !ready;
+      const clearButton = bar.querySelector('[data-garage-bar-clear]');
+      if (clearButton) clearButton.hidden = !Object.values(garage).some(Boolean);
+      const change = bar.querySelector('[data-garage-bar-change]');
+      if (change) change.textContent = ready ? 'Change' : 'Choose vehicle';
+    });
     document.querySelectorAll('[data-vehicle-saved]').forEach((chip) => {
       chip.hidden = !ready;
       const text = chip.querySelector('[data-vehicle-saved-text]');
@@ -358,5 +373,39 @@
     history.replaceState({}, '', url);
   }
   window.AEGarage = { open, close, read, state, complete, update };
+  const header = document.querySelector('.site-header--sticky');
+  const ticker = document.querySelector('.announcement-bar');
+  let offsetFrame = 0;
+  let followUntil = 0;
+  const offset = () => {
+    const bottom = Math.max(0, header?.getBoundingClientRect().bottom || 0, ticker?.getBoundingClientRect().bottom || 0);
+    document.documentElement.style.setProperty('--garage-bar-offset', `${bottom}px`);
+  };
+  const followHeader = () => {
+    offset();
+    offsetFrame = performance.now() < followUntil ? requestAnimationFrame(followHeader) : 0;
+  };
+  const queueOffset = () => {
+    if (!offsetFrame) offsetFrame = requestAnimationFrame(followHeader);
+  };
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(queueOffset);
+    if (header) observer.observe(header);
+    if (ticker) observer.observe(ticker);
+  }
+  if (header) {
+    let previousClass = header.className;
+    new MutationObserver(() => {
+      if (header.className === previousClass) return;
+      previousClass = header.className;
+      // Follow only the short header transition, not a permanent animation loop.
+      followUntil = performance.now() + (matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 400);
+      queueOffset();
+    }).observe(header, { attributes: true, attributeFilter: ['class'] });
+    header.addEventListener('transitionend', queueOffset);
+  }
+  window.addEventListener('scroll', queueOffset, { passive: true });
+  window.addEventListener('resize', queueOffset);
+  offset();
   update();
 })();

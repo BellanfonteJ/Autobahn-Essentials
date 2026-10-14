@@ -1,0 +1,29 @@
+{%- assign active_count = 0 -%}
+{%- capture active_filters -%}
+  {%- for filter in collection.filters -%}
+    {%- for value in filter.active_values -%}
+      {%- assign active_count = active_count | plus: 1 -%}
+      <a class="collection-active-filter" href="{{ value.url_to_remove | escape }}">
+        <span>{{ filter.label | escape }}: {{ value.label | escape }}</span>
+        <span class="visually-hidden">{{ 'collections.filters.remove' | t }}</span>
+        {% render 'icon', icon: 'close' %}
+      </a>
+    {%- endfor -%}
+    {%- if filter.type == 'price_range' -%}
+      {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+        {%- assign active_count = active_count | plus: 1 -%}
+        <a class="collection-active-filter" href="{{ filter.url_to_remove | escape }}">
+          <span>{{ filter.min_value.value | default: 0 | money }} - {{ filter.max_value.value | default: filter.range_max | money }}</span>
+          <span class="visually-hidden">{{ 'collections.filters.remove' | t }}</span>
+          {% render 'icon', icon: 'close' %}
+        </a>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- if active_count > 0 -%}
+  <div class="collection-active-filters" aria-label="{{ 'collections.filters.active' | t }}">
+    {{ active_filters }}
+    <a class="collection-facets__reset" href="{{ collection.url }}" data-facet-reset>{{ 'collections.filters.clear' | t }}</a>
+  </div>
+{%- endif -%}
