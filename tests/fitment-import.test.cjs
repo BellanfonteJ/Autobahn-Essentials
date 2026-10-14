@@ -77,3 +77,60 @@ test('shipped catalog has valid indices, published handles and no fabricated yea
   assert.equal(data.meta.yearRangesProvided, false);
   assert.equal(data.meta.sha256.length, 64);
 });
+
+test('manufacturer reviews attach provenance only to exact rows and matching part numbers', () => {
+  const data = python(`import json,runpy
+from pathlib import Path
+m=runpy.run_path('scripts/import-fitment.py')
+review=json.loads(Path('data/fitment-source-reviews.json').read_text())['products']['135i-5-intercooler-fmic']
+records=[record for row in review['rows'] for record in m['records_for_row'](row)]
+before=json.dumps(records,sort_keys=True)
+out=m['source_review'](review,{'Variant SKU':'335FMIC'},records)
+print(json.dumps({'source':out,'unchanged':before==json.dumps(records,sort_keys=True)}))`);
+  assert.equal(data.unchanged, true);
+  assert.equal(data.source.scope, 'model-engine');
+  assert.equal(data.source.reviewedAt, '2026-10-14');
+  assert.equal(data.source.recordsSha256.length, 64);
+  assert.equal('partNumber' in data.source, false, 'Exported SKU fields are not copied into the storefront asset');
+});
+
+test('manufacturer reviews reject mismatched rows, guessed years, unsafe URLs and malformed dates', () => {
+  const data = python(`import copy,json,runpy
+from pathlib import Path
+m=runpy.run_path('scripts/import-fitment.py')
+review=json.loads(Path('data/fitment-source-reviews.json').read_text())['products']['135i-5-intercooler-fmic']
+records=[record for row in review['rows'] for record in m['records_for_row'](row)]
+cases=[]
+for url in ['javascript:alert(1)','https://armmotorsports.com.attacker.test/products/a','https://user:pass@armmotorsports.com/products/a','https://armmotorsports.com/products/a?private=secret']:
+ r=copy.deepcopy(review); r['url']=url; cases.append(r)
+r=copy.deepcopy(review); r['rows'][0]['years']=[2010]; cases.append(r)
+r=copy.deepcopy(review); r['rows'].pop(); cases.append(r)
+r=copy.deepcopy(review); r['partNumber']='Different'; cases.append(r)
+r=copy.deepcopy(review); r['reviewedAt']='20261014'; cases.append(r)
+r=copy.deepcopy(review); r['reviewedAt']='2026-02-31'; cases.append(r)
+r=copy.deepcopy(review); r['scope']='guaranteed'; cases.append(r)
+out=[]
+for item in cases:
+ try: m['source_review'](item,{'Variant SKU':'335FMIC'},records); out.append(False)
+ except ValueError: out.append(True)
+print(json.dumps(out))`);
+  assert.equal(data.length, 10);
+  assert.ok(data.every(Boolean));
+});
+
+test('stale source reviews are flagged without clearing existing fitment or upgrading year claims', () => {
+  const data = python(`import json,runpy,tempfile
+from pathlib import Path
+m=runpy.run_path('scripts/import-fitment.py')
+with tempfile.TemporaryDirectory() as directory:
+ source=Path(directory)/'reviews.json'
+ source.write_text(json.dumps({'version':1,'products':{'explicit':{'supplier':'ARM Motorsports','url':'https://armmotorsports.com/products/test','scope':'model-engine','reviewedAt':'2026-10-14','partNumber':'CHANGED','rows':[{'make':'BMW','chassis':'E90','model':'335i','engine':'N54/N55'}]}}}))
+ data,review=m['extract'](Path('tests/fixtures/fitment.csv'),source)
+ print(json.dumps({'data':data,'review':review}))`);
+  assert.deepEqual(data.data.products.explicit.records, [0, 1]);
+  assert.equal(data.data.products.explicit.review, true);
+  assert.equal(data.data.products.explicit.sourceReview, undefined);
+  assert.equal(data.data.meta.sourceReviewedProducts, 0);
+  assert.equal(data.data.meta.yearRangesProvided, false);
+  assert.ok(data.review.find((item) => item.handle === 'explicit').issues.some((issue) => issue.includes('source review invalid')));
+});

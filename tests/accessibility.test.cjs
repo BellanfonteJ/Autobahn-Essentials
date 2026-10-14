@@ -1,0 +1,68 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const { test, before, after } = require('node:test');
+const { chromium } = require('playwright');
+const axe = require('axe-core');
+const { mount } = require('./helpers/theme.cjs');
+
+let browser;
+before(async () => {
+  const chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || (fs.existsSync(chrome) ? chrome : undefined) });
+});
+after(async () => { await browser?.close(); });
+
+async function audit(page, label) {
+  await page.addScriptTag({ content: axe.source });
+  const results = await page.evaluate(() => axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } }));
+  assert.deepEqual(results.violations.map(({ id, nodes }) => ({ id, targets: nodes.map((node) => node.target) })), [], label);
+}
+
+for (const template of ['index', 'product', 'collection', 'search', 'builds', 'contact']) {
+  test(`${template} has no axe WCAG A/AA violations on mobile or desktop fixtures`, async () => {
+    for (const width of [390, 1440]) {
+      const session = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
+      const page = await session.newPage();
+      try {
+        await mount(page, { template });
+        await audit(page, `${template} at ${width}px`);
+      } finally { await session.close(); }
+    }
+  });
+}
+
+test('search, garage, gallery, cart and newsletter dialogs pass axe when opened', async () => {
+  const session = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  const page = await session.newPage();
+  try {
+    await mount(page, { popup: true, popupDelay: 0 });
+    await page.locator('[data-popup-newsletter]').waitFor({ state: 'visible' });
+    await audit(page, 'Newsletter');
+    await page.locator('.popup-newsletter__close').click();
+    for (const [open, close] of [
+      ['[data-search-toggle]', '[data-search-toggle]'],
+      ['[data-garage-toggle]', '[data-garage-close]'],
+      ['[data-gallery-open]', '.product-gallery-lightbox__close'],
+      ['[data-cart-drawer-open]', '[data-cart-drawer-close]'],
+    ]) {
+      await page.locator(open).first().click();
+      await audit(page, open);
+      await page.locator(close).last().click();
+    }
+  } finally { await session.close(); }
+});
+
+test('mobile native filter drawer passes axe with brand, availability and price fields', async () => {
+  const session = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  const page = await session.newPage();
+  const value = { param_name: 'filter.p.vendor', value: 'ARM Motorsports', label: 'ARM Motorsports', count: 1, active: false };
+  try {
+    await mount(page, { template: 'collection', collection: { filters: [
+      { label: 'Brand', type: 'list', values: [value], active_values: [] },
+      { label: 'Availability', type: 'boolean', values: [{ ...value, param_name: 'filter.v.availability', value: '1', label: 'In stock' }], active_values: [] },
+      { label: 'Price', type: 'price_range', min_value: { param_name: 'filter.v.price.gte', value: null }, max_value: { param_name: 'filter.v.price.lte', value: null }, range_max: 10000, active_values: [] },
+    ] } });
+    await page.locator('[data-facet-open]').click();
+    await audit(page, 'Mobile filters');
+  } finally { await session.close(); }
+});

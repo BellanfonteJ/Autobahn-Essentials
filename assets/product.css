@@ -1,0 +1,233 @@
+.product-info {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  text-align: left;
+}
+
+.product-info > h1 {
+  margin-inline: 0;
+  font-size: 32px;
+  line-height: 1.12;
+}
+
+.product-details {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  padding-top: 32px;
+  border-top: 1px solid var(--color-line);
+}
+
+.product-details__heading {
+  max-width: 920px;
+  margin: 0 auto 24px;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.product-description {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.product-description :is(div, p, h1, h2, h3) {
+  text-align: left !important;
+}
+
+.product-description :is(h1, h2, h3) {
+  margin: 32px 0 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-line);
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.product-description p {
+  margin: 0 0 18px;
+}
+
+.product-description :is(ul, ol) {
+  margin-block: 18px;
+  padding-left: 24px;
+}
+
+.product-description li + li {
+  margin-top: 8px;
+}
+
+.product-description :is(div, p, ul, ol):empty {
+  display: none;
+}
+
+.product-description :is(img, iframe, video, table) {
+  margin-block: 20px;
+}
+
+/* Supplier tab wrappers are content lists here, not interactive tabs. */
+.product-description :is(.tabs, .tabs-content) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-description .tabs {
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.product-description .tabs-content li {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+
+.product-description .tabs-content :is(p, img) {
+  margin: 0;
+}
+
+.product-description .iframe-container {
+  position: static !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin-block: 24px;
+}
+
+.product-description .iframe-container iframe {
+  position: static !important;
+  display: block;
+  height: auto !important;
+  margin: 0;
+}
+
+.product-description .iframe-container > br,
+.product-description :is(h1, h2, h3) > br,
+.product-description br + br + br {
+  display: none;
+}
+
+.product-description table {
+  border-collapse: collapse;
+  line-height: 1.5;
+}
+
+.product-description :is(th, td) {
+  padding: 12px;
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+}
+
+.product-description table :is(thead tr, tbody > tr:first-child) {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.product-description table tbody > tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+/* A block table shrink-wraps its row group even when the outer box is full width. */
+.product-description table.appTable {
+  display: table;
+  width: 100% !important;
+  table-layout: fixed;
+  font-size: 15px;
+}
+
+.product-description .appTable :is(th, td) {
+  padding: 12px 16px;
+  vertical-align: top;
+  text-align: left !important;
+  overflow-wrap: anywhere;
+}
+
+.product-description .appTable tr:first-child :is(th, td) {
+  font-weight: 700;
+}
+
+.product-description > :first-child {
+  margin-top: 0;
+}
+
+.product-gallery__main {
+  background: #f3f4f6;
+}
+
+.product-resources {
+  padding: 16px 0;
+  border-block: 1px solid var(--color-line);
+  margin: 18px 0;
+}
+
+.product-resources p {
+  margin: 0 0 8px;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.product-resources nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.product-resources a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.product-resources svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.product-specifications {
+  margin-top: 16px;
+}
+
+@media (min-width: 990px) {
+  .product-page {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    justify-items: stretch;
+    gap: 32px;
+  }
+
+  .product-gallery,
+  .product-gallery__main {
+    width: 100%;
+  }
+
+  .product-buy-row {
+    grid-template-columns: minmax(0, 0.65fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .product-info > h1 {
+    font-size: 26px;
+  }
+
+  .product-description table.appTable {
+    font-size: 14px;
+  }
+
+  .product-description .appTable :is(th, td) {
+    padding: 10px 8px;
+  }
+}

@@ -2,6 +2,10 @@
   const data = window.AEFitmentData?.version === 1 ? window.AEFitmentData : { vehicles: [], products: {} };
   const vehicles = data.vehicles;
   const config = JSON.parse(document.querySelector('[data-theme-config]')?.textContent || '{}');
+  const reportHealth = (code) => {
+    try { window.AEHealth?.report(code); } catch { /* Diagnostics cannot interrupt browsing. */ }
+  };
+  if (!vehicles.length) reportHealth('garage_data_unavailable');
   const storageKey = 'autobahn:garage';
   const filterKey = 'autobahn:garageFitOnly';
   const fields = ['make', 'model', 'chassis', 'trim', 'variant'];
@@ -124,6 +128,20 @@
   }
 
   function badges(garage) {
+    document.querySelectorAll('[data-fitment-source]').forEach((element) => {
+      const review = data.products[element.dataset.productHandle]?.sourceReview;
+      const link = element.querySelector('[data-fitment-source-link]');
+      const note = element.querySelector('[data-fitment-source-note]');
+      element.hidden = true;
+      link?.removeAttribute('href');
+      if (!link || !note || review?.scope !== 'model-engine' || !/^\d{4}-\d{2}-\d{2}$/.test(review.reviewedAt || '')) return;
+      let url;
+      try { url = new URL(review.url); } catch { return; }
+      if (url.protocol !== 'https:' || url.hostname !== 'armmotorsports.com' || url.username || url.password || url.port || url.search || url.hash || !url.pathname.startsWith('/products/')) return;
+      link.href = url.href;
+      note.textContent = ` Model/engine rows reviewed ${review.reviewedAt}. Model-year compatibility remains unverified. ${review.notes || ''}`;
+      element.hidden = false;
+    });
     document.querySelectorAll('[data-fitment-badge]').forEach((badge) => {
       const value = state(badge.dataset.productHandle, garage);
       const label = value === 'empty' ? 'Check fitment'
@@ -224,6 +242,7 @@
     } catch (error) {
       controller.abort();
       if (generation !== cache.generation) return;
+      reportHealth('garage_load_error');
       cache.error = 'Could not check every product page. Showing unfiltered results. Try again.';
       setFilter(false);
     } finally {
@@ -283,6 +302,7 @@
       grid.setAttribute('aria-busy', 'false');
       if (ready && filterOn()) {
         loadGrid(grid, cache, garage).catch(() => {
+          reportHealth('garage_load_error');
           cache.error = 'Cannot check the full collection. Showing unfiltered results.';
           setFilter(false);
           applyGrid(grid, cache, garage, false);

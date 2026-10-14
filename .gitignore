@@ -3,3 +3,8 @@ node_modules/
 .tools/
 .shopify/
 *.zip
+.env
+.env.*
+!.env.example
+*.pem
+*.key

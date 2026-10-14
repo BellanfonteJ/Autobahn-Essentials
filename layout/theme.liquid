@@ -24,8 +24,6 @@
       <meta name="description" content="{{ page_description | escape }}">
     {%- endif -%}
 
-    {{ content_for_header }}
-
     <style>
       @font-face {
         font-family: "Montserrat";
@@ -59,9 +57,14 @@
     </style>
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'browsing.css' | asset_url | stylesheet_tag }}
+    {%- if template.name == 'product' -%}
+      {{ 'product.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {{ content_for_header }}
     {%- if page.handle == 'builds' -%}
       {{ 'builds.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
+    <script src="{{ 'health.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'fitment-data.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'garage.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>

@@ -32,7 +32,7 @@ The initial fixes were based on `origin/main` at `5ddc954` and merged through PR
 
 ## Verification
 
-All 68 regression tests pass: 61 browser tests, four CSV-import checks and three catalog-audit checks. Shopify Theme Check reports no errors or warnings. Desktop and mobile fixture screenshots were inspected, including the CSV-backed garage and Builds page at 320, 390, 768, 1024 and 1440 pixels.
+All 95 checks pass: 73 browser regressions, eight accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Desktop and mobile fixture screenshots were inspected, including garage, Builds and product pages at 320, 390, 768, 1024 and 1440 pixels. Legacy supplier description coverage checks badge visibility, responsive video wrappers, retained fitment warnings, full-width aligned fitment guides and no-JavaScript rendering.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -67,7 +67,7 @@ Store-level checks verified real catalog rendering, variant price/URL/SKU update
 - The empty generic Builds page now receives the complete Builds experience in the unpublished preview. Assign `page.builds` in Shopify for editor-configurable media and source settings after checking the live template impact.
 - The read-only [catalog audit](CATALOG-REVIEW.md) identified five description candidates. The reviewed duplicate profile-through-warranty block on `135i-5-intercooler-fmic` was backed up and removed in Shopify Admin; one profile and one fitment table were verified in the preview. Other candidates need individual review. Product content changes are store-wide, unlike theme preview edits.
 
-Checkout, email delivery, complete installed-app workflows, collection assignments, and page/template assignments still require verification. Cart add/update/remove passed with the original empty cart restored; checkout failed to load through the local preview. Admin showed Shopify Payments accepting payments, inactive PayPal and free US economy shipping. No payment, shipping, account or notification setting was changed. Exact model-year compatibility remains unverified because no supplier year file is available. Restock requests remain contact requests and require a store workflow for notifications.
+Hosted draft-theme checkout now loads, reports required buyer fields and rejects an invalid discount. Its payment controls render, but no successful or declined transaction has been tested. The earlier localhost redirect failure is not evidence of a production checkout failure. The test item was removed and the original empty cart restored. Shipping/taxes for an approved address, email delivery, fulfillment/refunds, complete installed-app workflows and page/template assignments remain open. Admin showed Shopify Payments accepting payments, inactive PayPal and free US economy shipping; PayPal also renders in checkout, so its actual activation/transaction status needs owner verification. No payment, shipping, account or notification setting was changed. Exact model-year compatibility remains unverified because no supplier year file is available. Restock requests remain contact requests and require a store workflow for notifications.
 
 ## CSV-Backed Garage
 
@@ -79,7 +79,9 @@ Badges distinguish listed, restricted, not-listed, unknown, and incomplete selec
 
 Collection and search page loading is bounded, cancellable, deduplicated by handle, and atomic. Failures, invalid responses, excessive page counts, or interrupted filters cannot silently hide ordinary results or apply stale selections. New cards retain delegated purchase handlers and existing motion behavior.
 
-The source export stays outside Git. The generated asset contains only public handles, configurations, review flags, and provenance counts/hash, not commercial CSV columns. Refresh it with `python3 scripts/import-fitment.py /path/to/products_export.csv`. No product descriptions, prices, inventory, or live theme settings were edited.
+The source export stays outside Git. The generated asset contains only public handles, configurations, review flags, provenance counts/hash and approved public-source review metadata, not commercial CSV columns. Refresh it with `python3 scripts/import-fitment.py /path/to/products_export.csv`. The garage implementation itself did not edit product descriptions, prices, inventory or live theme settings; separate store-wide content/filter maintenance is recorded above and below.
+
+Manufacturer reviews in `data/fitment-source-reviews.json` must match the current imported configurations and the primary variant SKU exactly. Invalid/stale sources preserve rows and leave the product flagged for review. The first reviewed product, `135i-5-intercooler-fmic`, has 14 source-confirmed model/engine rows and a customer-visible manufacturer link dated October 14, 2026. Model years and physical installation remain unverified. Tests reject unsafe URLs, invented year fields, mismatched SKUs and changed rows.
 
 Changes are maintained on `codex/theme-bug-fixes`, separate from `main`. They have not been published as the live Shopify theme.
 
@@ -91,7 +93,17 @@ Product cards use consistent light image surfaces, full readable titles, quieter
 
 The persistent vehicle bar updates from the existing garage state, retains year warnings, and offers Change/Clear controls. It follows real rendered header/ticker geometry rather than assuming fixed header heights.
 
-Real-store checks verified the mobile Availability/Price drawer, desktop sidebar, price filtering, and combined garage matching across filtered pages. Brand and Product Type are theme-supported but still require Search & Discovery configuration. That app presented a permission update, which was left pending explicit approval. Supplier labels also need current-data review before normalization. Browsing changes have not been published to the live theme.
+Real-store checks verified the mobile Availability/Price drawer, desktop sidebar, price filtering, and combined garage matching across filtered pages. After the owner made Search & Discovery accessible, Brand and Part Type were enabled as store-wide settings. Both ARM vendor aliases are natively grouped under ARM Motorsports; raw Vendor fields and collection rules are untouched. Cards and product specs use the canonical display label. The hosted desktop/mobile preview verified ARM plus Intercoolers returning 17 products; grouped filter IDs survive sorting in regression tests. Browsing code changes have not been published to the live theme.
+
+## Enterprise First Stage
+
+Long product descriptions now sit in a dedicated full-width section below the gallery/purchase area, not in the narrow purchase column. Original text, images, video, fitment tables, restrictions and ordering remain unchanged. Heading/paragraph spacing and media/table bounds are checked at 320-1440px; an absent description creates no empty section.
+
+Product purchasing now sits beside the gallery on desktop and remains stacked on mobile. Direct support/policy links, typed verified specifications/shipping notes, HTTPS installation guides and Shopify review-app blocks are supported without invented content. Original descriptions and gallery/variant behavior remain. Stock-update requests include initial/changed variant/SKU identity and acknowledge a support request, not an automatic restock alert.
+
+New accessibility checks exposed and fixed primary-button contrast and the visually hidden mobile sort label; product-card alt text is explicit. First-party transfer budgets run in the suite. Full-resolution lightbox media waits until opening, and product styles only load on product templates.
+
+Local health counts are bounded, document-only and contain no private payloads or external transmission. Nondeploying/read-only CI and a release checklist are prepared, not yet running remotely. Native historical measurements, owner secure-sign-in enforcement, app access and open development advisories are recorded in [QUALITY-AUDIT.md](QUALITY-AUDIT.md), [SECURITY.md](SECURITY.md) and [OPERATIONS.md](OPERATIONS.md). Store-wide security/monitoring activation and content setup are not complete.
 
 ## Motion Additions
 

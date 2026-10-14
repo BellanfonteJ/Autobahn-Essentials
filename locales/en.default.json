@@ -59,6 +59,7 @@
   "products": {
     "product": {
       "products": "products",
+      "description": "Description",
       "add_to_cart": "Add to cart",
       "quick_buy": "Quick buy",
       "choose_options": "Choose options",
@@ -67,7 +68,7 @@
       "in_stock": "In stock",
       "available_to_order": "Available to order",
       "low_stock": "Only {{ count }} left - order soon",
-      "back_in_stock": "Get notified when this is back",
+      "back_in_stock": "Ask about availability",
       "fitment_check": "Check fitment",
       "fitment_check_vehicle": "Check fitment for {{ vehicle }}",
       "fitment_match": "Possible fit for {{ vehicle }}",

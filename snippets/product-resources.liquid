@@ -1,0 +1,22 @@
+{%- liquid
+  assign guide = product.metafields.custom.installation_guide
+  assign guide_prefix = guide.value | slice: 0, 8
+  assign shipping_page = pages['shipping-returns']
+  assign support_page = pages['contact']
+-%}
+<div class="product-resources">
+  <p>Confirm model year and installation requirements before ordering.</p>
+  <nav aria-label="Product support">
+    {%- if support_page != blank -%}
+      <a href="{{ support_page.url | escape }}">{% render 'icon', icon: 'shield' %}Fitment help</a>
+    {%- endif -%}
+    {%- if shipping_page != blank -%}
+      <a href="{{ shipping_page.url | escape }}">{% render 'icon', icon: 'truck' %}Shipping &amp; returns</a>
+    {%- elsif shop.shipping_policy != blank -%}
+      <a href="{{ shop.shipping_policy.url | escape }}">{% render 'icon', icon: 'truck' %}Shipping policy</a>
+    {%- endif -%}
+    {%- if guide.type == 'url' and guide_prefix == 'https://' -%}
+      <a href="{{ guide.value | escape }}" target="_blank" rel="noopener noreferrer">{% render 'icon', icon: 'arrow' %}Installation guide</a>
+    {%- endif -%}
+  </nav>
+</div>

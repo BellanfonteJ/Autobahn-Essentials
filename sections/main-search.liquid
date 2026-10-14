@@ -29,7 +29,7 @@
 
       <div class="section-heading section--tight">
         {%- assign escaped_search_terms = search.terms | escape -%}
-        <p>{{ 'general.search.results_with_count' | t: count: search.results_count, terms: escaped_search_terms }}</p>
+        <p data-search-result-count="{{ search.results_count }}">{{ 'general.search.results_with_count' | t: count: search.results_count, terms: escaped_search_terms }}</p>
       </div>
 
       {%- paginate search.results by 12 -%}

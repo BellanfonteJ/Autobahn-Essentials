@@ -3,9 +3,11 @@
 <article class="product-card" data-product-card data-product-handle="{{ product.handle | escape }}">
   <a href="{{ product.url }}" class="product-card__media" aria-label="{{ product.title | escape }}">
     {%- if product.featured_media -%}
-      {{ product.featured_media | image_url: width: 820 | image_tag: loading: 'lazy', decoding: 'async', sizes: sizes, class: 'product-card__image' }}
+      {%- assign image_alt = product.featured_media.alt | default: product.title -%}
+      {{ product.featured_media | image_url: width: 820 | image_tag: alt: image_alt, loading: 'lazy', decoding: 'async', sizes: sizes, class: 'product-card__image' }}
       {%- if product.media[1] and product.media[1].media_type == 'image' -%}
-        {{ product.media[1] | image_url: width: 820 | image_tag: loading: 'lazy', decoding: 'async', sizes: sizes, class: 'product-card__image product-card__image--hover' }}
+        {%- assign hover_alt = product.media[1].alt | default: product.title -%}
+        {{ product.media[1] | image_url: width: 820 | image_tag: alt: hover_alt, loading: 'lazy', decoding: 'async', sizes: sizes, class: 'product-card__image product-card__image--hover' }}
       {%- endif -%}
     {%- else -%}
       <img src="{{ 'autobahn-hero.svg' | asset_url }}" alt="" width="1800" height="1000" loading="lazy" class="product-card__image">
@@ -24,7 +26,7 @@
 
   <div class="product-card__info">
     {%- if product.vendor != blank -%}
-      <div class="product-card__vendor">{{ product.vendor | escape }}</div>
+      <div class="product-card__vendor">{% render 'brand-label', vendor: product.vendor %}</div>
     {%- endif -%}
     <h3 class="product-card__title">
       <a href="{{ product.url }}">{{ product.title | escape }}</a>

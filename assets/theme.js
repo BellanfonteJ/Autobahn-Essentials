@@ -2,6 +2,9 @@ document.documentElement.classList.remove('no-js');
 
 const themeConfig = JSON.parse(document.querySelector('[data-theme-config]')?.textContent || '{}');
 const themeMessages = themeConfig.messages || {};
+const reportHealth = (code) => {
+  try { window.AEHealth?.report(code); } catch { /* Diagnostics cannot interrupt shopping. */ }
+};
 const themeRoute = (path) => `${themeConfig.root || window.Shopify?.routes?.root || '/'}${path}`;
 const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -614,7 +617,7 @@ document.querySelectorAll('[data-product-info]').forEach((info) => {
     const notification = info.querySelector('[data-back-in-stock]');
     notification.hidden = variant.available;
     const body = notification.querySelector('[name="contact[body]"]');
-    body.value = `Back in stock request for ${info.querySelector('h1').textContent} - ${variant.title} (${variant.id})`;
+    body.value = `Stock update request for ${info.querySelector('h1').textContent} - ${variant.title} (${variant.id}), SKU: ${variant.sku}`;
     const payment = form.querySelector('[data-product-payment]');
     if (payment) payment.hidden = !variant.available;
     const error = form.querySelector('[data-product-error]');
@@ -825,6 +828,7 @@ async function changeCartLine(key, quantity) {
     });
   } catch (error) {
     if (lastConfirmedCart) renderCartDrawer(lastConfirmedCart);
+    reportHealth('cart_change_error');
     showCartError(error.message || themeMessages.cartError || 'Unable to update your cart. Please try again.');
   } finally {
     setCartBusy(false);
@@ -841,7 +845,10 @@ if (cartDrawer) {
       evt.preventDefault();
       showCartError();
       openCartDrawer();
-      queueCartRequest(refreshCart).catch((error) => showCartError(error.message || themeMessages.cartError));
+      queueCartRequest(refreshCart).catch((error) => {
+        reportHealth('cart_refresh_error');
+        showCartError(error.message || themeMessages.cartError);
+      });
     });
   });
 
@@ -909,11 +916,13 @@ if (cartDrawer) {
         });
         await cartResponse(res);
         added = true;
+        reportHealth('cart_add');
         await refreshCart();
       });
       showCartError();
       openCartDrawer();
     } catch (error) {
+      reportHealth(added ? 'cart_refresh_error' : 'cart_add_error');
       errorTarget.textContent = added
         ? themeMessages.addedButRefreshFailed || 'Your item was added. Open the cart before adding again.'
         : error.message || themeMessages.cartError || 'Unable to update your cart. Please try again.';

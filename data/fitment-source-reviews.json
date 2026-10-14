@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "products": {
+    "135i-5-intercooler-fmic": {
+      "supplier": "ARM Motorsports",
+      "url": "https://armmotorsports.com/products/135i-5-intercooler-fmic",
+      "reviewedAt": "2026-10-14",
+      "scope": "model-engine",
+      "partNumber": "335FMIC",
+      "notes": "The manufacturer also lists DCT compatibility. Confirm installation requirements.",
+      "rows": [
+        {"make": "BMW", "chassis": "E82", "model": "135i", "engine": "N54"},
+        {"make": "BMW", "chassis": "E82", "model": "135i", "engine": "N55"},
+        {"make": "BMW", "chassis": "E90", "model": "335i", "engine": "N54"},
+        {"make": "BMW", "chassis": "E90", "model": "335i", "engine": "N55"},
+        {"make": "BMW", "chassis": "E90", "model": "335xi", "engine": "N54"},
+        {"make": "BMW", "chassis": "E90", "model": "335xi", "engine": "N55"},
+        {"make": "BMW", "chassis": "E92", "model": "335i", "engine": "N54"},
+        {"make": "BMW", "chassis": "E92", "model": "335i", "engine": "N55"},
+        {"make": "BMW", "chassis": "E92", "model": "335is", "engine": "N54"},
+        {"make": "BMW", "chassis": "E92", "model": "335xi", "engine": "N54"},
+        {"make": "BMW", "chassis": "E92", "model": "335xi", "engine": "N55"},
+        {"make": "BMW", "chassis": "E93", "model": "335i", "engine": "N54"},
+        {"make": "BMW", "chassis": "E93", "model": "335i", "engine": "N55"},
+        {"make": "BMW", "chassis": "E93", "model": "335is", "engine": "N54"}
+      ]
+    }
+  }
+}

@@ -348,7 +348,13 @@
   }
 
   .collection-browser__sort label {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .collection-browser__sort .select {
