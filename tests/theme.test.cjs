@@ -14,7 +14,7 @@ before(async () => {
 after(async () => { await browser?.close(); });
 
 async function withPage(options, check) {
-  const session = await browser.newContext({ viewport: options.viewport || { width: 1440, height: 1000 }, reducedMotion: 'reduce', javaScriptEnabled: options.javaScriptEnabled ?? true });
+  const session = await browser.newContext({ viewport: options.viewport || { width: 1440, height: 1000 }, reducedMotion: options.reducedMotion || 'reduce', javaScriptEnabled: options.javaScriptEnabled ?? true });
   const page = await session.newPage();
   try {
     const errors = await mount(page, options);
@@ -28,6 +28,127 @@ const cart = (quantity = 1) => ({
   items: quantity ? [{ key: '101:key', product_title: '<img src=x onerror="window.injected=true"> & Parts', variant_title: 'Standard <edition>', url: '/products/test-part', image: '/assets/brand-bmw-m4.jpg', quantity, final_line_price: quantity * 12345 }] : [],
 });
 const json = (route, body, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
+
+test('newsletter, cart, and gallery close buttons each render a single X', async () => {
+  await withPage({ popup: true, formStates: { PopupNewsletter: { errors: true } } }, async (page) => {
+    for (const selector of ['.popup-newsletter__close', '.cart-drawer__header button', '.product-gallery-lightbox__close']) {
+      assert.equal(await page.locator(`${selector} svg`).count(), 1, `${selector} contains one icon`);
+    }
+    if (process.env.THEME_SCREENSHOTS) {
+      fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+      await page.locator('.popup-newsletter__panel').screenshot({ path: path.join(root, '.tools/screenshots/newsletter-close-fixed.png') });
+    }
+    await page.locator('.popup-newsletter__close').click();
+    assert.equal(await page.locator('[data-popup-newsletter]').isVisible(), false);
+  });
+});
+
+test('one-time card entrances preserve layout and hover behavior on desktop and mobile', async () => {
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await withPage({ cards: true, cardsCount: 4, viewport: { width, height: 844 }, reducedMotion: 'no-preference' }, async (page) => {
+      const card = page.locator('.product-card').first();
+      const before = await card.evaluate((element) => ({ width: element.offsetWidth, height: element.offsetHeight, top: element.offsetTop - element.parentElement.offsetTop }));
+      assert.equal(await card.evaluate((element) => getComputedStyle(element).opacity), '1', 'Content is visible before the observer fires');
+      await page.evaluate(() => {
+        window.motionEvents = [];
+        document.addEventListener('animationstart', (event) => window.motionEvents.push(event.animationName));
+      });
+      await card.scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => document.querySelector('.product-card').classList.contains('is-scroll-revealed'));
+      if (process.env.THEME_SCREENSHOTS) {
+        fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/motion-cards-${width}.png`) });
+      }
+      await page.waitForFunction(() => document.querySelector('.product-card').classList.contains('is-motion-complete'));
+      if (process.env.THEME_SCREENSHOTS) {
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/motion-cards-settled-${width}.png`) });
+      }
+      assert.equal(await page.evaluate(() => window.motionEvents.includes('ae-content-enter')), true);
+      assert.deepEqual(await card.evaluate((element) => ({ width: element.offsetWidth, height: element.offsetHeight, top: element.offsetTop - element.parentElement.offsetTop })), before);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `No horizontal overflow at ${width}px`);
+      if (width === 1440) {
+        await card.hover();
+        await page.waitForFunction(() => new DOMMatrix(getComputedStyle(document.querySelector('.product-card')).transform).m42 < 0);
+        assert.equal(await card.evaluate((element) => getComputedStyle(element).animationName), 'none');
+      }
+    });
+  }
+});
+
+test('entrances are optional when observers or JavaScript are unavailable', async () => {
+  for (const fallback of [{ observerUnavailable: true }, { javaScriptEnabled: false }]) {
+    await withPage({ cards: true, reducedMotion: 'no-preference', ...fallback }, async (page) => {
+      const card = page.locator('.product-card');
+      assert.equal(await card.evaluate((element) => getComputedStyle(element).opacity), '1');
+      assert.equal(await card.evaluate((element) => getComputedStyle(element).animationName), 'none');
+      await card.locator('a.button').click();
+      assert.equal(await page.locator('[data-atc-main]').isEnabled(), true);
+    });
+  }
+});
+
+test('changing reduced-motion preference or focusing a card cancels its entrance', async () => {
+  await withPage({ cards: true, cardsCount: 2, reducedMotion: 'no-preference' }, async (page) => {
+    const card = page.locator('.product-card').first();
+    await card.locator('a.button').focus();
+    assert.equal(await card.evaluate((element) => element.classList.contains('is-motion-complete')), true);
+    assert.equal(await card.evaluate((element) => getComputedStyle(element).opacity), '1');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.waitForFunction(() => Array.from(document.querySelectorAll('.scroll-reveal')).every((element) => element.classList.contains('is-motion-complete')));
+    await page.locator('[data-search-toggle]').click();
+    assert.equal(await page.locator('.search-drawer .search-form').evaluate((element) => getComputedStyle(element).animationName), 'none');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('[data-search-toggle]').evaluate((element) => document.activeElement === element), true);
+  });
+});
+
+test('new theme-editor sections register entrances without animating fixed product controls', async () => {
+  await withPage({ cards: true, reducedMotion: 'no-preference' }, async (page) => {
+    await page.evaluate(() => {
+      const section = document.createElement('section');
+      section.id = 'editor-motion-test';
+      const card = document.querySelector('.product-card').cloneNode(true);
+      card.classList.remove('scroll-reveal', 'is-scroll-revealed', 'is-motion-complete');
+      section.appendChild(card);
+      document.querySelector('.main-content').appendChild(section);
+      section.dispatchEvent(new CustomEvent('shopify:section:load', { bubbles: true }));
+      section.dispatchEvent(new CustomEvent('shopify:section:load', { bubbles: true }));
+    });
+    assert.equal(await page.locator('#editor-motion-test .scroll-reveal').count(), 1);
+    assert.equal(await page.locator('.product-info.scroll-reveal, .product-gallery.scroll-reveal, [role="dialog"].scroll-reveal').count(), 0);
+    await page.locator('#editor-motion-test a.button').focus();
+    assert.equal(await page.locator('#editor-motion-test .product-card').evaluate((element) => getComputedStyle(element).animationName), 'none');
+    await page.evaluate(() => {
+      const section = document.querySelector('#editor-motion-test');
+      section.dispatchEvent(new CustomEvent('shopify:section:unload', { bubbles: true }));
+      section.remove();
+    });
+    assert.equal(await page.locator('#editor-motion-test').count(), 0);
+  });
+});
+
+test('drawer and cart-count motion preserve cart updates and reduced-motion behavior', async () => {
+  for (const reducedMotion of ['no-preference', 'reduce']) {
+    await withPage({ reducedMotion }, async (page) => {
+      await page.route('**/cart.js', (route) => json(route, cart()));
+      await page.route('**/cart/change.js', (route) => json(route, cart(route.request().postDataJSON().quantity)));
+      await page.locator('[data-search-toggle]').click();
+      assert.equal(await page.locator('.search-drawer .search-form').evaluate((element) => getComputedStyle(element).animationName), reducedMotion === 'reduce' ? 'none' : 'ae-panel-enter');
+      await page.keyboard.press('Escape');
+      await page.locator('[data-cart-drawer-open]').click();
+      await page.locator('[data-cart-qty-increment]').waitFor();
+      assert.equal(await page.locator('[data-cart-count]').evaluate((element) => getComputedStyle(element).animationName), reducedMotion === 'reduce' ? 'none' : 'ae-count-feedback');
+      await page.locator('[data-cart-qty-increment]').click();
+      await page.waitForFunction(() => document.querySelector('[data-cart-qty-input]').value === '2' && !document.querySelector('[data-cart-qty-input]').disabled);
+      assert.match(await page.locator('.cart-drawer__subtotal').textContent(), /246[.,]90/);
+      await page.locator('[data-cart-remove]').click();
+      await page.locator('.cart-drawer__empty').waitFor();
+      assert.equal(await page.locator('[data-cart-count]').isVisible(), false);
+      await page.keyboard.press('Escape');
+      assert.equal(await page.locator('[data-cart-drawer-open]').evaluate((element) => document.activeElement === element), true);
+    });
+  }
+});
 
 test('variant selection updates exact price, stock, SKU, gallery, URL and buy controls', async () => {
   await withPage({}, async (page) => {

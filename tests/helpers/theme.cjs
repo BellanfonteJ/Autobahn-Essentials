@@ -122,7 +122,7 @@ async function renderPage(options = {}) {
   if (options.finder) content += await renderSection('vehicle-finder', ctx);
   if (options.cards) {
     const card = await engine.renderFile('product-card', { ...ctx, product: ctx.product });
-    content += `<div class="product-grid">${card.repeat(options.cardsCount || 1)}</div>`;
+    content += `<div class="page-width"><div class="product-grid">${card.repeat(options.cardsCount || 1)}</div></div>`;
   }
   const shell = read(template === 'password' ? 'layout/password.liquid' : 'layout/theme.liquid').replace(/{% section '([^']+)' %}/g, (_, section) => `{{ ${section.replace(/-/g, '_')}_html }}`);
   return engine.parseAndRender(shell, {
@@ -151,6 +151,7 @@ async function mount(page, options = {}) {
   if (options.storageBlocked) await page.addInitScript(() => {
     Object.defineProperty(window, 'localStorage', { get() { throw new Error('Storage is unavailable'); } });
   });
+  if (options.observerUnavailable) await page.addInitScript(() => { delete window.IntersectionObserver; });
   await page.goto('http://theme.test/products/test-part');
   await page.evaluate(() => document.fonts.ready);
   return errors;
