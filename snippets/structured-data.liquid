@@ -1,0 +1,33 @@
+{%- capture seo_json_less_than -%}\u003c{%- endcapture -%}
+{%- if template.name == 'product' and product != blank -%}
+  <script type="application/ld+json">{{ product | structured_data | replace: '<', seo_json_less_than }}</script>
+{%- elsif template.name == 'article' and article != blank -%}
+  <script type="application/ld+json">{{ article | structured_data | replace: '<', seo_json_less_than }}</script>
+{%- elsif template.name == 'index' -%}
+  {%- liquid
+    assign seo_origin = canonical_url | split: '/' | slice: 0, 3 | join: '/'
+    assign seo_home_url = routes.root_url | prepend: seo_origin
+    assign seo_organization_id = shop.url | append: '#organization'
+    assign seo_website_id = seo_home_url | append: '#website'
+  -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": {{ seo_organization_id | json | replace: '<', seo_json_less_than }},
+          "name": {{ shop.name | json | replace: '<', seo_json_less_than }},
+          "url": {{ shop.url | json | replace: '<', seo_json_less_than }}
+        },
+        {
+          "@type": "WebSite",
+          "@id": {{ seo_website_id | json | replace: '<', seo_json_less_than }},
+          "name": {{ shop.name | json | replace: '<', seo_json_less_than }},
+          "url": {{ seo_home_url | json | replace: '<', seo_json_less_than }},
+          "publisher": { "@id": {{ seo_organization_id | json | replace: '<', seo_json_less_than }} }
+        }
+      ]
+    }
+  </script>
+{%- endif -%}

@@ -993,6 +993,121 @@ summary:focus-visible {
   overflow-wrap: anywhere;
 }
 
+.garage-drawer__workspace {
+  min-width: 0;
+}
+
+.garage-vehicles__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.garage-vehicles__heading h3,
+.garage-form__heading {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.garage-vehicles__count {
+  margin-left: 6px;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.garage-vehicles__heading .button {
+  min-height: 40px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.garage-vehicles {
+  min-width: 0;
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+}
+
+.garage-vehicles__list {
+  max-height: 208px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.garage-vehicle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.garage-vehicle.is-active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.garage-vehicle__choice {
+  display: flex;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.garage-vehicle__choice input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  margin: 0;
+  accent-color: var(--color-accent);
+}
+
+.garage-vehicle__copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  font-size: 13px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.garage-vehicle__active {
+  font-size: 11px;
+  color: #fff;
+}
+
+.garage-vehicle__actions {
+  display: flex;
+  gap: 4px;
+}
+
+.garage-vehicle__actions .icon-button {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+}
+
+.garage-vehicle__actions svg {
+  width: 18px;
+  height: 18px;
+}
+
+.garage-vehicles__empty {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.garage-form__heading {
+  grid-column: 1 / -1;
+}
+
 .garage-form {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

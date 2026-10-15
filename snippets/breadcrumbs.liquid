@@ -1,3 +1,21 @@
+{%- liquid
+  assign breadcrumb_parent = nil
+  assign breadcrumb_name = page_title
+  case template.name
+    when 'product'
+      assign breadcrumb_parent = collection | default: product.collections.first
+      assign breadcrumb_name = product.title
+    when 'collection'
+      assign breadcrumb_name = collection.title
+    when 'page'
+      assign breadcrumb_name = page.title
+    when 'blog'
+      assign breadcrumb_name = blog.title
+    when 'article'
+      assign breadcrumb_parent = blog
+      assign breadcrumb_name = article.title
+  endcase
+-%}
 <nav class="breadcrumbs page-width" aria-label="Breadcrumbs">
   <a href="{{ routes.root_url }}">Home</a>
   <span aria-hidden="true">/</span>
@@ -24,3 +42,26 @@
     <span>{{ page_title | escape }}</span>
   {%- endif -%}
 </nav>
+{%- if template.name == 'product' or template.name == 'collection' or template.name == 'page' or template.name == 'blog' or template.name == 'article' -%}
+  {%- capture breadcrumb_json_less_than -%}\u003c{%- endcapture -%}
+  {%- liquid
+    assign breadcrumb_origin = canonical_url | split: '/' | slice: 0, 3 | join: '/'
+    assign breadcrumb_home = routes.root_url | prepend: breadcrumb_origin
+    assign breadcrumb_position = 2
+  -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ breadcrumb_home | json | replace: '<', breadcrumb_json_less_than }} },
+        {%- if breadcrumb_parent -%}
+          {%- assign breadcrumb_parent_url = breadcrumb_parent.url | prepend: breadcrumb_origin -%}
+          { "@type": "ListItem", "position": 2, "name": {{ breadcrumb_parent.title | json | replace: '<', breadcrumb_json_less_than }}, "item": {{ breadcrumb_parent_url | json | replace: '<', breadcrumb_json_less_than }} },
+          {%- assign breadcrumb_position = 3 -%}
+        {%- endif -%}
+        { "@type": "ListItem", "position": {{ breadcrumb_position }}, "name": {{ breadcrumb_name | json | replace: '<', breadcrumb_json_less_than }}, "item": {{ canonical_url | json | replace: '<', breadcrumb_json_less_than }} }
+      ]
+    }
+  </script>
+{%- endif -%}

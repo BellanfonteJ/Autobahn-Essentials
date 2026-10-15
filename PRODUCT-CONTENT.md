@@ -26,7 +26,7 @@ The product section accepts Shopify `@app` blocks. An authenticated reviews app 
 
 Use clear photos of the actual part, supplied connector/hardware details and genuine installed-product images. Preserve accurate alt text, dimensions and media order. The gallery retains all images, variant selection and keyboard-accessible zoom; full-resolution lightbox media loads only on opening.
 
-Account-linked multi-vehicle garages need authenticated storage and a reviewed app/backend integration. The current garage stays device-local. Genuine customer builds require merchant-supplied, publishable articles/photos.
+The preview supports multiple browser-local vehicles with one active fitment selection, editing/removal and single-car migration; see [GARAGE.md](GARAGE.md). Account-linked or cross-device garages still need authenticated storage and a reviewed app/backend integration. Genuine customer builds require merchant-supplied, publishable articles/photos.
 
 ## Stock Requests
 

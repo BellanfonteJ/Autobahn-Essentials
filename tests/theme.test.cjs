@@ -347,7 +347,7 @@ test('garage bar reflects saves, clear actions, invalid legacy vehicles and cros
     assert.equal(await page.locator('[data-garage-drawer]').isVisible(), true);
     await page.locator('[data-garage-close]').click();
     await page.locator('[data-garage-bar-clear]').click();
-    assert.match(await page.locator('[data-garage-bar-vehicle]').textContent(), /No vehicle saved/);
+    assert.match(await page.locator('[data-garage-bar-vehicle]').textContent(), /No vehicle selected/);
     assert.equal(await page.locator('[data-garage-bar-clear]').isVisible(), false);
     await page.evaluate(() => {
       localStorage.setItem('autobahn:garage', JSON.stringify({ make: 'BMW', model: '3 Series' }));

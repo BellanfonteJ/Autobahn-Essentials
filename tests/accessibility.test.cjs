@@ -47,6 +47,23 @@ test('populated cart pages and drawers pass axe on mobile and desktop', async ()
   }
 });
 
+test('multi-car garage passes axe with saved vehicles and edit controls on mobile and desktop', async () => {
+  for (const width of [320, 1440]) {
+    const session = await browser.newContext({ viewport: { width, height: 844 }, reducedMotion: 'reduce' });
+    try {
+      const page = await session.newPage();
+      await mount(page, { garageCollection: { version: 2, activeId: 'bmw', vehicles: [
+        { id: 'bmw', year: '2017', make: 'BMW', model: '340i', chassis: 'F30', trim: 'B58' },
+        { id: 'audi', year: '2019', make: 'Audi', model: 'S4', chassis: 'B9', trim: '3.0T' },
+      ] } });
+      await page.locator('[data-garage-toggle]').click();
+      await audit(page, `Multi-car garage at ${width}px`);
+      await page.locator('[data-garage-edit]').last().click();
+      await audit(page, `Editing saved car at ${width}px`);
+    } finally { await session.close(); }
+  }
+});
+
 test('search, garage, gallery, cart and newsletter dialogs pass axe when opened', async () => {
   const session = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await session.newPage();

@@ -14,6 +14,8 @@ const hashes = (args) => Object.fromEntries(args.filter(Array.isArray));
 
 const engine = new Liquid({ root: path.join(root, 'snippets'), extname: '.liquid' });
 engine.registerFilter('json', (value) => JSON.stringify(value ?? null));
+// Shopify supplies this filter; fixtures verify delegation, not Shopify's schema generator.
+engine.registerFilter('structured_data', (value) => JSON.stringify(value._structuredData));
 engine.registerFilter('handle', (value) => String(value).toLowerCase().replace(/\W+/g, '-'));
 engine.registerFilter('asset_url', (value) => `/assets/${value}`);
 engine.registerFilter('stylesheet_tag', (value) => `<link rel="stylesheet" href="${value}">`);
@@ -86,23 +88,27 @@ const product = {
   variants, selected_or_first_available_variant: variants[0], media, featured_media: media[0], tags: ['BMW', 'F30'],
   description: '<p>ARM Motorsports charge pipe performance details.</p><p>Installation details.</p>',
   metafields: { custom: {} }, collections: [],
+  _structuredData: { '@context': 'https://schema.org', '@type': 'ProductGroup', name: 'BMW F30 Charge Pipe' },
 };
 
 function context(options = {}) {
   return {
-    shop: { name: 'Autobahn Essentials', currency: 'USD', email: 'support@example.test', policies: [], ...options.shop },
+    shop: { name: 'Autobahn Essentials', url: 'http://theme.test', currency: 'USD', email: 'support@example.test', policies: [], ...options.shop },
     settings: { ...config, ...options.settings },
     routes: { root_url: '/', cart_url: '/cart', search_url: '/search', collections_url: '/collections', all_products_collection_url: '/collections/all', ...options.routes },
-    request: { locale: { iso_code: 'en-US' } },
+    request: { origin: 'http://theme.test', locale: { iso_code: 'en-US' }, ...options.request },
     cart: { item_count: 0, items: [], total_price: 0, currency: { iso_code: 'USD' }, ...options.cart },
-    page_title: 'Autobahn Essentials', canonical_url: 'http://theme.test/', current_page: 1,
+    page_title: options.pageTitle ?? 'Autobahn Essentials', canonical_url: options.canonicalUrl ?? 'http://theme.test/', current_page: options.currentPage ?? 1,
+    page_description: options.pageDescription, page_image: options.pageImage, current_tags: options.currentTags,
     template: { name: ['builds', 'page'].includes(options.template) ? 'page' : options.template || 'product' }, product: { ...product, ...options.product },
     page: { handle: options.template === 'builds' ? 'builds' : 'example', title: 'Example', content: '', ...options.page },
     pages: options.pages || {},
     blogs: options.blogs || {},
+    blog: { title: 'Installation guides', url: '/blogs/guides', articles: [], ...options.blog },
+    article: { title: 'Charge pipe guide', url: '/blogs/guides/charge-pipe', content: '<p>Installation requirements.</p>', excerpt_or_content: '<p>Installation requirements.</p>', published_at: '2026-10-15', _structuredData: { '@context': 'https://schema.org', '@type': 'Article', headline: 'Charge pipe guide' }, ...options.article },
     collections: options.collections || { bmw: { title: 'BMW', url: '/collections/bmw' }, audi: { title: 'Audi', url: '/collections/audi' }, vw: { title: 'Volkswagen', url: '/collections/vw' }, accessories: { title: 'Accessories', url: '/collections/accessories' } },
     search: { performed: true, terms: 'charge pipe', results_count: 1, results: [{ ...product, object_type: 'product' }], ...options.search },
-    collection: { title: 'BMW', url: '/collections/bmw', products_count: 1, products: [product], all_tags: [], filters: [], default_sort_by: 'best-selling', sort_options: [{ value: 'best-selling', name: 'Best selling' }, { value: 'price-ascending', name: 'Price, low to high' }, { value: 'price-descending', name: 'Price, high to low' }], ...options.collection },
+    collection: options.collection === null ? null : { title: 'BMW', url: '/collections/bmw', products_count: 1, products: [product], all_tags: [], filters: [], default_sort_by: 'best-selling', sort_options: [{ value: 'best-selling', name: 'Best selling' }, { value: 'price-ascending', name: 'Price, low to high' }, { value: 'price-descending', name: 'Price, high to low' }], ...options.collection },
     _paginate: options.paginate || {},
     _formStates: options.formStates || {},
   };
@@ -121,7 +127,7 @@ async function renderSection(name, ctx, overrides = {}) {
 async function renderPage(options = {}) {
   const ctx = context(options);
   const template = options.template || 'product';
-  const name = { page: 'main-page', builds: 'page-builds-autobahn', product: 'main-product', index: 'hero-autobahn', collection: 'main-collection-product-grid', search: 'main-search', cart: 'main-cart-items', contact: 'page-contact-autobahn', fitment: 'page-fitment-autobahn', password: 'main-password' }[template];
+  const name = { page: 'main-page', builds: 'page-builds-autobahn', product: 'main-product', index: 'hero-autobahn', collection: 'main-collection-product-grid', search: 'main-search', cart: 'main-cart-items', contact: 'page-contact-autobahn', fitment: 'page-fitment-autobahn', password: 'main-password', article: 'main-article', blog: 'main-blog', '404': 'main-404' }[template];
   const popupSettings = { ...config.sections['popup-newsletter'].settings, enabled: Boolean(options.popup), delay_seconds: options.popupDelay ?? 30 };
   let content = await renderSection(name, ctx);
   if (options.finder) content += await renderSection('vehicle-finder', ctx);
@@ -160,6 +166,11 @@ async function mount(page, options = {}) {
     localStorage.setItem('autobahn:garage', JSON.stringify(garage));
     sessionStorage.setItem('garageFixtureSeeded', 'true');
   }, options.garage);
+  if (options.garageCollection) await page.addInitScript((collection) => {
+    if (sessionStorage.getItem('garageCollectionSeeded')) return;
+    localStorage.setItem('autobahn:garage:v2', JSON.stringify(collection));
+    sessionStorage.setItem('garageCollectionSeeded', 'true');
+  }, options.garageCollection);
   if (options.storageBlocked) await page.addInitScript(() => {
     Object.defineProperty(window, 'localStorage', { get() { throw new Error('Storage is unavailable'); } });
   });

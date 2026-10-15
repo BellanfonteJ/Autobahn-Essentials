@@ -2,6 +2,11 @@
   "accessibility": {
     "skip_to_content": "Skip to content"
   },
+  "seo": {
+    "home_title": "European Performance Parts",
+    "home_description": "Shop BMW, Audi and Volkswagen performance parts at Autobahn Essentials. Browse upgrades, compare product details and confirm vehicle fitment before ordering.",
+    "collection_description": "Explore {{ collection }} at {{ shop }}. Compare performance parts, review product details and confirm vehicle fitment before ordering."
+  },
   "general": {
     "continue_shopping": "Continue shopping",
     "pagination": {
@@ -22,6 +27,19 @@
     "success": "Thanks for subscribing."
   },
   "sections": {
+    "multi_vehicle_garage": {
+      "vehicles": "Your vehicles",
+      "active": "Active",
+      "add_vehicle": "Add vehicle",
+      "edit_vehicle": "Edit vehicle",
+      "remove_vehicle": "Remove vehicle",
+      "save_changes": "Save changes",
+      "cancel": "Cancel",
+      "details": "Vehicle details",
+      "clear_active": "Clear selection",
+      "empty_title": "No vehicle saved",
+      "save": "Save Vehicle"
+    },
     "header": {
       "menu": "Open menu",
       "navigation": "Main navigation",

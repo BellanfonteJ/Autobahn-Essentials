@@ -4,8 +4,8 @@ Code/fixture checks updated October 15, 2026; native reports below were inspecte
 
 ## Automated Gates
 
-- `pnpm test`: 103 checks including Liquid fixtures, source validation and release safeguards. Product-information positioning and accordion/SKU behavior are covered at 320-1920px with and without JavaScript. Card hover-image alignment and bounds are covered at 320-1440px with normal/reduced motion on collection, search and related products.
-- `pnpm test:accessibility`: nine axe-core WCAG A/AA checks, covering homepage, product, collection, search, Builds and contact fixtures at 390/1440px plus populated cart pages/drawers at 320/1440px; opened newsletter, search, garage, gallery, cart and native filter controls included.
+- `pnpm test`: 123 checks including 12 multi-car garage groups, seven SEO browser groups, Liquid fixtures, source validation and release safeguards. Product-information positioning and accordion/SKU behavior are covered at 320-1920px with and without JavaScript. Card hover-image alignment and bounds are covered at 320-1440px with normal/reduced motion on collection, search and related products.
+- `pnpm test:accessibility`: ten axe-core WCAG A/AA checks, covering homepage, product, collection, search, Builds and contact fixtures at 390/1440px plus populated cart pages/drawers and saved multi-car garage/edit controls at 320/1440px; opened newsletter, search, gallery, cart and native filter controls included.
 - `pnpm test:budgets`: first-party scripts <=40 KiB gzip and styles <=30 KiB gzip per representative template; scripts deferred, lead product media sized/responsive/eager, lightbox media deferred until opening.
 - Hero caps: 40/90/220 KiB for 640/1200/2400px WebP. Each local font <=45 KiB.
 - Product layout/resource bounds tested at 320, 390, 768, 1024 and 1440px, alongside existing reduced-motion, failure, escaping and keyboard checks.
@@ -15,6 +15,10 @@ The initial accessibility run exposed low contrast on small white primary-button
 Budgets exclude Shopify/app scripts and remote media; they are not load-time benchmarks. Fixtures omit real merchant HTML/apps. Incomplete automated checks, screen readers, real devices, custom colors and third-party overlays need human review. The inspected supplier description has multiple H1 headings and stock claims; these source-content details were not rewritten or verified by the layout change.
 
 ## October 15 Bug Sweep
+
+The subsequent multi-car garage has separate migration, duplicate/edit/remove, active filtering, legacy/real-tab events, blocked/full storage, shared-URL and keyboard/mobile coverage. Inspected fixture screenshots at 320-1440px and verified adding/reloading/switching cars in the real Shopify preview. The temporary car was removed and the pre-existing vehicle preserved. An actual-renderer label mismatch was resolved with distinct section translation keys. This is browser-local storage, not account sync. See [GARAGE.md](GARAGE.md).
+
+The subsequent SEO follow-up preserves merchant metadata/canonical pagination and adds native product/article schema, social cards, homepage identity, breadcrumbs and utility-page indexing controls. Tests explicitly cover safe JSON embedding, localized absolute URLs and merchant overrides without JavaScript. The hosted draft product's native schema was separately parsed; the fixture filter is a stub, not a test of Shopify's schema generator. Search Console ownership/indexing, Merchant Center status and Google rich-result validation remain unverified. See [SEO.md](SEO.md).
 
 All five new browser regressions failed before their scoped fixes and passed afterward. Screenshot review additionally caught cart thumbnails retaining intrinsic HTML height; the cart regression now asserts an exact 92px square.
 
