@@ -96,7 +96,7 @@
               <span aria-hidden="true">&lsaquo;</span>
             </button>
             <div class="product-gallery-lightbox__stage" data-gallery-lightbox-stage>
-              <img data-gallery-lightbox-image src="{{ featured_image | image_url: width: 2000 }}" alt="{{ featured_image.alt | default: product.title | escape }}" width="{{ featured_image.width }}" height="{{ featured_image.height }}" loading="lazy">
+              <img data-gallery-lightbox-image alt="{{ featured_image.alt | default: product.title | escape }}" width="{{ featured_image.width }}" height="{{ featured_image.height }}" loading="lazy">
             </div>
             <button class="product-gallery-lightbox__nav product-gallery-lightbox__nav--next" type="button" data-gallery-lightbox-next aria-label="Next product image">
               <span aria-hidden="true">&rsaquo;</span>
@@ -109,7 +109,7 @@
     <div class="product-info" data-product-info>
       {%- assign current_variant = product.selected_or_first_available_variant -%}
       {%- if product.vendor != blank -%}
-        <div class="eyebrow">{{ product.vendor | escape }}</div>
+        <div class="eyebrow">{% render 'brand-label', vendor: product.vendor %}</div>
       {%- endif -%}
       <h1>{{ product.title | escape }}</h1>
 
@@ -216,14 +216,12 @@
         </div>
       </div>
 
-      {%- if product.description != blank -%}
-        <div class="rte product-description" data-product-description>{{ product.description }}</div>
-      {%- endif -%}
+      {% render 'product-resources', product: product %}
 
         {%- form 'contact', id: 'BackInStockForm', class: 'back-in-stock-form' -%}
         <div data-back-in-stock{% if current_variant.available %}{% unless form.posted_successfully? or form.errors %} hidden{% endunless %}{% endif %}>
           <input type="hidden" name="contact[tags]" value="back-in-stock, {{ product.handle }}">
-          <input type="hidden" name="contact[body]" value="Back in stock request for {{ product.title | escape }}">
+          <input type="hidden" name="contact[body]" value="Stock update request for {{ product.title | escape }} - {{ current_variant.title | escape }} ({{ current_variant.id }}), SKU: {{ current_variant.sku | default: 'Not supplied' | escape }}">
           {%- if form.posted_successfully? -%}
             <p role="status">Your request was received.</p>
           {%- endif -%}
@@ -233,11 +231,12 @@
           <label class="form-label" for="BackInStock-{{ section.id }}">{{ 'products.product.back_in_stock' | t }}</label>
           <div class="search-form">
             <input class="field" id="BackInStock-{{ section.id }}" type="email" name="contact[email]" placeholder="{{ 'newsletter.label' | t }}" required>
-            <button class="button" type="submit">{{ 'newsletter.button_label' | t }}</button>
+            <button class="button" type="submit">Request update</button>
           </div>
       </div>
         {%- endform -%}
-
+    </div>
+    <div class="product-information">
       <div class="product-tabs">
         <details open>
           <summary>{{ 'products.product.tabs.specs' | t }}</summary>
@@ -254,20 +253,29 @@
                 </tr>
                 <tr>
                   <th>Brand</th>
-                  <td>{{ product.vendor | default: shop.name | escape }}</td>
+                  <td>{% render 'brand-label', vendor: product.vendor, fallback: shop.name %}</td>
                 </tr>
+                {%- if product.metafields.custom.build_style.value != blank -%}
                 <tr>
                   <th>Build Style</th>
-                  <td>{{ product.metafields.custom.build_style.value | default: 'OEM+ / Performance' | escape }}</td>
+                  <td>{{ product.metafields.custom.build_style.value | escape }}</td>
                 </tr>
+                {%- endif -%}
               </tbody>
             </table>
+            {%- if product.metafields.custom.specifications.type == 'rich_text_field' -%}
+              <div class="rte product-specifications">{{ product.metafields.custom.specifications | metafield_tag }}</div>
+            {%- endif -%}
           </div>
         </details>
 
         <details>
           <summary>{{ 'products.product.tabs.fitment' | t }}</summary>
           <div class="product-tabs__content rte">
+            <p data-fitment-source data-product-handle="{{ product.handle | escape }}" hidden>
+              <a data-fitment-source-link target="_blank" rel="noopener noreferrer">Manufacturer fitment table</a>
+              <span data-fitment-source-note></span>
+            </p>
             {%- if product.metafields.custom.fitment != blank -%}
               {{ product.metafields.custom.fitment | metafield_tag }}
             {%- else -%}
@@ -279,29 +287,49 @@
         <details>
           <summary>{{ 'products.product.tabs.shipping' | t }}</summary>
           <div class="product-tabs__content rte">
-            <p>{{ 'products.product.shipping_fallback' | t }}</p>
+            {%- if product.metafields.custom.shipping_note.type == 'single_line_text_field' or product.metafields.custom.shipping_note.type == 'multi_line_text_field' -%}
+              <p>{{ product.metafields.custom.shipping_note.value | escape | newline_to_br }}</p>
+            {%- endif -%}
+            <p>Delivery options and applicable taxes are confirmed at checkout. Contact us before ordering if you need a specific delivery date.</p>
+            {%- if pages['shipping-returns'] != blank -%}
+              <a href="{{ pages['shipping-returns'].url | escape }}">Shipping &amp; returns</a>
+            {%- elsif shop.shipping_policy != blank -%}
+              <a href="{{ shop.shipping_policy.url | escape }}">Shipping policy</a>
+            {%- endif -%}
           </div>
         </details>
       </div>
+      {%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}
+          {% render block %}
+        {%- endif -%}
+      {%- endfor -%}
     </div>
+    {%- if product.description != blank -%}
+      <section class="product-details" aria-labelledby="ProductDescription-{{ section.id }}">
+        <h2 class="product-details__heading" id="ProductDescription-{{ section.id }}">{{ 'products.product.description' | t }}</h2>
+        <div class="rte product-description" data-product-description>{{ product.description }}</div>
+      </section>
+    {%- endif -%}
   </div>
 </section>
 
 {% schema %}
 {
   "name": "Product",
+  "blocks": [{ "type": "@app" }],
   "settings": [
     {
       "type": "text",
       "id": "trust_1",
       "label": "Trust message 1",
-      "default": "Performance tested"
+      "default": "Fitment support"
     },
     {
       "type": "text",
       "id": "trust_2",
       "label": "Trust message 2",
-      "default": "Fast shipping"
+      "default": "Shipping & returns"
     },
     {
       "type": "text",

@@ -1,0 +1,8 @@
+{%- liquid
+  assign brand = vendor | default: fallback
+  assign brand_key = brand | strip | downcase
+  if brand_key == 'armmotorsports' or brand_key == 'arm motorsports'
+    assign brand = 'ARM Motorsports'
+  endif
+-%}
+{{- brand | escape -}}

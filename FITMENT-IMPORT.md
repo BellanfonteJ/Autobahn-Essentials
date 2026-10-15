@@ -17,9 +17,16 @@ Model-year ranges are not supplied. Listed matches require year and installation
   "excludedUnpublishedProducts": 3,
   "reviewProducts": 95,
   "configurations": 258,
-  "yearRangesProvided": false
+  "yearRangesProvided": false,
+  "sourceReviewedProducts": 1
 }
 ```
+
+## Manufacturer Source Reviews
+
+Source reviews cover exact model/engine rows and matching part numbers only, never model years or a physical-fit guarantee. Invalid or changed source mappings are flagged for review.
+
+- `135i-5-intercooler-fmic`: [ARM Motorsports](https://armmotorsports.com/products/135i-5-intercooler-fmic), reviewed 2026-10-14
 
 ## Needs Review
 

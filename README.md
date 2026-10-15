@@ -24,7 +24,17 @@ The development command does not publish the live theme. However, pushes to a Sh
 
 ## GitHub and VS Code Sync
 
-The collection, footer and Builds updates are maintained on `codex/theme-bug-fixes` in [slimeraps/Autobahn-Essentials](https://github.com/slimeraps/Autobahn-Essentials/tree/codex/theme-bug-fixes), based on `main` at `5c2575b` after the garage merge in PR #49. The earlier motion and close-icon fixes were merged through PR #48.
+The latest theme code and README are available on [slimeraps/Autobahn-Essentials/main](https://github.com/slimeraps/Autobahn-Essentials/tree/main), including the October 15 update below. `codex/theme-bug-fixes` is the development branch. The garage work was merged through PR #49, collection/footer/Builds modernization through PR #50, and the earlier motion and close-icon fixes through PR #48. Updating this repository does not publish the live Shopify theme; its separate connection is documented below.
+
+### October 15 Review Status
+
+The October 15 main-branch update includes the enterprise, description, fitment-guide, product-page spacing and hover-image fixes, followed by a storefront bug sweep. The sweep fixes clipped gallery magnifiers, narrow-screen cart overflow/stretched thumbnails, newsletter interruptions during Search/My Garage use, and locale-dropping navigation/cart requests. All 103 local checks, Shopify Theme Check and packaging pass. The code and this README are synchronized to `slimeraps/Autobahn-Essentials/main`; the separate `BellanfonteJ` repository and live Shopify theme remain unchanged. See [QUALITY-AUDIT.md](QUALITY-AUDIT.md) for reproduced issues, coverage and limits.
+
+### October 14 Review Status
+
+The earlier theme modernization was pushed in [commit `576c3ae`](https://github.com/slimeraps/Autobahn-Essentials/commit/576c3ae) and subsequently merged through PR #50. [Review the newest branch changes against main](https://github.com/slimeraps/Autobahn-Essentials/compare/main...codex/theme-bug-fixes). The latest review-branch batch includes enterprise-readiness items 1-7, full-width description cleanup and the responsive fitment guide. Verification passed all 95 tests, Shopify Theme Check and theme packaging.
+
+The earlier draft-PR creation attempt was denied by the GitHub integration; PR #50 was later merged separately. This latest update pushes the working branch only and does not create a new PR, merge into main or publish a live theme. Outstanding catalog, fitment and checkout/email checks are tracked in [RELEASE-READINESS.md](RELEASE-READINESS.md).
 
 **Release warning:** Shopify Admin currently links the live theme to [BellanfonteJ/Autobahn-Essentials/main](https://github.com/BellanfonteJ/Autobahn-Essentials/tree/main), not the `slimeraps` repository used by this checkout. A read-only live layout download did not contain the garage scripts. The connection and reset controls were not changed. Do not merge into the connected repository or reset its theme without reviewing the complete diff and authorizing the resulting live update. See [RELEASE-READINESS.md](RELEASE-READINESS.md).
 
@@ -32,8 +42,8 @@ For an existing checkout, preserve or commit any local work before switching bra
 
 ```sh
 git fetch origin
-git switch codex/theme-bug-fixes
-git pull --ff-only origin codex/theme-bug-fixes
+git switch main
+git pull --ff-only origin main
 ```
 
 Open that checkout in VS Code and start the Local Development command above. Git pulls update your files; the running Shopify development server updates the unpublished preview when those files change. The original product CSV is not committed; the generated fitment catalog, importer, and review report are included.
@@ -46,11 +56,22 @@ pnpm test
 pnpm theme:package
 ```
 
-The current suite has 68 regression tests: 61 browser checks, four CSV-import checks and three read-only catalog-audit checks. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content and single close icons. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
+The current suite has 103 checks: 80 browser regressions, nine accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content, single close icons, canonical brand labels, source links and grouped Brand filter IDs. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
 
 Tests use installed Google Chrome on macOS or Playwright Chromium. If neither is available, run `pnpm exec playwright install chromium`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for another compatible Chromium installation. Set `THEME_SCREENSHOTS=1` to capture test screenshots in the ignored `.tools/screenshots/` folder.
 
-Real-store preview checks verified product variants, cart add/update/remove, gallery navigation, mobile layout, contact navigation, combined native/garage filters, the Builds page and distinct footer links. Checkout failed to load through the local preview; email delivery and complete installed-app workflows remain unverified. No order was placed. See [BUGFIXES.md](BUGFIXES.md) and [RELEASE-READINESS.md](RELEASE-READINESS.md) for remaining work. Garage matching is a browsing aid, not a compatibility guarantee.
+Real-store preview checks verified product variants, cart add/update/remove, gallery navigation, mobile layout, contact navigation, combined native/garage filters, the Builds page and distinct footer links. Hosted draft-theme checkout loads, reports missing required buyer fields and rejects an invalid discount code. The earlier localhost redirect failure does not establish a production checkout failure. Shipping/taxes for an approved address, payment transactions, email delivery and complete installed-app workflows remain unverified. No order was placed; the test item was removed and the original empty cart restored. See [BUGFIXES.md](BUGFIXES.md) and [RELEASE-READINESS.md](RELEASE-READINESS.md) for remaining work. Garage matching is a browsing aid, not a compatibility guarantee.
+
+## Enterprise Readiness: Items 4-7
+
+The enterprise first-stage update is included in the GitHub review branch and synchronized to the unpublished preview, not published live:
+
+- **Product pages:** Desktop photography/purchasing sit side by side, with stacked mobile reading order, existing support/policy links, typed verified-specification/shipping-note fields, HTTPS guides and real review-app block support. Removed generic build-style and unsubstantiated default performance-tested/fast-shipping messages; merchant-supplied settings/content remain. See [PRODUCT-CONTENT.md](PRODUCT-CONTENT.md) for setup and remaining content/account-linked garage work.
+- **Speed/accessibility:** Added axe-core audits and payload budgets. Fixed primary-button contrast, the hidden mobile sort label and card alt text. Essential CSS precedes Shopify app output; full-size gallery media waits until opening. Native historical measurements and audit limitations are in [QUALITY-AUDIT.md](QUALITY-AUDIT.md).
+- **Releases/security:** Prepared pinned read-only, nondeploying CI and a PR checklist. Remote CI/branch protection and repository choice remain pending. Owner/app findings and two development-tool advisories are in [SECURITY.md](SECURITY.md). No roles, credentials, permissions or live connections changed.
+- **Operations:** Added bounded browser-memory diagnostics without private payloads, persistence or transmission. Fixed stock-request wording and initial/changed variant/SKU identity. Native reports, support/stock procedures and remaining monitoring/notification setup are in [OPERATIONS.md](OPERATIONS.md).
+
+Individual gates: `pnpm test:accessibility`, `pnpm test:budgets`; `pnpm test` includes both. The included GitHub workflow runs frozen install, high-severity dependency audit, Theme Check, tests and packaging without deploying. A successful remote run and required-check branch protection still need verification. Passing local checks is not launch certification.
 
 ## My Garage Fitment Data
 
@@ -74,15 +95,21 @@ pnpm test
 
 This regenerates `assets/fitment-data.js` and `FITMENT-IMPORT.md`. Keep the source CSV outside the repository. Review flagged rows before changing any compatibility claims. A separate, verified supplier year-range file is needed for exact model-year matching; this importer does not infer ranges from titles.
 
+### Manufacturer Source Reviews
+
+The importer also reads `data/fitment-source-reviews.json` by default; use `--source-reviews /path/to/reviews.json` to select another manifest. Each review records the manufacturer URL, review date, exact model/engine rows and manufacturer part number. The importer attaches provenance only when the reviewed rows exactly match the current imported rows and the manufacturer part number matches the export's primary variant SKU. Unsafe URLs, unsupported fields and stale/mismatched reviews leave the product flagged for review without changing its fitment rows.
+
+The first reviewed product is the [ARM 135i 5-inch intercooler](https://armmotorsports.com/products/135i-5-intercooler-fmic), checked October 14, 2026: 14 model/engine configurations and matching part number. Its Fitment panel links to the manufacturer and explicitly says model-year compatibility remains unverified. This is a public-source review, not physical installation verification or catalog-wide certification. Other products retain their existing unknown/restricted states. Source reviews do not populate missing year ranges or copy SKUs into the storefront asset.
+
 ## Collection Browsing
 
-Collections have a native Shopify filter sidebar on desktop and a keyboard-accessible filter drawer on mobile. The theme renders the configured `collection.filters` rather than inventing filter values. Availability and Price were present in the real-store preview; Brand and Product Type need to be enabled in Shopify Search & Discovery to appear. Those are store-wide settings and were not changed by this preview update. See [Shopify's filter setup guide](https://help.shopify.com/en/manual/online-store/storefront-search/search-and-discovery-filters).
+Collections have a native Shopify filter sidebar on desktop and a keyboard-accessible filter drawer on mobile. The theme renders the configured `collection.filters` rather than inventing filter values. Availability, Price, **Brand** (Vendor) and **Part Type** (Product type) are enabled in Shopify Search & Discovery. These are store-wide filter settings, not preview-only changes. The two existing ARM vendor spellings are grouped under **ARM Motorsports** using Shopify's native value grouping; raw product Vendor fields and vendor-based collection rules remain unchanged. Preview product cards and product specs use the same canonical display label. See [Shopify's filter setup guide](https://help.shopify.com/en/manual/online-store/storefront-search/search-and-discovery-filters).
 
 Applying filters resets pagination while preserving sorting, locale, tagged collection paths, and vehicle URL preferences. Sorting preserves repeated filter values and price ranges. Active filters can be removed individually or cleared; invalid price ranges expose native validation and can be corrected. Filtering and sorting also work without JavaScript.
 
 A compact My Garage bar stays visible while browsing, with Change/Clear controls and the model-year warning. It follows the rendered header position, including Shopify's section wrapper, resized headers, and hidden navigation. Product cards retain full titles, clear starting prices, restrained fitment labels, consistent image surfaces, and unchanged quick-buy/variant behavior. A sold-out label takes priority over decorative merchandising badges.
 
-Real-preview checks verified Availability/Price controls, a USD 100-200 price range returning 35 products, and eight listed garage matches across that filtered collection's pages. Temporary price and match-only filters were cleared afterward; the saved vehicle was preserved. No order was placed and no theme was published. Separate catalog content maintenance is recorded below.
+Real-preview checks verified Availability/Price controls, a USD 100-200 price range returning 35 products, and eight listed garage matches across that filtered collection's pages. The hosted preview also verified the grouped ARM brand with Intercoolers returning 17 products, including selected filters in the mobile drawer and desktop sidebar. Temporary filters were cleared afterward; existing garage preferences were preserved. No order was placed and no theme was published. Separate catalog content maintenance is recorded below.
 
 ## Footer, Builds and Catalog Review
 
@@ -92,12 +119,30 @@ The Builds template has configurable hero media and a blog source, platform brow
 
 Run `python3 scripts/audit-catalog.py /path/to/products_export.csv` for a read-only supplier/description review. [CATALOG-REVIEW.md](CATALOG-REVIEW.md) flags five products with repeated substantial parsed HTML fragments in the supplied export. Similar but nonidentical content may not be detected; flags are review candidates, not deletion instructions. No raw descriptions or commercial CSV columns are committed.
 
-The current `135i-5-intercooler-fmic` description was backed up locally and its manually reviewed second profile-through-warranty block was removed in Shopify Admin. Preview verification confirmed one profile and one unchanged fitment table. This is a **store-wide product content edit**, not an unpublished-theme-only change. Other candidates and supplier normalization await current-data review; no prices, stock or compatibility claims were changed.
+The current `135i-5-intercooler-fmic` description was backed up locally and its manually reviewed second profile-through-warranty block was removed in Shopify Admin. Preview verification confirmed one profile and one unchanged fitment table. This is a **store-wide product content edit**, not an unpublished-theme-only change. Other candidates and any raw supplier-data normalization await current-data review; no prices, stock or compatibility claims were changed.
 
 ## Changelog
 
+### October 15, 2026
+
+- Synchronized the tested enterprise/product fixes, storefront bug sweep and documentation to `slimeraps/Autobahn-Essentials/main`, so today's README is visible on the default GitHub page. The separate Shopify-connected `BellanfonteJ/Autobahn-Essentials/main` is unchanged; no live theme release is included.
+- Completed a follow-up storefront code/fixture audit after pushing hover fix `baaa626`. Reproduced and fixed gallery magnifier clipping/pixel alignment, mobile cart page/drawer overflow, stretched cart thumbnails, newsletter focus interruptions and locale-dropping fallback links/API requests. Added five browser regressions and a populated-cart accessibility audit, bringing the suite to 103. Dependency audit found no high/critical advisories; the two existing lower-severity development-tool findings remain documented. This batch is included in the review-branch push only; no order, email, buyer-data submission or live release was performed.
+- Fixed alternate product-card images extending outside their frame on hover: a more-specific 100% image-size rule overrode the absolute image's auto sizing while its inset remained. Primary and alternate images now share one bounded grid cell, preserving containment, the image transition and card dimensions. Coverage checks collection, search and related cards at 320-1440px with normal/reduced motion. This 97-check follow-up is included in the review-branch push and unpublished preview, not a live release.
+- Pushed the product-page spacing follow-up and updated README/release documentation on the review branch. Specs, Fitment, Shipping and app blocks sit below both columns, removing the large empty area beside the panels. Added 320-1920px layout, accordion and variant-SKU regression coverage with and without JavaScript; all 96 checks pass. No live theme publication.
+
 ### October 14, 2026
 
+- Removed the large empty area below the desktop gallery by moving Specs, Fitment, Shipping and app blocks into a full-width row after the gallery/purchase area. Retained mobile reading order, native accordions and variant SKU updates. This 96-check follow-up is on the unpublished preview and included in the October 15 review-branch push.
+- Included all pending enterprise-readiness, description and fitment-guide improvements in the GitHub review-branch update. README and release runbooks reflect 95 passing checks and distinguish the unpublished preview from a live release. Private exports, local backups, screenshots, CLI state and generated ZIPs are excluded.
+- Fixed the long product description being squeezed into the purchase column. Added a dedicated full-width reading section with readable headings/spacing, bounded media/tables and unchanged original content/order. Responsive regression coverage brings the suite to 93; changes remain on the unpublished preview and review branch.
+- Cleaned up legacy supplier description formatting with compact wrapping badges, restrained heading typography/dividers, responsive video wrappers and subtle fitment row shading. Product content stays unchanged; no-JavaScript responsive coverage brings the suite to 94.
+- Fixed supplier fitment guides whose rows were shrink-wrapped inside a full-width block table. Guides now have aligned full-width columns, consistent cell alignment and compact mobile padding, with unchanged configuration data and no-JavaScript regression coverage.
+- Implemented the first stage of items 4-7: responsive product purchasing/resources, optional verified content/review blocks, accessibility/byte-budget gates, nondeploying CI/release safeguards, local diagnostics and stock-request identity fixes. Suite now has 92 checks.
+- Read historical LCP/INP/CLS reports and inspected owner sign-in enforcement, app inventory and Syncee access without changes. Added content, quality, security/rollback and operations runbooks. Live release, enforced account security and central monitoring remain owner tasks.
+- Started enterprise readiness with exact-row/SKU-validated manufacturer source reviews, safe customer-visible provenance and unchanged model-year warnings. Reviewed the first intercooler; no missing compatibility data was invented.
+- Enabled store-wide Brand and Part Type filters, grouped both ARM vendor aliases without rewriting product data, and aligned preview brand labels across cards and specs.
+- Verified hosted checkout loading, required-field validation and invalid-discount rejection without buyer data or payment. Restored the empty cart; shipping/tax, transaction, notification and fulfillment checks remain open.
+- Added six regressions for source validation, canonical labels and grouped filter IDs, bringing the suite to 74. This first-stage work is included in the latest review-branch push.
 - Added native collection filtering with a desktop sidebar, mobile focus-managed drawer, active filter removal, sort preservation, price validation, and no-JavaScript support.
 - Refined product cards and added a persistent My Garage bar with Change/Clear controls and year-fitment warnings. Card starting prices use the product minimum without implying unrelated variant discounts.
 - Rebuilt the empty Builds page with platform links, configurable hero/blog sources and a genuine customer-story gallery; repaired Search-only footer fallbacks without replacing custom menus.

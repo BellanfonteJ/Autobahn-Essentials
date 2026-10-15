@@ -5,8 +5,10 @@ import csv
 import hashlib
 import json
 import re
+from datetime import date
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
 class TableParser(HTMLParser):
@@ -81,7 +83,36 @@ def records_for_row(row):
              "variant": variant, "years": None} for value in engines]
 
 
-def extract(source):
+def source_review(review, product, records):
+    hosts = {"ARM Motorsports": "armmotorsports.com"}
+    url = urlsplit(review.get("url", ""))
+    expected_host = hosts.get(review.get("supplier"))
+    if not expected_host or url.scheme != "https" or url.hostname != expected_host or url.username or url.password or url.port or url.query or url.fragment or not url.path.startswith("/products/"):
+        raise ValueError("Manufacturer source URL needs review")
+    if review.get("scope") != "model-engine":
+        raise ValueError("Only model/engine source reviews are supported; years remain unverified")
+    reviewed_at = review.get("reviewedAt", "")
+    if not isinstance(reviewed_at, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", reviewed_at):
+        raise ValueError("Source review date must use YYYY-MM-DD")
+    date.fromisoformat(reviewed_at)
+    if not review.get("partNumber") or review["partNumber"].strip().casefold() != product.get("Variant SKU", "").strip().casefold():
+        raise ValueError("Manufacturer part number does not match the exported product SKU")
+    checked = []
+    for row in review.get("rows", []):
+        if set(row) - {"make", "model", "chassis", "engine", "submodel"}:
+            raise ValueError("Source rows cannot contain years or unsupported fields")
+        checked.extend(records_for_row(row))
+    key = lambda row: json.dumps(row, sort_keys=True)
+    if not checked or {key(row) for row in checked} != {key(row) for row in records}:
+        raise ValueError("Manufacturer source rows differ from the current imported fitment")
+    notes = review.get("notes", "")
+    if not isinstance(notes, str) or len(notes) > 1000:
+        raise ValueError("Manufacturer installation notes need review")
+    return {"supplier": review["supplier"], "url": review["url"], "reviewedAt": review["reviewedAt"],
+            "scope": "model-engine", "notes": notes, "recordsSha256": hashlib.sha256("\n".join(sorted({key(row) for row in checked})).encode()).hexdigest()}
+
+
+def extract(source, source_reviews=None):
     with source.open(encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
         if not {"Handle", "Title", "Body (HTML)", "Published", "Status"}.issubset(reader.fieldnames or []):
@@ -95,6 +126,12 @@ def extract(source):
             products[row["Handle"]] = row
     active = {key: value for key, value in products.items()
               if value["Published"].lower() == "true" and value["Status"].lower() == "active"}
+    reviews = {}
+    if source_reviews is not None:
+        manifest = json.loads(source_reviews.read_text(encoding="utf-8"))
+        if manifest.get("version") != 1 or not isinstance(manifest.get("products"), dict):
+            raise ValueError("Invalid manufacturer source-review manifest")
+        reviews = manifest["products"]
     configurations, lookup, output, review = [], {}, {}, []
     tables_count = 0
     for handle, product in active.items():
@@ -129,13 +166,20 @@ def extract(source):
         if restrictions:
             issues.add("Description contains restrictions; confirm installation notes")
         output[handle] = {"records": sorted(product_ids), "review": bool(issues) or restrictions}
+        if handle in reviews:
+            try:
+                output[handle]["sourceReview"] = source_review(reviews[handle], product, [configurations[index] for index in sorted(product_ids)])
+            except (ValueError, TypeError, AttributeError) as error:
+                issues.add("Manufacturer source review invalid: " + str(error))
+                output[handle]["review"] = True
         if issues:
             review.append({"handle": handle, "title": product["Title"], "issues": sorted(issues)})
     meta = {"source": source.name, "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
             "exportProducts": len(products), "publishedProducts": len(active), "productsWithTables": tables_count,
             "productsWithRecords": sum(bool(value["records"]) for value in output.values()),
             "excludedUnpublishedProducts": len(products) - len(active), "reviewProducts": len(review),
-            "configurations": len(configurations), "yearRangesProvided": False}
+            "configurations": len(configurations), "yearRangesProvided": False,
+            "sourceReviewedProducts": sum("sourceReview" in product for product in output.values())}
     return {"version": 1, "meta": meta, "vehicles": configurations, "products": output}, review
 
 
@@ -143,8 +187,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("source", type=Path)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--source-reviews", type=Path)
     args = parser.parse_args()
-    data, review = extract(args.source)
+    reviews = args.source_reviews or args.root / "data" / "fitment-source-reviews.json"
+    if args.source_reviews and not reviews.is_file():
+        parser.error("The supplied source-review file does not exist")
+    data, review = extract(args.source, reviews if reviews.is_file() else None)
     assets = args.root / "assets"
     assets.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(data, ensure_ascii=True, separators=(",", ":"))
@@ -153,7 +201,11 @@ def main():
     lines = ["# Fitment Import", "", "Source: `" + args.source.name + "`.", "",
              "Only published, active products and explicit description-table rows are included. Prices, costs, inventory, image URLs, and raw descriptions are not exported to the fitment asset.", "",
              "Model-year ranges are not supplied. Listed matches require year and installation-note confirmation; they are not a fitment guarantee.", "",
-             "```json", json.dumps(data["meta"], indent=2), "```", "", "## Needs Review", ""]
+             "```json", json.dumps(data["meta"], indent=2), "```", "", "## Manufacturer Source Reviews", "",
+             "Source reviews cover exact model/engine rows and matching part numbers only, never model years or a physical-fit guarantee. Invalid or changed source mappings are flagged for review.", ""]
+    lines += ["- `" + handle + "`: [" + product["sourceReview"]["supplier"] + "](" + product["sourceReview"]["url"] + "), reviewed " + product["sourceReview"]["reviewedAt"]
+              for handle, product in data["products"].items() if "sourceReview" in product]
+    lines += ["", "## Needs Review", ""]
     lines += ["- `" + item["handle"] + "`: " + "; ".join(item["issues"]) for item in review]
     report.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps({**data["meta"], "configurations": len(data["vehicles"]), "reviewProducts": len(review)}, indent=2))

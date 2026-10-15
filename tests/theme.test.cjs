@@ -39,6 +39,175 @@ const nativeFilters = () => {
   ];
 };
 
+test('product resources only expose supplied guides and existing policies without made-up specs', async () => {
+  for (const url of ['https://manufacturer.example.test/guide.pdf', 'javascript:alert(1)', 'http://manufacturer.example.test/guide.pdf', '']) {
+    await withPage({ pages: { contact: { url: '/pages/contact' }, 'shipping-returns': { url: '/pages/shipping-returns' } }, product: { metafields: { custom: { installation_guide: { type: 'url', value: url } } } } }, async (page) => {
+      assert.equal(await page.locator('.product-resources a').filter({ hasText: 'Installation guide' }).count(), url.startsWith('https://') ? 1 : 0);
+      assert.equal(await page.locator('.product-resources a').filter({ hasText: 'Fitment help' }).getAttribute('href'), '/pages/contact');
+      assert.match(await page.locator('.product-resources').innerText(), /Confirm model year/);
+      assert.ok(!(await page.locator('.spec-table').innerText()).includes('OEM+ / Performance'));
+    });
+  }
+  await withPage({}, async (page) => {
+    assert.equal(await page.locator('.product-resources a').count(), 0);
+  });
+});
+
+test('typed product specifications and shipping notes render safely without promising delivery dates', async () => {
+  const custom = { specifications: { type: 'rich_text_field', value: 'Verified supplier specification' }, shipping_note: { type: 'multi_line_text_field', value: '<img src=x onerror=alert(1)>\nSpecial order: contact support.' } };
+  await withPage({ product: { metafields: { custom } } }, async (page) => {
+    assert.match(await page.locator('.product-specifications').innerText(), /Verified supplier specification/);
+    const shipping = page.locator('.product-tabs details').last();
+    await shipping.locator('summary').click();
+    assert.equal(await shipping.locator('img').count(), 0);
+    assert.match(await shipping.innerText(), /<img.*Special order/s);
+    assert.match(await shipping.innerText(), /confirmed at checkout/);
+  });
+});
+
+test('health diagnostics reject arbitrary payloads and never persist or transmit them', async () => {
+  await withPage({ template: 'search', search: { results_count: 0, results: [], terms: 'private@example.test' } }, async (page) => {
+    const outgoing = [];
+    page.on('request', (request) => outgoing.push(request.url()));
+    const result = await page.evaluate(() => {
+      const before = { ...localStorage };
+      window.AEHealth.report({ email: 'private@example.test' });
+      window.AEHealth.report('private@example.test');
+      for (let i = 0; i < 60; i++) window.AEHealth.report('cart_add_error');
+      const snapshot = window.AEHealth.snapshot();
+      snapshot.counts.cart_add_error = -1;
+      snapshot.recent.push('private@example.test');
+      return { snapshot: window.AEHealth.snapshot(), storageSame: JSON.stringify(before) === JSON.stringify({ ...localStorage }) };
+    });
+    assert.equal(result.snapshot.counts.search_no_results, 1);
+    assert.equal(result.snapshot.counts.cart_add_error, 60);
+    assert.equal(result.snapshot.recent.length, 50);
+    assert.ok(!JSON.stringify(result.snapshot).includes('private@example.test'));
+    assert.equal(result.storageSame, true);
+    assert.deepEqual(outgoing, []);
+  });
+});
+
+test('cart diagnostics distinguish rejected adds from confirmed adds with refresh failures', async () => {
+  for (const refreshFails of [false, true]) {
+    await withPage({}, async (page) => {
+      await page.route('**/cart/add.js', (route) => json(route, refreshFails ? { id: 101 } : { description: 'Unavailable' }, refreshFails ? 200 : 422));
+      await page.route('**/cart.js', (route) => json(route, { description: 'Refresh unavailable' }, 503));
+      await page.locator('[data-atc-main]').click();
+      await page.locator('[data-product-error]').waitFor({ state: 'visible' });
+      const health = await page.evaluate(() => window.AEHealth.snapshot());
+      assert.equal(health.counts.cart_add_error || 0, refreshFails ? 0 : 1);
+      assert.equal(health.counts.cart_add || 0, refreshFails ? 1 : 0);
+      assert.equal(health.counts.cart_refresh_error || 0, refreshFails ? 1 : 0);
+    });
+  }
+});
+
+test('stock update requests identify the initial and changed variants without promising automatic alerts', async () => {
+  for (const javaScriptEnabled of [true, false]) {
+    await withPage({ javaScriptEnabled, product: { selected_or_first_available_variant: variants[2] } }, async (page) => {
+      const request = page.locator('[data-back-in-stock]');
+      assert.equal(await request.isVisible(), true);
+      const body = request.locator('[name="contact[body]"]');
+      assert.match(await body.inputValue(), /Limited \(103\), SKU: AE-LIMITED/);
+      assert.match(await request.innerText(), /Ask about availability.*Request update/si);
+      assert.doesNotMatch(await request.innerText(), /Get notified/i);
+      if (javaScriptEnabled) {
+        await page.locator('select[name="id"]').selectOption('102');
+        assert.match(await body.inputValue(), /Premium \(102\), SKU: AE-PREMIUM/);
+        assert.equal(await request.isVisible(), false);
+      }
+    });
+  }
+});
+
+test('product gallery and purchase controls share the desktop viewport and resources fit mobile widths', async () => {
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await withPage({ viewport: { width, height: 1000 }, pages: { contact: { url: '/pages/contact' }, 'shipping-returns': { url: '/pages/shipping-returns' } } }, async (page) => {
+      const gallery = await page.locator('.product-gallery__main').boundingBox();
+      const info = await page.locator('[data-product-info]').boundingBox();
+      const buy = await page.locator('[data-atc-main]').boundingBox();
+      const resources = await page.locator('.product-resources').boundingBox();
+      assert.ok(resources.x >= 0 && resources.x + resources.width <= width);
+      assert.ok(await page.locator('html').evaluate((element) => element.scrollWidth <= innerWidth), `${width}px overflow`);
+      if (width >= 990) {
+        assert.ok(info.x >= gallery.x + gallery.width, 'Purchase information is alongside the gallery');
+        assert.ok(buy.y + buy.height < 1000, 'Desktop purchase button is visible without scrolling');
+      } else assert.ok(info.y >= gallery.y + gallery.height, 'Mobile retains stacked reading order');
+      if (process.env.THEME_SCREENSHOTS) {
+        fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/enterprise-product-fixture-${width}.png`) });
+      }
+    });
+  }
+});
+
+test('product information follows both gallery and purchase columns instead of extending only the purchase column', async () => {
+  for (const width of [320, 390, 768, 1024, 1440, 1920]) {
+    for (const javaScriptEnabled of [true, false]) {
+      await withPage({ viewport: { width, height: 1000 }, javaScriptEnabled }, async page => {
+        const gallery = await page.locator('.product-gallery').boundingBox();
+        const purchase = await page.locator('[data-product-info]').boundingBox();
+        const information = page.locator('.product-information');
+        const panels = await information.boundingBox();
+        const productPage = await page.locator('.product-page').boundingBox();
+        assert.equal(await page.locator('[data-product-info] .product-tabs').count(), 0);
+        assert.equal(await information.locator('details').count(), 3);
+        assert.ok(panels.y >= Math.max(gallery.y + gallery.height, purchase.y + purchase.height));
+        assert.ok(panels.y - Math.max(gallery.y + gallery.height, purchase.y + purchase.height) <= 49, 'Panels follow the taller column without an extra spacer');
+        assert.ok(Math.abs(panels.width - productPage.width) < 1, 'Panels span both columns');
+        const description = await page.locator('.product-details').boundingBox();
+        assert.ok(description.y >= panels.y + panels.height);
+        await information.getByText('Fitment', { exact: true }).click();
+        await information.getByText('Shipping', { exact: true }).click();
+        assert.equal(await information.locator('details[open]').count(), 3);
+        if (javaScriptEnabled) {
+          await page.locator('select[name="id"]').selectOption('102');
+          assert.equal(await information.locator('[data-product-sku]').textContent(), 'AE-PREMIUM');
+        }
+        assert.equal(await page.locator('html').evaluate(node => node.scrollWidth <= innerWidth), true);
+        if (process.env.THEME_SCREENSHOTS && javaScriptEnabled) {
+          fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+          await information.locator('summary').first().scrollIntoViewIfNeeded();
+          await page.screenshot({ path: path.join(root, `.tools/screenshots/product-gap-fix-${width}.png`) });
+        }
+      });
+    }
+  }
+});
+
+test('supplier alias display is consistent on cards and product specs while other brands remain escaped', async () => {
+  for (const vendor of ['armmotorsports', 'ARM Motorsports']) {
+    await withPage({ cards: true, product: { vendor } }, async (page) => {
+      assert.equal(await page.locator('.product-card__vendor').first().innerText(), 'ARM Motorsports');
+      assert.match(await page.locator('.spec-table').innerText(), /Brand\s+ARM Motorsports/i);
+      assert.equal(await page.locator('main .eyebrow').filter({ hasText: 'ARM Motorsports' }).count(), 1);
+    });
+  }
+  await withPage({ cards: true, product: { vendor: '<img src=x onerror="window.injected=true">' } }, async (page) => {
+    assert.equal(await page.locator('.product-card__vendor img').count(), 0);
+    assert.match(await page.locator('.product-card__vendor').first().innerText(), /<img/);
+  });
+});
+
+test('manufacturer source links preserve year warnings and hide absent or unsafe provenance', async () => {
+  const review = { scope: 'model-engine', url: 'https://armmotorsports.com/products/test', reviewedAt: '2026-10-14', notes: 'Confirm installation requirements.' };
+  for (const sourceReview of [review, undefined, { ...review, url: 'javascript:alert(1)' }, { ...review, url: 'https://armmotorsports.com.attacker.test/products/test' }]) {
+    const data = { ...fitmentData, products: { ...fitmentData.products, 'test-part': { records: [0], review: false, sourceReview } } };
+    await withPage({ fitmentData: data }, async (page) => {
+      const source = page.locator('[data-fitment-source]');
+      assert.equal(await source.getAttribute('hidden') !== null, sourceReview !== review);
+      if (sourceReview === review) {
+        await page.locator('.product-tabs details').nth(1).locator('summary').click();
+        assert.equal(await source.isVisible(), true);
+        assert.equal(await source.locator('a').getAttribute('href'), review.url);
+        assert.match(await source.innerText(), /Model-year compatibility remains unverified/);
+        assert.equal(await source.locator('a').getAttribute('rel'), 'noopener noreferrer');
+      } else assert.equal(await source.locator('a').getAttribute('href'), null);
+    });
+  }
+});
+
 test('native filters submit repeated brands and prices while preserving locale, tags and sorting', async () => {
   await withPage({ template: 'collection', collection: { filters: nativeFilters() } }, async (page) => {
     await page.evaluate(() => history.replaceState({}, '', '/fr/collections/bmw/Charge-pipe?sort_by=price-descending&page=3&ae_vehicle=saved'));
@@ -58,6 +227,24 @@ test('native filters submit repeated brands and prices while preserving locale, 
     assert.equal(url.searchParams.get('ae_vehicle'), 'saved');
     assert.equal(url.searchParams.get('sort_by'), 'price-descending');
     assert.equal(url.searchParams.has('page'), false);
+  });
+});
+
+test('grouped Brand resource IDs survive native submission and subsequent sorting', async () => {
+  const filters = nativeFilters();
+  const group = 'gid://shopify/FilterSettingGroup/123';
+  filters[1].values[0].value = group;
+  await withPage({ template: 'collection', collection: { filters } }, async (page) => {
+    const form = page.locator('[data-collection-filter-form]');
+    await form.locator('[name="filter.p.vendor"]').first().check();
+    await form.locator('[name="filter.p.product_type"]').check();
+    await form.locator('button[type="submit"]').click();
+    await page.waitForURL('**/*FilterSettingGroup*');
+    assert.equal(new URL(page.url()).searchParams.get('filter.p.vendor'), group);
+    await page.locator('#SortBy').selectOption('price-ascending');
+    await page.waitForURL('**/*sort_by=price-ascending*');
+    assert.equal(new URL(page.url()).searchParams.get('filter.p.vendor'), group);
+    assert.equal(new URL(page.url()).searchParams.get('filter.p.product_type'), 'Charge pipe');
   });
 });
 
@@ -184,6 +371,153 @@ test('garage bar stays below the sticky header and follows its hidden and resize
     await page.setViewportSize({ width: 390, height: 844 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   });
+});
+
+test('product-card hover previews share the primary image frame without cropping or layout shifts', async () => {
+  for (const template of ['collection', 'search', 'product']) {
+    for (const width of [320, 390, 768, 1024, 1440]) {
+      for (const reducedMotion of ['reduce', 'no-preference']) {
+        await withPage({ template, cards: template === 'product', viewport: { width, height: 1000 }, reducedMotion, observerUnavailable: true }, async page => {
+          const card = page.locator('[data-product-card]').first();
+          const media = card.locator('.product-card__media');
+          const primary = media.locator('img').first();
+          const alternate = media.locator('.product-card__image--hover');
+          await media.scrollIntoViewIfNeeded();
+          await page.waitForFunction(() => [...document.querySelectorAll('.product-card__media img')].every(image => image.complete && image.naturalWidth > 0));
+          const before = await media.boundingBox();
+          assert.equal(await alternate.evaluate(node => getComputedStyle(node).opacity), '0');
+          await card.hover();
+          await page.waitForFunction(() => getComputedStyle(document.querySelector('.product-card__image--hover')).opacity === '1');
+          const frame = await media.boundingBox();
+          const first = await primary.boundingBox();
+          const second = await alternate.boundingBox();
+          assert.ok(Math.abs(before.width - frame.width) < 1 && Math.abs(before.height - frame.height) < 1, 'Hover does not resize the media frame');
+          for (const image of [first, second]) {
+            assert.ok(image.x >= frame.x - 1 && image.y >= frame.y - 1 && image.x + image.width <= frame.x + frame.width + 1 && image.y + image.height <= frame.y + frame.height + 1, `${template} ${width}px ${reducedMotion}: image stays inside the frame`);
+          }
+          for (const dimension of ['x', 'y', 'width', 'height']) assert.ok(Math.abs(first[dimension] - second[dimension]) < 1, `Both images share ${dimension}`);
+          assert.equal(await alternate.evaluate(node => getComputedStyle(node).objectFit), 'contain');
+          await page.mouse.move(0, 0);
+          await page.waitForFunction(() => getComputedStyle(document.querySelector('.product-card__image--hover')).opacity === '0');
+          assert.equal(await page.locator('html').evaluate(node => node.scrollWidth <= innerWidth), true);
+          if (process.env.THEME_SCREENSHOTS && template === 'collection' && reducedMotion === 'no-preference') {
+            await card.hover();
+            await page.waitForFunction(() => getComputedStyle(document.querySelector('.product-card__image--hover')).opacity === '1');
+            fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+            await page.screenshot({ path: path.join(root, `.tools/screenshots/product-card-hover-${width}.png`) });
+          }
+        });
+      }
+    }
+  }
+});
+
+test('audit: gallery magnifier stays inside the frame at all image edges', async () => {
+  for (const width of [1024, 1440]) {
+    await withPage({ viewport: { width, height: 1000 } }, async page => {
+      const main = page.locator('.product-gallery__main');
+      await main.scrollIntoViewIfNeeded();
+      const image = await page.locator('[data-gallery-main]').evaluate(node => getRenderedImageRect(node));
+      for (const [x, y] of [[image.left + 1, image.top + 1], [image.right - 1, image.top + 1], [image.left + 1, image.bottom - 1], [image.right - 1, image.bottom - 1]]) {
+        await main.dispatchEvent('pointermove', { clientX: x, clientY: y, pointerType: 'mouse' });
+        assert.equal(await main.evaluate(node => node.classList.contains('is-magnifying')), true);
+        const frame = await main.boundingBox();
+        const lens = await main.locator('[data-gallery-magnifier]').boundingBox();
+        assert.ok(lens.x >= frame.x && lens.y >= frame.y && lens.x + lens.width <= frame.x + frame.width && lens.y + lens.height <= frame.y + frame.height, `Lens stays inside ${width}px frame`);
+        const position = await main.locator('[data-gallery-magnifier]').evaluate(node => ({
+          background: node.style.getPropertyValue('--magnifier-bg-position').split(' ').map(parseFloat),
+          border: parseFloat(getComputedStyle(node).borderLeftWidth),
+        }));
+        const zoom = await main.evaluate(node => parseFloat(getComputedStyle(node).getPropertyValue('--magnifier-zoom')));
+        assert.ok(Math.abs((x - lens.x - position.border - position.background[0]) / zoom - (x - image.left)) < 1, 'Zoomed pixel stays aligned with the cursor');
+        assert.ok(Math.abs((y - lens.y - position.border - position.background[1]) / zoom - (y - image.top)) < 1);
+      }
+      await main.dispatchEvent('pointerleave');
+      assert.equal(await main.evaluate(node => node.classList.contains('is-magnifying')), false);
+      if (process.env.THEME_SCREENSHOTS) {
+        await main.dispatchEvent('pointermove', { clientX: image.left + 1, clientY: image.top + 1, pointerType: 'mouse' });
+        await page.waitForFunction(() => getComputedStyle(document.querySelector('[data-gallery-magnifier]')).opacity === '1');
+        fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/audit-magnifier-${width}.png`) });
+      }
+    });
+  }
+});
+
+test('audit: populated cart pages fit narrow screens with long product and option names', async () => {
+  const title = 'BMW-' + 'ExtendedConnector'.repeat(12);
+  const item = { key: '101:key', url: '/products/test-part', url_to_remove: '/cart/change?line=1&quantity=0', product: { title, has_only_default_variant: false }, variant: { title: 'Finish-' + 'CarbonWeave'.repeat(12) }, image: { asset: 'brand-bmw-m4.jpg', alt: title }, quantity: 1, final_line_price: 12345678 };
+  for (const width of [320, 390, 768, 1440]) {
+    await withPage({ template: 'cart', javaScriptEnabled: false, viewport: { width, height: 1000 }, cart: { item_count: 1, total_price: 12345678, items: [item] } }, async page => {
+      assert.match(await page.locator('.cart-item').innerText(), /ExtendedConnector.*CarbonWeave/s);
+      const thumbnail = await page.locator('.cart-item img').boundingBox();
+      assert.equal(thumbnail.width, 92);
+      assert.equal(thumbnail.height, 92, 'Intrinsic HTML dimensions cannot stretch cart thumbnails');
+      assert.equal(await page.locator('html').evaluate(node => node.scrollWidth <= innerWidth), true, `${width}px cart overflow`);
+      assert.equal(await page.locator('[name="updates[]"]').isVisible(), true);
+      assert.equal(await page.locator('[name="checkout"]').isVisible(), true);
+      if (process.env.THEME_SCREENSHOTS) {
+        fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+        await page.locator('.cart-item').scrollIntoViewIfNeeded();
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/audit-cart-${width}.png`) });
+      }
+    });
+  }
+});
+
+test('audit: cart drawer keeps long titles and large totals inside the panel', async () => {
+  const data = cart();
+  data.items[0].product_title = 'BMW-' + 'ExtendedConnector'.repeat(12);
+  data.items[0].variant_title = 'Finish-' + 'CarbonWeave'.repeat(12);
+  data.items[0].final_line_price = data.total_price = 12345678;
+  for (const width of [320, 390]) {
+    await withPage({ viewport: { width, height: 844 } }, async page => {
+      await page.route('**/cart.js', route => json(route, data));
+      await page.locator('[data-cart-drawer-open]').click();
+      await page.waitForSelector('[data-cart-line]');
+      const panel = await page.locator('.cart-drawer__panel').boundingBox();
+      for (const selector of ['.cart-drawer__title', '.cart-drawer__variant', '.cart-drawer__qty', '.cart-drawer__line-price']) {
+        const element = page.locator(selector).first();
+        const bounds = await element.boundingBox();
+        assert.ok(bounds.x >= panel.x && bounds.x + bounds.width <= panel.x + panel.width + 1, `${selector} fits ${width}px panel`);
+        assert.equal(await element.evaluate(node => node.scrollWidth <= node.clientWidth), true);
+      }
+    });
+  }
+});
+
+test('audit: newsletter waits for search and garage drawers before taking focus', async () => {
+  for (const selector of ['[data-search-toggle]', '[data-garage-toggle]']) {
+    await withPage({ popup: true, popupDelay: 1 }, async page => {
+      await page.locator(selector).click();
+      const drawer = page.locator(selector === '[data-search-toggle]' ? '[data-search-drawer]' : '[data-garage-drawer]');
+      const focused = await page.locator(':focus').getAttribute('id');
+      await page.waitForTimeout(1200);
+      assert.equal(await page.locator('[data-popup-newsletter]').isVisible(), false, 'Newsletter does not interrupt an open drawer');
+      assert.equal(await page.locator(':focus').getAttribute('id'), focused);
+      await page.keyboard.press('Escape');
+      assert.equal(await drawer.isVisible(), false);
+      await page.locator('[data-popup-newsletter]').waitFor({ state: 'visible' });
+      await page.keyboard.press('Escape');
+      assert.equal(await page.locator('[data-popup-newsletter]').isVisible(), false);
+    });
+  }
+});
+
+test('audit: fallback navigation and cart requests retain locale prefixes without requiring a trailing slash', async () => {
+  for (const root of ['/fr', '/fr/']) {
+    await withPage({ routes: { root_url: root, search_url: '/fr/search', cart_url: '/fr/cart', collections_url: '/fr/collections', all_products_collection_url: '/fr/collections/all' } }, async page => {
+      const navigation = page.locator('[data-mobile-nav]');
+      for (const [label, href] of [['Builds', '/fr/pages/builds'], ['AE. Blog', '/fr/pages/ae-blog'], ['Contact Us', '/fr/pages/contact'], ['Returns', '/fr/pages/shipping-returns']]) {
+        assert.equal(await navigation.getByRole('link', { name: label, exact: true, includeHidden: true }).getAttribute('href'), href);
+      }
+      let requests = 0;
+      await page.route('**/fr/cart.js', route => { requests += 1; return json(route, cart()); });
+      await page.locator('[data-cart-drawer-open]').click();
+      await page.waitForSelector('[data-cart-line]');
+      assert.equal(requests, 1);
+    });
+  }
 });
 
 test('collection layout, cards and mobile drawer fit all supported viewports with visible image pixels', async () => {
@@ -959,6 +1293,107 @@ test('product description retains its original content order', async () => {
   await withPage({}, async (page) => {
     assert.deepEqual(await page.locator('[data-product-description] > p').allTextContents(), ['ARM Motorsports charge pipe performance details.', 'Installation details.']);
   });
+});
+
+test('long product descriptions occupy their own full-width row with preserved content and bounded media', async () => {
+  const description = '<div style="text-align:center"><h1>Supplier highlights</h1><p>Original supplier details and installation requirements.</p></div><img src="/assets/brand-bmw-m4.jpg" alt="Supplier product detail" width="700" height="466"><iframe title="Supplier installation video" width="560" height="315" src="about:blank"></iframe><table style="width:700px"><tr><th>Model</th><th>Engine</th></tr><tr><td>335i</td><td>N54</td></tr></table><p>Does not fit the excluded configuration. Confirm model year.</p>';
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await withPage({ viewport: { width, height: 1000 }, product: { description } }, async (page) => {
+      const details = page.locator('.product-details');
+      const body = details.locator('[data-product-description]');
+      assert.equal(await page.locator('[data-product-info] [data-product-description]').count(), 0);
+      assert.equal(await details.getAttribute('aria-labelledby'), await details.locator('h2').getAttribute('id'));
+      assert.deepEqual(await body.locator(':scope > *').evaluateAll((nodes) => nodes.map((node) => node.tagName)), ['DIV', 'IMG', 'IFRAME', 'TABLE', 'P']);
+      assert.match(await body.textContent(), /Original supplier details.*335i.*N54.*Does not fit.*Confirm model year/s);
+      assert.equal(await body.locator('div').evaluate((node) => getComputedStyle(node).textAlign), 'left');
+      const bounds = await body.boundingBox();
+      const info = await page.locator('[data-product-info]').boundingBox();
+      const gallery = await page.locator('.product-gallery').boundingBox();
+      assert.ok(bounds.y >= Math.max(info.y + info.height, gallery.y + gallery.height));
+      if (width >= 990) assert.ok(bounds.width > info.width * 1.4, 'Description is not squeezed into the purchase column');
+      for (const tag of ['img', 'iframe', 'table']) {
+        const media = await body.locator(tag).boundingBox();
+        assert.ok(media.x >= bounds.x - 1 && media.x + media.width <= bounds.x + bounds.width + 1, `${tag} at ${width}px`);
+      }
+      assert.equal(await page.locator('html').evaluate((node) => node.scrollWidth <= innerWidth), true);
+      if (process.env.THEME_SCREENSHOTS) {
+        fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+        await details.locator('.product-details__heading').scrollIntoViewIfNeeded();
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/description-fixture-${width}.png`) });
+      }
+    });
+  }
+  await withPage({ product: { description: '' } }, async (page) => {
+    assert.equal(await page.locator('.product-details').count(), 0);
+  });
+});
+
+test('legacy supplier descriptions keep badges, video, headings and fitment readable without JavaScript', async () => {
+  const description = '<ul class="tabs"><li>Supplier warranty | Stock statement</li></ul><ul class="tabs-content"><ul class="tabs-content"><li style="display:block"><div><p><img src="/assets/brand-bmw-m4.jpg" width="300" height="88" alt="Supplier warranty"></p></div><div><p><img src="/assets/brand-bmw-m4.jpg" width="150" height="44" alt="Supplier shipping"></p></div></li></ul></ul><h1 style="text-align:center">HIGHLIGHTS</h1><div>Direct fit<br>Installation requires confirmation</div><style>.iframe-container{position:relative;padding-bottom:56.25%;height:0}.iframe-container iframe{position:absolute;top:0;left:0;width:100%;height:100%}</style><div class="iframe-container"><br><br><br><iframe title="Supplier installation" width="560" height="315" src="about:blank"></iframe></div><table><tbody><tr><td>Model</td><td>Engine</td></tr><tr><td>135i</td><td>N54</td></tr></tbody></table><p>Confirm model year. Does not fit excluded configuration.</p>';
+  for (const width of [320, 390, 768, 1440]) {
+    await withPage({ viewport: { width, height: 1000 }, javaScriptEnabled: false, product: { description } }, async (page) => {
+      const body = page.locator('[data-product-description]');
+      assert.match(await body.innerText(), /Supplier warranty.*Stock statement.*Direct fit.*Installation requires confirmation.*135i.*N54.*Confirm model year.*Does not fit/s);
+      assert.equal(await body.locator('.tabs-content').first().evaluate(node => getComputedStyle(node).paddingLeft), '0px');
+      const badges = await body.locator('img').all();
+      for (const badge of badges) assert.equal(await badge.isVisible(), true);
+      if (width === 1440) {
+        const [first, second] = await Promise.all(badges.map(badge => badge.boundingBox()));
+        assert.ok(Math.abs((first.y + first.height / 2) - (second.y + second.height / 2)) < 1, 'Badges share a compact row');
+      }
+      const wrapper = await body.locator('.iframe-container').boundingBox();
+      const video = await body.locator('iframe').boundingBox();
+      assert.ok(Math.abs(video.width / video.height - 16 / 9) < 0.02);
+      assert.ok(video.y >= wrapper.y && video.y + video.height <= wrapper.y + wrapper.height + 1);
+      assert.equal(await body.locator('h1').evaluate(node => getComputedStyle(node).fontSize), '20px');
+      assert.equal(await page.locator('html').evaluate(node => node.scrollWidth <= innerWidth), true);
+      if (process.env.THEME_SCREENSHOTS) {
+        fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+        await page.locator('.product-details__heading').scrollIntoViewIfNeeded();
+        await page.screenshot({ path: path.join(root, `.tools/screenshots/description-cleanup-${width}.png`) });
+      }
+    });
+  }
+});
+
+test('supplier fitment guides fill the reading column with aligned cells and unchanged configurations', async () => {
+  const records = [
+    ['BMW', 'E82', '135i', 'N54 3.0L'],
+    ['BMW', 'E82', '135i', 'N55 3.0L'],
+    ['BMW', 'E92', '335is', 'N54 3.0L'],
+    ['BMW', 'E93', '335xi', 'N55 3.0L'],
+  ];
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    for (const headerTag of ['td', 'th']) {
+      const description = `<h1>FITMENT GUIDE</h1><table class="appTable" style="width:700px"><tbody><tr>${['Make', 'Chassis', 'Model', 'Engine'].map(value => `<${headerTag}>${value}</${headerTag}>`).join('')}</tr>${records.map(row => `<tr>${row.map(value => `<td style="text-align:center">${value}</td>`).join('')}</tr>`).join('')}</tbody></table><p>Year ranges are not supplied. Confirm before ordering.</p><p>DCT transmission note remains unchanged.</p>`;
+      await withPage({ viewport: { width, height: 1000 }, javaScriptEnabled: false, product: { description } }, async page => {
+        const body = page.locator('[data-product-description]');
+        const table = body.locator('.appTable');
+        const bounds = await table.boundingBox();
+        const content = await body.boundingBox();
+        assert.ok(Math.abs(bounds.width - content.width) < 1, 'Fitment table fills the reading column');
+        assert.deepEqual(await table.locator('tr').evaluateAll(rows => rows.slice(1).map(row => [...row.cells].map(cell => cell.textContent))), records);
+        const header = await table.locator('tr').first().locator('td, th').evaluateAll(cells => cells.map(cell => ({ left: cell.getBoundingClientRect().left, right: cell.getBoundingClientRect().right })));
+        assert.equal(header.length, 4);
+        assert.ok(Math.abs(header[0].left - bounds.x) < 1 && Math.abs(header[3].right - bounds.x - bounds.width) < 1, 'Row spans the table');
+        for (const row of await table.locator('tr').all()) {
+          const cells = await row.locator('td, th').evaluateAll(nodes => nodes.map(node => ({ left: node.getBoundingClientRect().left, right: node.getBoundingClientRect().right, alignment: getComputedStyle(node).textAlign, fits: node.scrollWidth <= node.clientWidth })));
+          cells.forEach((cell, index) => {
+            assert.ok(Math.abs(cell.left - header[index].left) < 1 && Math.abs(cell.right - header[index].right) < 1);
+            assert.equal(cell.alignment, 'left');
+            assert.equal(cell.fits, true);
+          });
+        }
+        assert.match(await body.innerText(), /Year ranges are not supplied.*Confirm before ordering.*DCT transmission note/s);
+        assert.equal(await page.locator('html').evaluate(node => node.scrollWidth <= innerWidth), true);
+        if (process.env.THEME_SCREENSHOTS && headerTag === 'td') {
+          fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+          await body.locator('h1').scrollIntoViewIfNeeded();
+          await page.screenshot({ path: path.join(root, `.tools/screenshots/fitment-guide-${width}.png`) });
+        }
+      });
+    }
+  }
 });
 
 test('password heading stays inside the viewport', async () => {

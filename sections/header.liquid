@@ -20,6 +20,20 @@
   </div>
 {%- endif -%}
 
+{%- assign navigation_root = routes.root_url | default: '/' -%}
+{%- assign navigation_root_last = navigation_root | slice: -1, 1 -%}
+{%- unless navigation_root_last == '/' -%}
+  {%- assign navigation_root = navigation_root | append: '/' -%}
+{%- endunless -%}
+{%- assign builds_url = pages['builds'].url | default: '' -%}
+{%- if builds_url == blank -%}
+  {%- assign builds_url = navigation_root | append: 'pages/builds' -%}
+{%- endif -%}
+{%- assign default_blog_url = pages['ae-blog'].url | default: '' -%}
+{%- if default_blog_url == blank -%}
+  {%- assign default_blog_url = navigation_root | append: 'pages/ae-blog' -%}
+{%- endif -%}
+
 <header class="site-header{% if settings.enable_sticky_header %} site-header--sticky{% endif %}">
   <div class="site-header__inner page-width">
     <button class="icon-button mobile-menu-trigger" type="button" data-menu-toggle aria-expanded="false" aria-controls="SiteNav">
@@ -31,7 +45,7 @@
       {%- if section.settings.menu.links.size > 0 -%}
         {%- assign has_home_link = false -%}
         {%- assign has_builds_link = false -%}
-        {%- assign ae_blog_url = '/pages/ae-blog' -%}
+        {%- assign ae_blog_url = default_blog_url -%}
         {%- assign has_contacts_link = false -%}
 
         {%- for link in section.settings.menu.links -%}
@@ -56,7 +70,7 @@
           {%- endif -%}
         {%- endfor -%}
         {%- unless has_builds_link -%}
-          <a href="/pages/builds">Builds</a>
+          <a href="{{ builds_url | escape }}">Builds</a>
         {%- endunless -%}
 
         {%- for link in section.settings.menu.links -%}
@@ -90,8 +104,8 @@
       {%- else -%}
         <a href="{{ routes.root_url }}">Home</a>
         {% render 'category-dropdown', label: 'Shop' %}
-        <a href="/pages/builds">Builds</a>
-        <a href="/pages/ae-blog">AE. Blog</a>
+        <a href="{{ builds_url | escape }}">Builds</a>
+        <a href="{{ default_blog_url | escape }}">AE. Blog</a>
         {% render 'contacts-dropdown', label: 'Contacts' %}
       {%- endif -%}
     </nav>

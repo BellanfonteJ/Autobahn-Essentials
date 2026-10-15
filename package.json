@@ -5,6 +5,8 @@
   "packageManager": "pnpm@11.0.9",
   "scripts": {
     "test": "node --test tests/*.test.cjs",
+    "test:accessibility": "node --test tests/accessibility.test.cjs",
+    "test:budgets": "node --test tests/performance.test.cjs",
     "shopify": "shopify",
     "theme:check": "shopify theme check",
     "theme:dev": "shopify theme dev",
@@ -12,7 +14,9 @@
   },
   "devDependencies": {
     "@shopify/cli": "^3.94.3",
+    "axe-core": "^4.14.0",
     "liquidjs": "^10.30.0",
-    "playwright": "^1.64.0"
+    "playwright": "^1.64.0",
+    "yaml": "^2.9.1"
   }
 }

@@ -2,7 +2,10 @@ document.documentElement.classList.remove('no-js');
 
 const themeConfig = JSON.parse(document.querySelector('[data-theme-config]')?.textContent || '{}');
 const themeMessages = themeConfig.messages || {};
-const themeRoute = (path) => `${themeConfig.root || window.Shopify?.routes?.root || '/'}${path}`;
+const reportHealth = (code) => {
+  try { window.AEHealth?.report(code); } catch { /* Diagnostics cannot interrupt shopping. */ }
+};
+const themeRoute = (path) => `${(themeConfig.root || window.Shopify?.routes?.root || '/').replace(/\/?$/, '/')}${path}`;
 const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 })[character]);
@@ -495,17 +498,21 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
     }
 
     const mainRect = main.getBoundingClientRect();
-    const x = event.clientX - mainRect.left;
-    const y = event.clientY - mainRect.top;
+    const x = event.clientX - mainRect.left - main.clientLeft;
+    const y = event.clientY - mainRect.top - main.clientTop;
     const cursorImageX = event.clientX - imageRect.left;
     const cursorImageY = event.clientY - imageRect.top;
     const zoom = Number.parseFloat(getComputedStyle(main).getPropertyValue('--magnifier-zoom')) || 2.3;
-    const lensRadius = magnifier.clientWidth / 2;
-    const backgroundX = lensRadius - cursorImageX * zoom;
-    const backgroundY = lensRadius - cursorImageY * zoom;
+    const halfWidth = magnifier.offsetWidth / 2;
+    const halfHeight = magnifier.offsetHeight / 2;
+    const lensX = Math.min(Math.max(x, halfWidth), main.clientWidth - halfWidth);
+    const lensY = Math.min(Math.max(y, halfHeight), main.clientHeight - halfHeight);
+    // The lens can stop at the frame edge while the sampled pixel follows the pointer.
+    const backgroundX = x - lensX + magnifier.clientWidth / 2 - cursorImageX * zoom;
+    const backgroundY = y - lensY + magnifier.clientHeight / 2 - cursorImageY * zoom;
 
-    magnifier.style.setProperty('--magnifier-x', `${x}px`);
-    magnifier.style.setProperty('--magnifier-y', `${y}px`);
+    magnifier.style.setProperty('--magnifier-x', `${lensX}px`);
+    magnifier.style.setProperty('--magnifier-y', `${lensY}px`);
     magnifier.style.setProperty('--magnifier-bg-size', `${imageRect.width * zoom}px ${imageRect.height * zoom}px`);
     magnifier.style.setProperty('--magnifier-bg-position', `${backgroundX}px ${backgroundY}px`);
     cursorDot.style.setProperty('--cursor-dot-x', `${x}px`);
@@ -598,6 +605,8 @@ document.querySelectorAll('[data-product-info]').forEach((info) => {
   const variantData = info.querySelector('[data-product-variants]');
   if (!select || !variantData) return;
   const variants = JSON.parse(variantData.content.textContent);
+  const productPage = info.closest('.product-page');
+  const sku = productPage.querySelector('[data-product-sku]');
 
   select.addEventListener('change', () => {
     const variant = variants.find((item) => String(item.id) === select.value);
@@ -610,16 +619,16 @@ document.querySelectorAll('[data-product-info]').forEach((info) => {
     const stock = info.querySelector('[data-product-stock]');
     stock.querySelector('.stock-counter__dot').className = `stock-counter__dot${variant.stockState === 'available' ? '' : ` stock-counter__dot--${variant.stockState}`}`;
     stock.querySelector('span:last-child').textContent = variant.stockLabel;
-    info.querySelector('[data-product-sku]').textContent = variant.sku;
+    if (sku) sku.textContent = variant.sku;
     const notification = info.querySelector('[data-back-in-stock]');
     notification.hidden = variant.available;
     const body = notification.querySelector('[name="contact[body]"]');
-    body.value = `Back in stock request for ${info.querySelector('h1').textContent} - ${variant.title} (${variant.id})`;
+    body.value = `Stock update request for ${info.querySelector('h1').textContent} - ${variant.title} (${variant.id}), SKU: ${variant.sku}`;
     const payment = form.querySelector('[data-product-payment]');
     if (payment) payment.hidden = !variant.available;
     const error = form.querySelector('[data-product-error]');
     if (error) error.hidden = true;
-    const thumb = Array.from(info.closest('.product-page').querySelectorAll('[data-gallery-thumb]'))
+    const thumb = Array.from(productPage.querySelectorAll('[data-gallery-thumb]'))
       .find((item) => item.dataset.mediaId === String(variant.imageId));
     thumb?.click();
     const url = new URL(window.location.href);
@@ -825,6 +834,7 @@ async function changeCartLine(key, quantity) {
     });
   } catch (error) {
     if (lastConfirmedCart) renderCartDrawer(lastConfirmedCart);
+    reportHealth('cart_change_error');
     showCartError(error.message || themeMessages.cartError || 'Unable to update your cart. Please try again.');
   } finally {
     setCartBusy(false);
@@ -841,7 +851,10 @@ if (cartDrawer) {
       evt.preventDefault();
       showCartError();
       openCartDrawer();
-      queueCartRequest(refreshCart).catch((error) => showCartError(error.message || themeMessages.cartError));
+      queueCartRequest(refreshCart).catch((error) => {
+        reportHealth('cart_refresh_error');
+        showCartError(error.message || themeMessages.cartError);
+      });
     });
   });
 
@@ -909,11 +922,13 @@ if (cartDrawer) {
         });
         await cartResponse(res);
         added = true;
+        reportHealth('cart_add');
         await refreshCart();
       });
       showCartError();
       openCartDrawer();
     } catch (error) {
+      reportHealth(added ? 'cart_refresh_error' : 'cart_add_error');
       errorTarget.textContent = added
         ? themeMessages.addedButRefreshFailed || 'Your item was added. Open the cart before adding again.'
         : error.message || themeMessages.cartError || 'Unable to update your cart. Please try again.';
