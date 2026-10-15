@@ -85,6 +85,7 @@ test('returns feedback and expanded guidance pass axe on mobile and desktop', as
         const page = await session.newPage();
         await mount(page, { template: 'returns', formStates: { 'ReturnRequest-page-returns-autobahn': state } });
         await page.locator('.ae-returns-faq summary').first().click();
+        await page.locator('.ae-returns-pack summary').click();
         await audit(page, `Returns feedback at ${width}px`);
       } finally { await session.close(); }
     }

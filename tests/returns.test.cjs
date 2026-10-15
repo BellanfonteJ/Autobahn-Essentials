@@ -151,3 +151,38 @@ test('empty generic Returns pages render the new experience while authored page 
     assert.match(await page.locator('main .rte').textContent(), /Existing merchant-authored policy content/);
   });
 });
+
+test('returns polish keeps the request window visible, FAQs full-width and packing guidance keyboard-accessible', async () => {
+  for (const width of [320, 390, 768, 920, 1024, 1440]) {
+    for (const reducedMotion of ['reduce', 'no-preference']) {
+      await withPage({ viewport: { width, height: 900 }, reducedMotion }, async (page, form) => {
+        const heading = page.locator('.ae-contact-page__heading');
+        const windowNote = page.locator('.ae-returns-window');
+        const faq = page.locator('.ae-returns-faq');
+        assert.equal(await windowNote.isVisible(), true);
+        assert.ok((await windowNote.boundingBox()).y < 620, 'Request window is near the top');
+        assert.equal(await page.locator('.ae-contact-main .ae-returns-faq').count(), 0);
+        const layoutWidth = await page.locator('.ae-contact-layout').evaluate(node => node.clientWidth);
+        assert.equal(await faq.evaluate(node => node.clientWidth), layoutWidth);
+        assert.equal(await heading.evaluate(node => getComputedStyle(node).gridTemplateColumns.split(' ').length), width <= 640 ? 1 : 2);
+        assert.equal(await page.locator('.ae-contact-details__item').first().locator('h2').textContent(), 'Email support');
+        assert.deepEqual(await page.locator('.ae-returns-heading__copy, .ae-returns-window, .ae-returns-faq summary, .ae-returns-pack summary').evaluateAll(nodes => nodes.filter(node => node.scrollWidth > node.clientWidth + 1).map(node => node.className)), []);
+        const sizes = await form.locator('input:not([type="hidden"]), select, textarea').evaluateAll(nodes => nodes.map(node => [node.offsetWidth, node.offsetHeight]));
+        const pack = page.locator('.ae-returns-pack');
+        assert.equal(await pack.getAttribute('open'), null);
+        await pack.locator('summary').press('Enter');
+        assert.equal(await pack.locator('ul').isVisible(), true);
+        assert.equal(await pack.locator('summary').evaluate(node => document.activeElement === node), true);
+        assert.equal(await pack.locator('summary').evaluate(node => getComputedStyle(node, '::after').content), '"-"');
+        assert.deepEqual(await form.locator('input:not([type="hidden"]), select, textarea').evaluateAll(nodes => nodes.map(node => [node.offsetWidth, node.offsetHeight])), sizes);
+        await pack.locator('summary').press('Enter');
+        assert.equal(await pack.locator('ul').isVisible(), false);
+        assert.equal(await pack.locator('summary').evaluate(node => getComputedStyle(node, '::after').content), '"+"');
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+        if (reducedMotion === 'reduce') {
+          assert.equal(await heading.evaluate(node => getComputedStyle(node).animationName), 'none');
+        }
+      });
+    }
+  }
+});
