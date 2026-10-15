@@ -11,7 +11,7 @@ pnpm install --frozen-lockfile
 pnpm theme:dev --store autobahnessentials.myshopify.com --theme 167398703161 --ignore 'assets/*.png' --nodelete
 ```
 
-Complete Shopify's browser sign-in with an account that has Themes permission. The command targets the existing unpublished **Autobahn Essentials - Bug Fix Preview**, not the live theme.
+Complete Shopify's browser sign-in with an account that has Themes permission. The command targets unpublished theme **167398703161**, currently named **Autobahn Essentials - Final Version 2026**, not the live theme.
 
 Open [http://127.0.0.1:9292](http://127.0.0.1:9292) in a browser, or use VS Code's **Browser: Open Integrated Browser** command and enter that URL. Older VS Code versions may provide **Simple Browser: Show** instead. Saving theme code updates the preview while the development server runs. Restart the command after closing the server; stop it with Ctrl+C.
 
@@ -24,9 +24,13 @@ The development command does not publish the live theme. However, pushes to a Sh
 
 ## GitHub and VS Code Sync
 
-The latest theme code and README are available on [slimeraps/Autobahn-Essentials/main](https://github.com/slimeraps/Autobahn-Essentials/tree/main), including the October 15 update below. `codex/theme-bug-fixes` is the development branch. The garage work was merged through PR #49, collection/footer/Builds modernization through PR #50, and the earlier motion and close-icon fixes through PR #48. Updating this repository does not publish the live Shopify theme; its separate connection is documented below.
+The latest merged theme code and README are available on [slimeraps/Autobahn-Essentials/main](https://github.com/slimeraps/Autobahn-Essentials/tree/main), including the earlier October 15 update below. The newer SEO and multi-car garage changes are included in the [codex/seo-foundations branch push](https://github.com/slimeraps/Autobahn-Essentials/tree/codex/seo-foundations) and unpublished preview, not merged into main. The initial garage work was merged through PR #49, collection/footer/Builds modernization through PR #50, and the earlier motion and close-icon fixes through PR #48. Updating this repository does not publish the live Shopify theme; its separate connection is documented below.
 
 ### October 15 Review Status
+
+The multi-car garage follow-up adds a saved-vehicle list, one active car for fitment, add/edit/remove controls, duplicate prevention, legacy migration and cross-tab synchronization. Clear selection keeps saved cars. All 123 checks pass, including 12 new multi-car browser groups and an additional accessibility audit. This remains browser-local, not customer-account or cross-device storage. See [GARAGE.md](GARAGE.md) for behavior, storage format and verification.
+
+The subsequent SEO follow-up is included in the `codex/seo-foundations` branch push and unpublished preview, not merged into main or published live. It adds native product/article schema, homepage identity and breadcrumb schema, complete social cards, missing-description/homepage-title fallbacks and utility-page indexing rules while preserving merchant SEO fields, canonical pagination and Shopify output. See [SEO.md](SEO.md) for the public audit, Google setup checks and draft collection/product copy.
 
 The October 15 main-branch update includes the enterprise, description, fitment-guide, product-page spacing and hover-image fixes, followed by a storefront bug sweep. The sweep fixes clipped gallery magnifiers, narrow-screen cart overflow/stretched thumbnails, newsletter interruptions during Search/My Garage use, and locale-dropping navigation/cart requests. All 103 local checks, Shopify Theme Check and packaging pass. The code and this README are synchronized to `slimeraps/Autobahn-Essentials/main`; the separate `BellanfonteJ` repository and live Shopify theme remain unchanged. See [QUALITY-AUDIT.md](QUALITY-AUDIT.md) for reproduced issues, coverage and limits.
 
@@ -38,12 +42,12 @@ The earlier draft-PR creation attempt was denied by the GitHub integration; PR #
 
 **Release warning:** Shopify Admin currently links the live theme to [BellanfonteJ/Autobahn-Essentials/main](https://github.com/BellanfonteJ/Autobahn-Essentials/tree/main), not the `slimeraps` repository used by this checkout. A read-only live layout download did not contain the garage scripts. The connection and reset controls were not changed. Do not merge into the connected repository or reset its theme without reviewing the complete diff and authorizing the resulting live update. See [RELEASE-READINESS.md](RELEASE-READINESS.md).
 
-For an existing checkout, preserve or commit any local work before switching branches, then run:
+For the latest SEO and multi-car garage changes in an existing checkout, preserve or commit any local work before switching branches, then run:
 
 ```sh
 git fetch origin
-git switch main
-git pull --ff-only origin main
+git switch codex/seo-foundations
+git pull --ff-only origin codex/seo-foundations
 ```
 
 Open that checkout in VS Code and start the Local Development command above. Git pulls update your files; the running Shopify development server updates the unpublished preview when those files change. The original product CSV is not committed; the generated fitment catalog, importer, and review report are included.
@@ -56,7 +60,7 @@ pnpm test
 pnpm theme:package
 ```
 
-The current suite has 103 checks: 80 browser regressions, nine accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content, single close icons, canonical brand labels, source links and grouped Brand filter IDs. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
+The current suite has 123 checks: 80 storefront browser regressions, 12 multi-car garage groups, seven SEO browser groups, ten accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content, single close icons, canonical brand labels, source links, grouped Brand filter IDs and SEO metadata/schema. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
 
 Tests use installed Google Chrome on macOS or Playwright Chromium. If neither is available, run `pnpm exec playwright install chromium`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for another compatible Chromium installation. Set `THEME_SCREENSHOTS=1` to capture test screenshots in the ignored `.tools/screenshots/` folder.
 
@@ -83,7 +87,9 @@ Model-year ranges are **not supplied**. Year is optional, and badges explicitly 
 
 Collection/search filtering checks every paginated page using Shopify section rendering, preserving locale, collection tags, sort order, and search terms. It never presents a partially loaded collection as complete. Failed or invalid responses restore unfiltered results with a Retry button. Collections over 50 pages also fall back to unfiltered browsing.
 
-Complete vehicles are saved locally, synchronize between tabs, and can be cleared. Invalid legacy selections must be updated. If browser storage is blocked, the vehicle remains available for the current page and finder links carry the ordinary vehicle preference in the URL; no persistent-save claim is made. Without JavaScript, shoppers can still browse all parts.
+Multiple vehicles can be saved locally, with one active car for product badges and match-only filtering. Add vehicle preserves existing cars; radio controls switch the active car; pencil/X controls edit or remove individual cars. Duplicate configuration/year saves reuse the existing entry. Clear selection keeps the list but clears active filtering. The previous single saved vehicle is migrated automatically. Tabs synchronize, including selections from older open tabs. See [GARAGE.md](GARAGE.md).
+
+Invalid legacy selections must be updated. If browser storage is blocked/full, vehicles remain available for the current page and finder links carry only the active vehicle preference in the URL; no persistent-save claim is made. Shared parameters are cleared or updated after a selection changes. Saved vehicles are specific to the browser/profile and domain, not linked to customer accounts or synchronized across devices. Without JavaScript, shoppers can still browse all parts.
 
 To refresh the catalog from a Shopify export:
 
@@ -125,6 +131,9 @@ The current `135i-5-intercooler-fmic` description was backed up locally and its 
 
 ### October 15, 2026
 
+- Included the SEO and multi-car garage code, tests, README and feature documentation in the `codex/seo-foundations` GitHub branch push. All 123 local checks, Theme Check and packaging pass. This does not merge into main, update the separate Shopify-connected repository or publish a live theme.
+- Added multi-car My Garage with safe single-vehicle migration, one active fitment selection, add/edit/remove/cancel controls, duplicate prevention, cross-tab/legacy-tab synchronization and page-only storage fallback. Clear selection retains saved cars. Twelve workflow/browser groups and one axe audit bring the suite to 123. Verified adding, reloading and switching real catalog vehicles in the local Shopify preview; removed the temporary car and preserved the original BMW. New labels use a distinct section translation namespace after real-preview verification. Included in the review-branch push; no account backend or live publication.
+- Added SEO foundations on `codex/seo-foundations` and the unpublished preview: native product/article structured data, truthful homepage/breadcrumb schema, Open Graph/Twitter cards, safe title/description fallbacks and utility-page noindex rules. Added seven SEO regression groups (110 total checks at that stage) plus a public crawl audit and prioritized growth plan in [SEO.md](SEO.md). Included in the review-branch push; no Google account linking, catalog SEO edits or live publication.
 - Synchronized the tested enterprise/product fixes, storefront bug sweep and documentation to `slimeraps/Autobahn-Essentials/main`, so today's README is visible on the default GitHub page. The separate Shopify-connected `BellanfonteJ/Autobahn-Essentials/main` is unchanged; no live theme release is included.
 - Completed a follow-up storefront code/fixture audit after pushing hover fix `baaa626`. Reproduced and fixed gallery magnifier clipping/pixel alignment, mobile cart page/drawer overflow, stretched cart thumbnails, newsletter focus interruptions and locale-dropping fallback links/API requests. Added five browser regressions and a populated-cart accessibility audit, bringing the suite to 103. Dependency audit found no high/critical advisories; the two existing lower-severity development-tool findings remain documented. This batch is included in the review-branch push only; no order, email, buyer-data submission or live release was performed.
 - Fixed alternate product-card images extending outside their frame on hover: a more-specific 100% image-size rule overrode the absolute image's auto sizing while its inset remained. Primary and alternate images now share one bounded grid cell, preserving containment, the image transition and card dimensions. Coverage checks collection, search and related cards at 320-1440px with normal/reduced motion. This 97-check follow-up is included in the review-branch push and unpublished preview, not a live release.

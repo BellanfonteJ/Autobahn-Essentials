@@ -6,7 +6,8 @@
     try { window.AEHealth?.report(code); } catch { /* Diagnostics cannot interrupt browsing. */ }
   };
   if (!vehicles.length) reportHealth('garage_data_unavailable');
-  const storageKey = 'autobahn:garage';
+  const storageKey = 'autobahn:garage:v2';
+  const legacyKey = 'autobahn:garage';
   const filterKey = 'autobahn:garageFitOnly';
   const fields = ['make', 'model', 'chassis', 'trim', 'variant'];
   const labels = { make: 'Make', model: 'Model / platform', chassis: 'Chassis', trim: 'Engine', variant: 'Submodel / drive' };
@@ -20,6 +21,9 @@
   let memory;
   let filterMemory;
   let storageAvailable = true;
+  let editingId = null;
+  let addingVehicle = false;
+  let pageOnly = false;
 
   const clean = (value = {}) => Object.fromEntries(['year', ...fields].map((field) => [field, String(value?.[field] || '').trim()]));
   const normalize = (value) => String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -34,12 +38,86 @@
   const yearValid = (garage) => !garage.year || (/^\d{4}$/.test(garage.year) && Number(garage.year) >= 1900 && Number(garage.year) <= new Date().getFullYear() + 1);
   const format = (garage) => [garage.year, garage.make, garage.model, garage.chassis && `(${garage.chassis})`, garage.trim, garage.variant].filter(Boolean).join(' ');
 
-  function read() {
-    if (memory !== undefined) return clean(memory);
+  const identity = (garage) => JSON.stringify(['year', ...fields].map((name) => normalize(garage[name])));
+  const hasVehicle = (garage) => Object.values(clean(garage)).some(Boolean);
+  const newId = () => window.crypto?.randomUUID?.() || `vehicle-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const emptyCollection = () => ({ version: 2, activeId: null, vehicles: [] });
+
+  function collectionFrom(value) {
+    if (value?.version !== 2) {
+      const garage = clean(value);
+      return hasVehicle(garage) ? { version: 2, activeId: 'legacy-vehicle', vehicles: [{ id: 'legacy-vehicle', ...garage }] } : emptyCollection();
+    }
+    const result = emptyCollection();
+    const seen = new Set();
+    if (!Array.isArray(value.vehicles)) return result;
+    value.vehicles.forEach((entry, index) => {
+      if (!entry || typeof entry !== 'object') return;
+      const garage = clean(entry);
+      const key = identity(garage);
+      if (!hasVehicle(garage) || seen.has(key)) return;
+      seen.add(key);
+      let id = typeof entry.id === 'string' && /^[a-zA-Z0-9-]{1,100}$/.test(entry.id) ? entry.id : `vehicle-${index}`;
+      while (result.vehicles.some((vehicle) => vehicle.id === id)) id += '-copy';
+      result.vehicles.push({ id, ...garage });
+    });
+    result.activeId = value.activeId === null ? null
+      : result.vehicles.find((entry) => entry.id === value.activeId)?.id || result.vehicles[0]?.id || null;
+    return result;
+  }
+
+  function readCollection(fresh = false) {
+    if (memory !== undefined && (!fresh || !storageAvailable || pageOnly)) return collectionFrom(memory);
     let stored;
-    try { stored = localStorage.getItem(storageKey); }
-    catch { storageAvailable = false; return clean(); }
-    try { return clean(JSON.parse(stored || '{}')); } catch { return clean(); }
+    try { stored = localStorage.getItem(storageKey) ?? localStorage.getItem(legacyKey); }
+    catch { storageAvailable = false; return collectionFrom(memory); }
+    try { return collectionFrom(JSON.parse(stored || '{}')); } catch { return emptyCollection(); }
+  }
+
+  function read() {
+    const collection = readCollection();
+    return clean(collection.vehicles.find((entry) => entry.id === collection.activeId));
+  }
+
+  function persist(collection) {
+    memory = collectionFrom(collection);
+    grids.forEach((cache) => { cache.error = ''; });
+    forms.forEach((form) => formError(form, ''));
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(memory));
+      storageAvailable = true;
+      pageOnly = false;
+    } catch { storageAvailable = false; }
+    const url = new URL(location.href);
+    if (url.searchParams.has('ae_vehicle') || url.searchParams.has('ae_garage')) {
+      url.searchParams.delete('ae_garage');
+      const active = read();
+      if (!storageAvailable && complete(active) && yearValid(active)) url.searchParams.set('ae_vehicle', JSON.stringify(active));
+      else url.searchParams.delete('ae_vehicle');
+      history.replaceState({}, '', url);
+    }
+    update();
+  }
+
+  function selectVehicle(id) {
+    const collection = readCollection(true);
+    if (!collection.vehicles.some((entry) => entry.id === id)) return;
+    editingId = null;
+    addingVehicle = false;
+    collection.activeId = id;
+    persist(collection);
+  }
+
+  function removeVehicle(id) {
+    const collection = readCollection(true);
+    const index = collection.vehicles.findIndex((entry) => entry.id === id);
+    if (index < 0) return;
+    collection.vehicles.splice(index, 1);
+    if (collection.activeId === id) collection.activeId = collection.vehicles[Math.min(index, collection.vehicles.length - 1)]?.id || null;
+    if (editingId === id) editingId = null;
+    if (!collection.activeId) setFilter(false);
+    persist(collection);
+    (drawer?.querySelector('[data-garage-select]:checked') || drawer?.querySelector('[data-garage-add]'))?.focus();
   }
 
   function filterOn() {
@@ -118,6 +196,7 @@
     drawer?.classList.remove('is-open');
     toggle?.setAttribute('aria-expanded', 'false');
     if (drawer?.contains(document.activeElement)) toggle?.focus();
+    resetEditor();
   }
 
   function open() {
@@ -125,6 +204,60 @@
     toggle?.setAttribute('aria-expanded', 'true');
     document.dispatchEvent(new CustomEvent('ae:garage-open'));
     field(drawer, 'make')?.focus();
+  }
+
+  function resetEditor() {
+    editingId = null;
+    addingVehicle = false;
+    const form = drawer?.querySelector('[data-garage-form]');
+    if (!form) return;
+    populate(form, read());
+    formError(form, '');
+    editorLabels();
+  }
+
+  function editorLabels() {
+    const form = drawer?.querySelector('[data-garage-form]');
+    const heading = form?.querySelector('[data-garage-editor-title]');
+    const submit = form?.querySelector('[type="submit"]');
+    const cancel = form?.querySelector('[data-garage-cancel]');
+    if (heading) heading.textContent = editingId ? heading.dataset.editLabel : heading.dataset.addLabel;
+    if (submit) submit.textContent = editingId ? submit.dataset.editLabel : submit.dataset.saveLabel;
+    if (cancel) cancel.hidden = !editingId && !addingVehicle;
+  }
+
+  function renderVehicles(collection) {
+    const container = drawer?.querySelector('[data-garage-vehicles]');
+    const template = drawer?.querySelector('[data-garage-vehicle-template]');
+    if (!container || !template) return;
+    const focused = container.contains(document.activeElement) ? document.activeElement : null;
+    const focusedId = focused?.closest('[data-garage-vehicle]')?.dataset.garageVehicle;
+    const focusedControl = focused?.matches('[data-garage-select]') ? '[data-garage-select]'
+      : focused?.matches('[data-garage-edit]') ? '[data-garage-edit]' : '[data-garage-remove]';
+    const rows = collection.vehicles.map((garage) => {
+      const row = template.content.firstElementChild.cloneNode(true);
+      row.dataset.garageVehicle = garage.id;
+      const selected = collection.activeId === garage.id;
+      row.classList.toggle('is-active', selected);
+      row.querySelector('[data-garage-vehicle-name]').textContent = format(garage);
+      const radio = row.querySelector('[data-garage-select]');
+      radio.value = garage.id;
+      radio.checked = selected;
+      row.querySelector('[data-garage-active-label]').hidden = !selected;
+      row.querySelectorAll('[data-garage-edit], [data-garage-remove]').forEach((button) => {
+        const label = `${button.dataset.label}: ${format(garage)}`;
+        button.setAttribute('aria-label', label);
+        button.title = label;
+      });
+      return row;
+    });
+    container.replaceChildren(...rows);
+    const empty = drawer.querySelector('[data-garage-vehicles-empty]');
+    if (empty) empty.hidden = Boolean(rows.length);
+    const count = drawer.querySelector('[data-garage-count]');
+    if (count) count.textContent = String(rows.length);
+    if (focusedId) rows.find((row) => row.dataset.garageVehicle === focusedId)?.querySelector(focusedControl)?.focus();
+    editorLabels();
   }
 
   function badges(garage) {
@@ -267,27 +400,33 @@
   }
 
   function update() {
+    const collection = readCollection();
     const garage = read();
     const ready = complete(garage) && yearValid(garage);
-    forms.forEach((form) => populate(form, garage));
+    const emptyTitle = collection.vehicles.length ? 'No vehicle selected' : 'No vehicle saved';
+    forms.forEach((form) => {
+      if (form.matches('[data-garage-form]') && (editingId || addingVehicle)) return;
+      populate(form, garage);
+    });
     const title = drawer?.querySelector('[data-garage-title]');
     const summary = drawer?.querySelector('[data-garage-summary]');
-    if (title) title.textContent = ready ? format(garage) : Object.values(garage).some(Boolean) ? 'Update your saved vehicle' : 'No vehicle saved';
+    if (title) title.textContent = ready ? format(garage) : Object.values(garage).some(Boolean) ? 'Update your saved vehicle' : emptyTitle;
     if (summary) summary.textContent = !vehicles.length ? 'Vehicle data unavailable.' : ready
-      ? `${storageAvailable ? 'Saved.' : 'Saved for this page only.'} Listed model / engine matches require year and installation-note confirmation.`
+      ? `${storageAvailable && !pageOnly ? 'Saved in this browser.' : 'Saved for this page only.'} Listed model / engine matches require year and installation-note confirmation.`
       : 'Select a listed model, platform, and engine. Model-year ranges are not supplied.';
+    renderVehicles(collection);
     toggle?.classList.toggle('has-garage', ready);
     const indicator = toggle?.querySelector('[data-garage-indicator]');
     if (indicator) indicator.hidden = !ready;
     document.querySelectorAll('[data-garage-bar]').forEach((bar) => {
       const vehicle = bar.querySelector('[data-garage-bar-vehicle]');
-      if (vehicle) vehicle.textContent = ready ? format(garage) : Object.values(garage).some(Boolean) ? 'Update your saved vehicle' : 'No vehicle saved';
+      if (vehicle) vehicle.textContent = ready ? format(garage) : Object.values(garage).some(Boolean) ? 'Update your saved vehicle' : emptyTitle;
       const note = bar.querySelector('[data-garage-bar-note]');
       if (note) note.hidden = !ready;
       const clearButton = bar.querySelector('[data-garage-bar-clear]');
       if (clearButton) clearButton.hidden = !Object.values(garage).some(Boolean);
       const change = bar.querySelector('[data-garage-bar-change]');
-      if (change) change.textContent = ready ? 'Change' : 'Choose vehicle';
+      if (change) change.textContent = collection.vehicles.length > 1 ? `My Garage (${collection.vehicles.length})` : ready ? 'Change' : 'Choose vehicle';
     });
     document.querySelectorAll('[data-vehicle-saved]').forEach((chip) => {
       chip.hidden = !ready;
@@ -314,14 +453,28 @@
     badges(garage);
   }
 
-  function write(garage) {
-    memory = clean(garage);
-    grids.forEach((cache) => { cache.error = ''; });
-    try {
-      if (complete(memory)) localStorage.setItem(storageKey, JSON.stringify(memory));
-      else localStorage.removeItem(storageKey);
-    } catch { storageAvailable = false; }
-    update();
+  function write(garage, form) {
+    const collection = readCollection(true);
+    const editId = form?.matches('[data-garage-form]') ? editingId : null;
+    const duplicate = collection.vehicles.find((entry) => identity(entry) === identity(garage));
+    if (editId && !collection.vehicles.some((entry) => entry.id === editId)) {
+      formError(form, 'This vehicle was removed in another tab. Cancel editing and add it again if needed.');
+      return false;
+    }
+    if (editId && duplicate && duplicate.id !== editId) {
+      formError(form, 'This vehicle is already in My Garage. Select it from your vehicles.');
+      return false;
+    }
+    const id = editId || duplicate?.id || newId();
+    const index = collection.vehicles.findIndex((entry) => entry.id === id);
+    const entry = { id, ...clean(garage) };
+    if (index < 0) collection.vehicles.push(entry);
+    else collection.vehicles[index] = entry;
+    collection.activeId = id;
+    editingId = null;
+    addingVehicle = false;
+    persist(collection);
+    return true;
   }
 
   function browse(garage, part = '') {
@@ -343,7 +496,7 @@
       event.preventDefault();
       const garage = validate(form);
       if (!garage) return;
-      write(garage);
+      if (!write(garage, form)) return;
       if (form.matches('[data-garage-save]')) browse(garage, form.querySelector('[name="part_type"]')?.value || '');
       else close();
     });
@@ -358,33 +511,87 @@
     if (event.target.closest('[data-garage-toggle]')) { event.stopPropagation(); drawer?.classList.contains('is-open') ? close() : open(); }
     else if (event.target.closest('[data-garage-open]')) { event.preventDefault(); open(); }
     else if (event.target.closest('[data-garage-close]')) close();
+    else if (event.target.closest('[data-garage-add]')) {
+      editingId = null;
+      addingVehicle = true;
+      const form = drawer.querySelector('[data-garage-form]');
+      populate(form, {});
+      formError(form, '');
+      editorLabels();
+      field(form, 'make')?.focus();
+    } else if (event.target.closest('[data-garage-cancel]')) {
+      resetEditor();
+      drawer?.querySelector('[data-garage-add]')?.focus();
+    } else if (event.target.closest('[data-garage-edit]')) {
+      const id = event.target.closest('[data-garage-vehicle]')?.dataset.garageVehicle;
+      const garage = readCollection().vehicles.find((entry) => entry.id === id);
+      if (!garage) return;
+      editingId = id;
+      addingVehicle = false;
+      const form = drawer.querySelector('[data-garage-form]');
+      populate(form, garage);
+      formError(form, '');
+      editorLabels();
+      field(form, 'make')?.focus();
+    } else if (event.target.closest('[data-garage-remove]')) {
+      removeVehicle(event.target.closest('[data-garage-vehicle]')?.dataset.garageVehicle);
+    }
     else if (event.target.closest('[data-garage-clear], [data-vehicle-clear]')) {
       const url = new URL(location.href);
       url.searchParams.delete('ae_vehicle'); url.searchParams.delete('ae_garage');
       history.replaceState({}, '', url);
-      setFilter(false); write({});
+      setFilter(false);
+      const collection = readCollection(true);
+      collection.activeId = null;
+      editingId = null;
+      addingVehicle = false;
+      persist(collection);
     } else if (event.target.closest('[data-garage-shop]')) {
       event.preventDefault();
       const garage = validate(drawer.querySelector('form'));
-      if (garage) { write(garage); browse(garage); }
+      if (garage && write(garage, drawer.querySelector('form'))) browse(garage);
     } else if (event.target.closest('[data-fitment-retry]')) {
       grids.forEach((cache) => { cache.error = ''; });
       setFilter(true); update();
     } else if (drawer?.classList.contains('is-open') && !drawer.contains(event.target)) close();
   });
   document.addEventListener('change', (event) => {
+    if (event.target.matches('[data-garage-select]')) { selectVehicle(event.target.value); return; }
     if (!event.target.matches('[data-fitment-filter-toggle]')) return;
     grids.forEach((cache) => { cache.error = ''; });
     setFilter(event.target.checked); update();
   });
   window.addEventListener('storage', (event) => {
-    if (![storageKey, filterKey, null].includes(event.key)) return;
-    memory = filterMemory = undefined; update();
+    if (![storageKey, legacyKey, filterKey, null].includes(event.key)) return;
+    // Old open tabs may still write a single vehicle. Merge it instead of losing the saved list.
+    if (event.key === legacyKey) {
+      let garage;
+      try { garage = clean(JSON.parse(localStorage.getItem(legacyKey) || '{}')); } catch { return; }
+      if (hasVehicle(garage)) { write(garage); return; }
+      const collection = readCollection(true);
+      collection.activeId = null;
+      setFilter(false);
+      persist(collection);
+      return;
+    }
+    filterMemory = undefined;
+    if (event.key === filterKey) { update(); return; }
+    memory = undefined;
+    pageOnly = false;
+    if (event.key !== filterKey) { editingId = null; addingVehicle = false; }
+    update();
   });
   const parameters = new URLSearchParams(location.search);
   try {
     const shared = clean(JSON.parse(parameters.get('ae_vehicle') || 'null'));
-    if (complete(shared) && yearValid(shared)) memory = shared;
+    if (complete(shared) && yearValid(shared)) {
+      const collection = readCollection();
+      let entry = collection.vehicles.find((vehicle) => identity(vehicle) === identity(shared));
+      if (!entry) { entry = { id: newId(), ...shared }; collection.vehicles.push(entry); }
+      collection.activeId = entry.id;
+      memory = collection;
+      pageOnly = true;
+    }
   } catch { /* Ignore invalid shared selections. */ }
   if (parameters.get('ae_garage') === '1') {
     setFilter(true);
@@ -392,7 +599,7 @@
     url.searchParams.delete('ae_garage');
     history.replaceState({}, '', url);
   }
-  window.AEGarage = { open, close, read, state, complete, update };
+  window.AEGarage = { open, close, read, state, complete, update, list: () => readCollection().vehicles };
   const header = document.querySelector('.site-header--sticky');
   const ticker = document.querySelector('.announcement-bar');
   let offsetFrame = 0;

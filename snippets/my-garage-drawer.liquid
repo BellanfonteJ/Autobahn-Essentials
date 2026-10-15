@@ -13,14 +13,48 @@
       </button>
     </div>
 
-    <form class="garage-form" data-garage-form>
-      {% render 'garage-fields', prefix: 'Garage' %}
-
-      <div class="garage-form__actions">
-        <button class="button" type="submit">Save Vehicle</button>
-        <button class="button button--secondary" type="button" data-garage-shop>Find Parts</button>
-        <button class="button button--secondary" type="button" data-garage-clear>Clear</button>
+    <div class="garage-drawer__workspace">
+      <div class="garage-vehicles__heading">
+        <h3>{{ 'sections.multi_vehicle_garage.vehicles' | t }} <span class="garage-vehicles__count" data-garage-count>0</span></h3>
+        <button class="button button--secondary" type="button" data-garage-add>
+          <span aria-hidden="true">+</span> {{ 'sections.multi_vehicle_garage.add_vehicle' | t }}
+        </button>
       </div>
-    </form>
+      <fieldset class="garage-vehicles">
+        <legend class="visually-hidden">{{ 'sections.multi_vehicle_garage.vehicles' | t }}</legend>
+        <div class="garage-vehicles__list" data-garage-vehicles></div>
+        <p class="garage-vehicles__empty" data-garage-vehicles-empty>{{ 'sections.multi_vehicle_garage.empty_title' | t }}</p>
+      </fieldset>
+      <template data-garage-vehicle-template>
+        <div class="garage-vehicle" data-garage-vehicle>
+          <label class="garage-vehicle__choice">
+            <input type="radio" name="garage_active_vehicle" data-garage-select>
+            <span class="garage-vehicle__copy">
+              <span data-garage-vehicle-name></span>
+              <span class="garage-vehicle__active" data-garage-active-label hidden>{{ 'sections.multi_vehicle_garage.active' | t }}</span>
+            </span>
+          </label>
+          <div class="garage-vehicle__actions">
+            <button class="icon-button" type="button" data-garage-edit data-label="{{ 'sections.multi_vehicle_garage.edit_vehicle' | t | escape }}" aria-label="{{ 'sections.multi_vehicle_garage.edit_vehicle' | t | escape }}">
+              {% render 'icon', icon: 'edit' %}
+            </button>
+            <button class="icon-button" type="button" data-garage-remove data-label="{{ 'sections.multi_vehicle_garage.remove_vehicle' | t | escape }}" aria-label="{{ 'sections.multi_vehicle_garage.remove_vehicle' | t | escape }}">
+              {% render 'icon', icon: 'close' %}
+            </button>
+          </div>
+        </div>
+      </template>
+      <form class="garage-form" data-garage-form>
+        <h3 class="garage-form__heading" data-garage-editor-title data-add-label="{{ 'sections.multi_vehicle_garage.details' | t | escape }}" data-edit-label="{{ 'sections.multi_vehicle_garage.edit_vehicle' | t | escape }}">{{ 'sections.multi_vehicle_garage.details' | t }}</h3>
+        {% render 'garage-fields', prefix: 'Garage' %}
+
+        <div class="garage-form__actions">
+          <button class="button" type="submit" data-save-label="{{ 'sections.multi_vehicle_garage.save' | t | escape }}" data-edit-label="{{ 'sections.multi_vehicle_garage.save_changes' | t | escape }}">{{ 'sections.multi_vehicle_garage.save' | t }}</button>
+          <button class="button button--secondary" type="button" data-garage-shop>Find Parts</button>
+          <button class="button button--secondary" type="button" data-garage-clear>{{ 'sections.multi_vehicle_garage.clear_active' | t }}</button>
+          <button class="button button--secondary" type="button" data-garage-cancel hidden>{{ 'sections.multi_vehicle_garage.cancel' | t }}</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

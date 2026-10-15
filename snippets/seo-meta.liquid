@@ -1,0 +1,83 @@
+{%- liquid
+  assign seo_page_title = page_title | default: shop.name
+  if template.name == 'index' and seo_page_title == shop.name
+    assign seo_page_title = 'seo.home_title' | t
+  endif
+  assign seo_description = page_description
+  if seo_description == blank
+    case template.name
+      when 'index'
+        assign seo_description = 'seo.home_description' | t
+      when 'product'
+        assign seo_description = product.description
+      when 'collection'
+        assign seo_description = collection.description
+        if seo_description == blank
+          assign seo_description = 'seo.collection_description' | t: collection: collection.title, shop: shop.name
+        endif
+      when 'page'
+        assign seo_description = page.content
+      when 'article'
+        assign seo_description = article.excerpt_or_content
+    endcase
+    assign seo_description = seo_description | replace: '</p>', ' ' | replace: '</li>', ' ' | strip_html | strip_newlines | strip | truncate: 160
+    if seo_description == blank
+      assign seo_description = seo_page_title | append: ' | ' | append: shop.name
+    endif
+  endif
+  assign seo_type = 'website'
+  if template.name == 'product'
+    assign seo_type = 'product'
+  elsif template.name == 'article'
+    assign seo_type = 'article'
+  endif
+  assign seo_title = seo_page_title
+  if current_tags != blank
+    assign seo_tags = current_tags | join: ', '
+    assign seo_title = seo_title | append: ' - ' | append: seo_tags
+  endif
+  if current_page > 1
+    assign seo_title = seo_title | append: ' - Page ' | append: current_page
+  endif
+  unless seo_page_title contains shop.name
+    assign seo_title = seo_title | append: ' | ' | append: shop.name
+  endunless
+-%}
+<link rel="canonical" href="{{ canonical_url | escape }}">
+<title>{{ seo_title | escape }}</title>
+<meta name="description" content="{{ seo_description | escape }}">
+{%- if template.name == 'search' or template.name == 'cart' or template.name == '404' -%}
+  <meta name="robots" content="noindex,follow">
+{%- else -%}
+  <meta name="robots" content="max-image-preview:large">
+{%- endif -%}
+<meta property="og:site_name" content="{{ shop.name | escape }}">
+<meta property="og:url" content="{{ canonical_url | escape }}">
+<meta property="og:type" content="{{ seo_type }}">
+<meta property="og:title" content="{{ seo_title | escape }}">
+<meta property="og:description" content="{{ seo_description | escape }}">
+<meta name="twitter:title" content="{{ seo_title | escape }}">
+<meta name="twitter:description" content="{{ seo_description | escape }}">
+{%- if page_image -%}
+  {%- liquid
+    assign seo_image_url = page_image | image_url: width: 1200
+    assign seo_image_prefix = seo_image_url | slice: 0, 2
+    if seo_image_prefix == '//'
+      assign seo_image_url = seo_image_url | prepend: 'https:'
+    else
+      unless seo_image_url contains '://'
+        assign seo_origin = canonical_url | split: '/' | slice: 0, 3 | join: '/'
+        assign seo_image_url = seo_origin | append: seo_image_url
+      endunless
+    endif
+    assign seo_image_alt = page_image.alt | default: page_title
+  -%}
+  <meta property="og:image" content="{{ seo_image_url | escape }}">
+  <meta property="og:image:secure_url" content="{{ seo_image_url | escape }}">
+  <meta property="og:image:alt" content="{{ seo_image_alt | escape }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ seo_image_url | escape }}">
+  <meta name="twitter:image:alt" content="{{ seo_image_alt | escape }}">
+{%- else -%}
+  <meta name="twitter:card" content="summary">
+{%- endif -%}
