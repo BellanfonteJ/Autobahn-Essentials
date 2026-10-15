@@ -18,7 +18,7 @@ async function audit(page, label) {
   assert.deepEqual(results.violations.map(({ id, nodes }) => ({ id, targets: nodes.map((node) => node.target) })), [], label);
 }
 
-for (const template of ['index', 'product', 'collection', 'search', 'builds', 'contact']) {
+for (const template of ['index', 'product', 'collection', 'search', 'builds', 'contact', 'returns']) {
   test(`${template} has no axe WCAG A/AA violations on mobile or desktop fixtures`, async () => {
     for (const width of [390, 1440]) {
       const session = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
@@ -61,6 +61,33 @@ test('multi-car garage passes axe with saved vehicles and edit controls on mobil
       await page.locator('[data-garage-edit]').last().click();
       await audit(page, `Editing saved car at ${width}px`);
     } finally { await session.close(); }
+  }
+});
+
+test('contact error and success states pass axe with visible labels on mobile and desktop', async () => {
+  for (const width of [320, 1440]) {
+    for (const state of [{ errors: ['email'], email: 'invalid' }, { 'posted_successfully?': true }]) {
+      const session = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+      try {
+        const page = await session.newPage();
+        await mount(page, { template: 'contact', formStates: { 'ContactForm-page-contact-autobahn': state } });
+        await audit(page, `Contact feedback at ${width}px`);
+      } finally { await session.close(); }
+    }
+  }
+});
+
+test('returns feedback and expanded guidance pass axe on mobile and desktop', async () => {
+  for (const width of [320, 1440]) {
+    for (const state of [{ errors: ['email'], email: 'invalid' }, { 'posted_successfully?': true }]) {
+      const session = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+      try {
+        const page = await session.newPage();
+        await mount(page, { template: 'returns', formStates: { 'ReturnRequest-page-returns-autobahn': state } });
+        await page.locator('.ae-returns-faq summary').first().click();
+        await audit(page, `Returns feedback at ${width}px`);
+      } finally { await session.close(); }
+    }
   }
 });
 

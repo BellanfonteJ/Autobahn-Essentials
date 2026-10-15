@@ -1,68 +1,96 @@
 {% render 'breadcrumbs' %}
 
-<section class="ae-page-hero" style="--ae-page-image: url({{ 'autobahn-hero.svg' | asset_url }});">
-  <div class="page-width ae-page-hero__inner">
-    <div>
-      <div class="eyebrow">{{ section.settings.eyebrow }}</div>
-      <h1>{{ section.settings.heading }}</h1>
-      <p>{{ section.settings.text }}</p>
-    </div>
-    <div class="ae-page-stats" aria-label="Contact highlights">
-      <div class="ae-page-stat"><strong>Orders</strong><span>Tracking, shipping, and returns</span></div>
-      <div class="ae-page-stat"><strong>Fitment</strong><span>Vehicle and part compatibility</span></div>
-      <div class="ae-page-stat"><strong>Builds</strong><span>Product advice for your setup</span></div>
-    </div>
-  </div>
-</section>
+{%- liquid
+  assign contact_form_id = 'ContactForm-' | append: section.id
+  assign contact_heading_id = contact_form_id | append: '-heading'
+  assign contact_error_id = contact_form_id | append: '-errors'
+  assign contact_email = shop.email | default: section.settings.fallback_email | strip
+  assign contact_topics = 'Fitment check|Order support|Build advice|Wholesale' | split: '|'
+  assign contact_shipping_url = shop.shipping_policy.url | default: pages['shipping-returns'].url
+  assign contact_returns_url = pages['returns'].url | default: shop.refund_policy.url
+-%}
+<section class="ae-contact-page">
+  <div class="page-width">
+    <header class="ae-contact-page__heading">
+      {%- if section.settings.eyebrow != blank -%}<div class="eyebrow">{{ section.settings.eyebrow | escape }}</div>{%- endif -%}
+      <h1>{{ section.settings.heading | escape }}</h1>
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text | escape }}</p>{%- endif -%}
+    </header>
 
-<section class="section">
-  <div class="page-width ae-contact-layout">
-    <div class="ae-card">
-      <div class="eyebrow">Message AE</div>
-      <h2>{{ section.settings.form_heading }}</h2>
-      {%- form 'contact', class: 'ae-contact-form' -%}
+    <div class="ae-contact-layout">
+      <div class="ae-contact-main">
+        <h2 id="{{ contact_heading_id }}">{{ section.settings.form_heading | escape }}</h2>
+        {%- form 'contact', id: contact_form_id, class: 'ae-contact-form', aria-labelledby: contact_heading_id -%}
         {%- if form.posted_successfully? -%}
-          <div class="ae-form-status" role="status">{{ section.settings.success_text }}</div>
+          <div class="ae-form-status ae-contact-form__wide" role="status">{{ section.settings.success_text | escape }}</div>
         {%- endif -%}
         {%- if form.errors -%}
-          <div class="ae-form-status" role="alert">{{ form.errors | default_errors }}</div>
+          <div class="ae-form-status ae-contact-form__wide" id="{{ contact_error_id }}" role="alert">{{ form.errors | default_errors }}</div>
         {%- endif -%}
-        <label class="visually-hidden" for="ContactName">Name</label>
-        <input id="ContactName" class="field" type="text" name="contact[name]" placeholder="Name" autocomplete="name" value="{{ form.name | escape }}" required>
-        <label class="visually-hidden" for="ContactEmail">Email</label>
-        <input id="ContactEmail" class="field" type="email" name="contact[email]" placeholder="Email" autocomplete="email" value="{{ form.email | escape }}" required>
-        <label class="visually-hidden" for="ContactVehicle">Vehicle</label>
-        <input id="ContactVehicle" class="field" type="text" name="contact[vehicle]" placeholder="Vehicle">
-        <label class="visually-hidden" for="ContactTopic">Topic</label>
-        <select id="ContactTopic" class="field" name="contact[topic]">
-          <option value="Fitment check">Fitment check</option>
-          <option value="Order support">Order support</option>
-          <option value="Build advice">Build advice</option>
-          <option value="Wholesale">Wholesale</option>
-        </select>
-        <label class="visually-hidden" for="ContactBody">Message</label>
-        <textarea id="ContactBody" class="field" name="contact[body]" placeholder="Tell us what you need" required>{{ form.body | escape }}</textarea>
-        <button class="button" type="submit">{{ section.settings.button_label }}</button>
-      {%- endform -%}
-    </div>
+        <div class="ae-contact-field">
+          <label for="{{ contact_form_id }}-name">Name <span aria-hidden="true">*</span></label>
+          <input id="{{ contact_form_id }}-name" class="field" type="text" name="contact[name]" autocomplete="name" value="{{ form.name | escape }}" required>
+        </div>
+        <div class="ae-contact-field">
+          <label for="{{ contact_form_id }}-email">Email <span aria-hidden="true">*</span></label>
+          <input id="{{ contact_form_id }}-email" class="field" type="email" name="contact[email]" autocomplete="email" autocapitalize="off" spellcheck="false" value="{{ form.email | escape }}"{% if form.errors contains 'email' %} aria-invalid="true" aria-describedby="{{ contact_error_id }}"{% endif %} required>
+        </div>
+        <div class="ae-contact-field">
+          <label for="{{ contact_form_id }}-topic">Topic</label>
+          <select id="{{ contact_form_id }}-topic" class="select" name="contact[topic]">
+            {%- for topic in contact_topics -%}<option value="{{ topic | escape }}"{% if form.topic == topic %} selected{% endif %}>{{ topic | escape }}</option>{%- endfor -%}
+          </select>
+        </div>
+        <div class="ae-contact-field">
+          <label for="{{ contact_form_id }}-order">Order number <span>(optional)</span></label>
+          <input id="{{ contact_form_id }}-order" class="field" type="text" name="contact[order_number]" autocomplete="off" value="{{ form.order_number | escape }}">
+        </div>
+        <div class="ae-contact-field ae-contact-form__wide">
+          <label for="{{ contact_form_id }}-vehicle">Vehicle <span>(optional)</span></label>
+          <input id="{{ contact_form_id }}-vehicle" class="field" type="text" name="contact[vehicle]" placeholder="Year, make, model and engine" value="{{ form.vehicle | escape }}">
+        </div>
+        <div class="ae-contact-field ae-contact-form__wide">
+          <label for="{{ contact_form_id }}-body">Message <span aria-hidden="true">*</span></label>
+          <textarea id="{{ contact_form_id }}-body" class="field" name="contact[body]" rows="5" placeholder="What can we help with?" required>{{ form.body | escape }}</textarea>
+        </div>
+        <div class="ae-contact-form__actions ae-contact-form__wide">
+          <button class="button" type="submit">{{ section.settings.button_label | escape }} {% render 'icon', icon: 'arrow' %}</button>
+          {%- if shop.privacy_policy.url != blank -%}
+            <a class="ae-contact-page__link" href="{{ shop.privacy_policy.url | escape }}">Privacy policy</a>
+          {%- endif -%}
+        </div>
+        {%- endform -%}
+      </div>
 
-    <div class="ae-page-content">
-      <div class="ae-card ae-card--accent">
-        <div class="eyebrow">Email</div>
-        <h3>{{ shop.email | default: section.settings.fallback_email }}</h3>
-        <p>{{ section.settings.email_text }}</p>
-      </div>
-      <div class="ae-card ae-card--accent">
-        <div class="eyebrow">Instagram</div>
-        <h3>@autobahnessentials</h3>
-        <p>{{ section.settings.instagram_text }}</p>
-        <a class="button button--secondary" href="https://www.instagram.com/autobahnessentials/" target="_blank" rel="noopener noreferrer">Open Instagram</a>
-      </div>
-      <div class="ae-card ae-card--accent">
-        <div class="eyebrow">Response time</div>
-        <h3>{{ section.settings.response_heading }}</h3>
-        <p>{{ section.settings.response_text }}</p>
-      </div>
+      <aside class="ae-contact-details" aria-label="Contact details">
+        {%- if contact_email != blank -%}
+          <div class="ae-contact-details__item">
+            <h2>Email</h2>
+            <a class="ae-contact-details__address" href="mailto:{{ contact_email | escape }}">{{ contact_email | escape }}</a>
+            {%- if section.settings.email_text != blank -%}<p>{{ section.settings.email_text | escape }}</p>{%- endif -%}
+          </div>
+        {%- endif -%}
+        <div class="ae-contact-details__item">
+          <h2>Instagram</h2>
+          <a class="ae-contact-details__address" href="https://www.instagram.com/autobahnessentials/" target="_blank" rel="noopener noreferrer">@autobahnessentials {% render 'icon', icon: 'arrow' %}<span class="visually-hidden"> (opens in a new tab)</span></a>
+          {%- if section.settings.instagram_text != blank -%}<p>{{ section.settings.instagram_text | escape }}</p>{%- endif -%}
+        </div>
+        {%- if section.settings.response_heading != blank or section.settings.response_text != blank -%}
+          <div class="ae-contact-details__item">
+            {%- if section.settings.response_heading != blank -%}<h2>{{ section.settings.response_heading | escape }}</h2>{%- endif -%}
+            {%- if section.settings.response_text != blank -%}<p>{{ section.settings.response_text | escape }}</p>{%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- if pages['faq'] != blank or pages['fitment'] != blank or contact_shipping_url != blank or contact_returns_url != blank -%}
+          <nav class="ae-contact-details__item ae-contact-details__links" aria-label="Support resources">
+            <h2>Helpful links</h2>
+            {%- if pages['fitment'] != blank -%}<a href="{{ pages['fitment'].url | escape }}">Fitment help {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+            {%- if contact_shipping_url != blank -%}<a href="{{ contact_shipping_url | escape }}">Shipping {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+            {%- if contact_returns_url != blank -%}<a href="{{ contact_returns_url | escape }}">Returns {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+            {%- if pages['faq'] != blank -%}<a href="{{ pages['faq'].url | escape }}">FAQs {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+          </nav>
+        {%- endif -%}
+      </aside>
     </div>
   </div>
 </section>
@@ -75,19 +103,19 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Contact Autobahn Essentials"
+      "default": "Autobahn Essentials Support"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Talk Parts With Us"
+      "default": "Contact Us"
     },
     {
       "type": "textarea",
       "id": "text",
-      "label": "Hero text",
-      "default": "Ask about fitment, orders, product recommendations, and build-focused upgrade paths."
+      "label": "Introduction",
+      "default": "Questions about your order or your next upgrade? Get in touch with the AE team."
     },
     {
       "type": "text",
