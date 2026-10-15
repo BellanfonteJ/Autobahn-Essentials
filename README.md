@@ -24,11 +24,11 @@ The development command does not publish the live theme. However, pushes to a Sh
 
 ## GitHub and VS Code Sync
 
-The theme updates are maintained on `codex/theme-bug-fixes` in [slimeraps/Autobahn-Essentials](https://github.com/slimeraps/Autobahn-Essentials/tree/codex/theme-bug-fixes). The garage work was merged through PR #49, and the collection, footer and Builds modernization through PR #50 (`main` at `ea81ab2`, verified by fetch October 14). The earlier motion and close-icon fixes were merged through PR #48. The newest enterprise, description and fitment-guide changes are a separate review-branch update, not a main merge or live publication.
+The latest theme code and README are available on [slimeraps/Autobahn-Essentials/main](https://github.com/slimeraps/Autobahn-Essentials/tree/main), including the October 15 update below. `codex/theme-bug-fixes` is the development branch. The garage work was merged through PR #49, collection/footer/Builds modernization through PR #50, and the earlier motion and close-icon fixes through PR #48. Updating this repository does not publish the live Shopify theme; its separate connection is documented below.
 
 ### October 15 Review Status
 
-The review branch includes the product-page spacing and hover-image fixes, followed by a storefront bug sweep. The sweep fixes clipped gallery magnifiers, narrow-screen cart overflow/stretched thumbnails, newsletter interruptions during Search/My Garage use, and locale-dropping navigation/cart requests. All 103 local checks, Shopify Theme Check and packaging pass. These updates are included on `codex/theme-bug-fixes`; they do not merge into main or publish the live Shopify theme. See [QUALITY-AUDIT.md](QUALITY-AUDIT.md) for reproduced issues, coverage and limits.
+The October 15 main-branch update includes the enterprise, description, fitment-guide, product-page spacing and hover-image fixes, followed by a storefront bug sweep. The sweep fixes clipped gallery magnifiers, narrow-screen cart overflow/stretched thumbnails, newsletter interruptions during Search/My Garage use, and locale-dropping navigation/cart requests. All 103 local checks, Shopify Theme Check and packaging pass. The code and this README are synchronized to `slimeraps/Autobahn-Essentials/main`; the separate `BellanfonteJ` repository and live Shopify theme remain unchanged. See [QUALITY-AUDIT.md](QUALITY-AUDIT.md) for reproduced issues, coverage and limits.
 
 ### October 14 Review Status
 
@@ -42,8 +42,8 @@ For an existing checkout, preserve or commit any local work before switching bra
 
 ```sh
 git fetch origin
-git switch codex/theme-bug-fixes
-git pull --ff-only origin codex/theme-bug-fixes
+git switch main
+git pull --ff-only origin main
 ```
 
 Open that checkout in VS Code and start the Local Development command above. Git pulls update your files; the running Shopify development server updates the unpublished preview when those files change. The original product CSV is not committed; the generated fitment catalog, importer, and review report are included.
@@ -125,6 +125,7 @@ The current `135i-5-intercooler-fmic` description was backed up locally and its 
 
 ### October 15, 2026
 
+- Synchronized the tested enterprise/product fixes, storefront bug sweep and documentation to `slimeraps/Autobahn-Essentials/main`, so today's README is visible on the default GitHub page. The separate Shopify-connected `BellanfonteJ/Autobahn-Essentials/main` is unchanged; no live theme release is included.
 - Completed a follow-up storefront code/fixture audit after pushing hover fix `baaa626`. Reproduced and fixed gallery magnifier clipping/pixel alignment, mobile cart page/drawer overflow, stretched cart thumbnails, newsletter focus interruptions and locale-dropping fallback links/API requests. Added five browser regressions and a populated-cart accessibility audit, bringing the suite to 103. Dependency audit found no high/critical advisories; the two existing lower-severity development-tool findings remain documented. This batch is included in the review-branch push only; no order, email, buyer-data submission or live release was performed.
 - Fixed alternate product-card images extending outside their frame on hover: a more-specific 100% image-size rule overrode the absolute image's auto sizing while its inset remained. Primary and alternate images now share one bounded grid cell, preserving containment, the image transition and card dimensions. Coverage checks collection, search and related cards at 320-1440px with normal/reduced motion. This 97-check follow-up is included in the review-branch push and unpublished preview, not a live release.
 - Pushed the product-page spacing follow-up and updated README/release documentation on the review branch. Specs, Fitment, Shipping and app blocks sit below both columns, removing the large empty area beside the panels. Added 320-1920px layout, accordion and variant-SKU regression coverage with and without JavaScript; all 96 checks pass. No live theme publication.

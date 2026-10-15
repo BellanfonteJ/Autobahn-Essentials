@@ -1,6 +1,6 @@
 # Release Readiness
 
-Store/admin observations were checked October 14, 2026; code verification was updated October 15. Theme changes target unpublished preview 167398703161. Brand/Part Type configuration and ARM filter-value grouping are store-wide changes. No theme publication, main-branch merge of this latest batch, payment or shipping change, order, customer email submission or agent-performed app-permission update was performed. The enterprise, description, fitment-guide and subsequent bug-sweep code is included in the review-branch push. The earlier modernization was merged separately through PR #50; fetched main is `ea81ab2`.
+Store/admin observations were checked October 14, 2026; code verification was updated October 15. Theme changes target unpublished preview 167398703161. Brand/Part Type configuration and ARM filter-value grouping are store-wide changes. The October 15 GitHub synchronization includes the enterprise, description, fitment-guide and subsequent bug-sweep code and documentation on `slimeraps/Autobahn-Essentials/main`. The separate Shopify-connected `BellanfonteJ/Autobahn-Essentials/main` is unchanged. No theme publication, payment or shipping change, order, customer email submission or agent-performed app-permission update was performed. The earlier modernization was merged separately through PR #50 (`ea81ab2`).
 
 ## Verified
 
@@ -55,6 +55,6 @@ Detailed setup/limits: [PRODUCT-CONTENT.md](PRODUCT-CONTENT.md), [QUALITY-AUDIT.
 
 This checkout pushes to `slimeraps/Autobahn-Essentials`. Shopify Admin's live GitHub connection points to **`BellanfonteJ/Autobahn-Essentials`, branch `main`**. The visible log for October 13 at 12:55 PM CDT reported "Theme updated!" with zero succeeded, warnings or failed entries. The live layout snapshot did not load the garage assets present in this checkout's main branch.
 
-The connection was inspected read-only. Do not press **Reset to latest commit**, disconnect/reconnect, merge into the connected branch or publish the preview until the owner selects the authoritative repository, reviews the full release diff and authorizes the live update. Connected branch pushes update the linked theme automatically: [Shopify GitHub integration documentation](https://shopify.dev/docs/storefronts/themes/tools/github).
+The connection was inspected read-only. The October 15 merge into `slimeraps/Autobahn-Essentials/main` updates GitHub only, not this separate connection. Do not press **Reset to latest commit**, disconnect/reconnect, merge into the connected branch or publish the preview until the owner selects the authoritative repository, reviews the full release diff and authorizes the live update. Connected branch pushes update the linked theme automatically: [Shopify GitHub integration documentation](https://shopify.dev/docs/storefronts/themes/tools/github).
 
-Use a draft pull request for the reviewed theme code while these launch items remain open. A passing code suite does not complete store-level fitment, fulfillment, checkout or email validation.
+The tested code can be reviewed on the `slimeraps` main branch while these launch items remain open. Keep any proposed update to the separate Shopify-connected repository in a draft pull request until live release is authorized. A passing code suite does not complete store-level fitment, fulfillment, checkout or email validation.
