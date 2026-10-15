@@ -9,10 +9,12 @@
 {%- if pages['contact'] != blank -%}
   {%- assign contact_url = pages['contact'].url -%}
 {%- endif -%}
-{%- if pages['shipping-returns'] != blank -%}
-  {%- assign returns_url = pages['shipping-returns'].url -%}
-{%- elsif pages['returns'] != blank -%}
+{%- if pages['returns'] != blank -%}
   {%- assign returns_url = pages['returns'].url -%}
+{%- elsif pages['shipping-returns'] != blank -%}
+  {%- assign returns_url = pages['shipping-returns'].url -%}
+{%- elsif shop.refund_policy.url != blank -%}
+  {%- assign returns_url = shop.refund_policy.url -%}
 {%- endif -%}
 
 <details class="nav-dropdown nav-dropdown--contacts">

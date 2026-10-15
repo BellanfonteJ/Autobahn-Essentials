@@ -1,6 +1,9 @@
 {%- if page.handle == 'builds' and page.content == blank -%}
   {% render 'breadcrumbs' %}
   {% render 'builds-content', section: section %}
+{%- elsif page.handle == 'returns' and page.content == blank -%}
+  {% render 'breadcrumbs' %}
+  {% render 'returns-content', section: section %}
 {%- else -%}
 {% render 'breadcrumbs' %}
 

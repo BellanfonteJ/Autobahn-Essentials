@@ -26,8 +26,8 @@
 {%- else -%}
   {%- case fallback_role -%}
     {%- when 'support' -%}
-      {%- assign page_handles = 'contact,fitment,shipping-returns,faq' | split: ',' -%}
-      {%- assign page_labels = 'Contact Us,Fitment Guide,Shipping & Returns,FAQ' | split: ',' -%}
+      {%- assign page_handles = 'contact,returns,fitment,shipping-returns,faq' | split: ',' -%}
+      {%- assign page_labels = 'Contact Us,Returns,Fitment Guide,Shipping & Returns,FAQ' | split: ',' -%}
     {%- when 'company' -%}
       {%- assign page_handles = 'about,builds,ae-blog' | split: ',' -%}
       {%- assign page_labels = 'About Us,Builds,Autobahn Blog' | split: ',' -%}

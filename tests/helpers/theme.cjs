@@ -100,7 +100,7 @@ function context(options = {}) {
     cart: { item_count: 0, items: [], total_price: 0, currency: { iso_code: 'USD' }, ...options.cart },
     page_title: options.pageTitle ?? 'Autobahn Essentials', canonical_url: options.canonicalUrl ?? 'http://theme.test/', current_page: options.currentPage ?? 1,
     page_description: options.pageDescription, page_image: options.pageImage, current_tags: options.currentTags,
-    template: { name: ['builds', 'page'].includes(options.template) ? 'page' : options.template || 'product' }, product: { ...product, ...options.product },
+    template: { name: ['builds', 'page', 'contact', 'returns'].includes(options.template) ? 'page' : options.template || 'product', suffix: ['contact', 'returns'].includes(options.template) ? options.template : '' }, product: { ...product, ...options.product },
     page: { handle: options.template === 'builds' ? 'builds' : 'example', title: 'Example', content: '', ...options.page },
     pages: options.pages || {},
     blogs: options.blogs || {},
@@ -120,16 +120,16 @@ async function renderSection(name, ctx, overrides = {}) {
   const defaults = Object.fromEntries((schema.settings || []).map((setting) => [setting.id, setting.default]));
   const settings = { ...defaults, ...overrides.settings };
   if (name === 'header') settings.menu = { links: [] };
-  const scope = { ...ctx, section: { id: name, settings, blocks: overrides.blocks || [] } };
+  const scope = { ...ctx, section: { id: overrides.id || name, settings, blocks: overrides.blocks || [] } };
   return engine.parseAndRender(file.replace(/{% schema %}[\s\S]*?{% endschema %}/, ''), scope, { globals: scope });
 }
 
 async function renderPage(options = {}) {
   const ctx = context(options);
   const template = options.template || 'product';
-  const name = { page: 'main-page', builds: 'page-builds-autobahn', product: 'main-product', index: 'hero-autobahn', collection: 'main-collection-product-grid', search: 'main-search', cart: 'main-cart-items', contact: 'page-contact-autobahn', fitment: 'page-fitment-autobahn', password: 'main-password', article: 'main-article', blog: 'main-blog', '404': 'main-404' }[template];
+  const name = { page: 'main-page', builds: 'page-builds-autobahn', product: 'main-product', index: 'hero-autobahn', collection: 'main-collection-product-grid', search: 'main-search', cart: 'main-cart-items', contact: 'page-contact-autobahn', returns: 'page-returns-autobahn', fitment: 'page-fitment-autobahn', password: 'main-password', article: 'main-article', blog: 'main-blog', '404': 'main-404' }[template];
   const popupSettings = { ...config.sections['popup-newsletter'].settings, enabled: Boolean(options.popup), delay_seconds: options.popupDelay ?? 30 };
-  let content = await renderSection(name, ctx);
+  let content = await renderSection(name, ctx, { settings: options.sectionSettings || {} });
   if (options.finder) content += await renderSection('vehicle-finder', ctx);
   if (options.cards) {
     const card = await engine.renderFile('product-card', { ...ctx, product: ctx.product });

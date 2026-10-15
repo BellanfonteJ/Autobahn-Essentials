@@ -1,0 +1,120 @@
+{%- liquid
+  assign returns_form_id = 'ReturnRequest-' | append: section.id
+  assign returns_heading_id = returns_form_id | append: '-heading'
+  assign returns_error_id = returns_form_id | append: '-errors'
+  assign returns_note_id = returns_form_id | append: '-note'
+  assign returns_email = shop.email | default: section.settings.fallback_email | default: 'support@autobahnessentials.com' | strip
+  assign returns_eyebrow = section.settings.eyebrow | default: 'Autobahn Essentials Support'
+  assign returns_heading = section.settings.heading | default: 'Returns & Refunds'
+  assign returns_text = section.settings.text | default: 'Need to return a part? Send us the details and we will help you with the next steps.'
+  assign returns_window = section.settings.return_window_days | default: 14
+  assign returns_reasons = 'No longer needed|Incorrect item received|Damaged or defective item|Fitment concern|Other' | split: '|'
+-%}
+<section class="ae-contact-page ae-returns-page">
+  <div class="page-width">
+    <header class="ae-contact-page__heading">
+      <div class="eyebrow">{{ returns_eyebrow | escape }}</div>
+      <h1>{{ returns_heading | escape }}</h1>
+      <p>{{ returns_text | escape }}</p>
+      <p class="ae-returns-window">{% render 'icon', icon: 'shield' %}<span>Request a return within <strong>{{ returns_window | escape }} days of delivery.</strong></span></p>
+    </header>
+
+    <div class="ae-contact-layout">
+      <div class="ae-contact-main">
+        <h2 id="{{ returns_heading_id }}">Start a return request</h2>
+        {%- form 'contact', id: returns_form_id, class: 'ae-contact-form', aria-labelledby: returns_heading_id, aria-describedby: returns_note_id -%}
+          <input type="hidden" name="contact[topic]" value="Return request">
+          {%- if form.posted_successfully? -%}
+            <div class="ae-form-status ae-contact-form__wide" role="status">Your return request was sent. This is not return approval. Please wait for instructions before shipping anything back.</div>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <div class="ae-form-status ae-contact-form__wide" id="{{ returns_error_id }}" role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+          <div class="ae-contact-field">
+            <label for="{{ returns_form_id }}-email">Email <span aria-hidden="true">*</span></label>
+            <input class="field" id="{{ returns_form_id }}-email" type="email" name="contact[email]" autocomplete="email" autocapitalize="off" spellcheck="false" value="{{ form.email | escape }}"{% if form.errors contains 'email' %} aria-invalid="true" aria-describedby="{{ returns_error_id }}"{% endif %} required>
+          </div>
+          <div class="ae-contact-field">
+            <label for="{{ returns_form_id }}-name">Name <span>(optional)</span></label>
+            <input class="field" id="{{ returns_form_id }}-name" type="text" name="contact[name]" autocomplete="name" value="{{ form.name | escape }}">
+          </div>
+          <div class="ae-contact-field">
+            <label for="{{ returns_form_id }}-order">Order number <span aria-hidden="true">*</span></label>
+            <input class="field" id="{{ returns_form_id }}-order" type="text" name="contact[order_number]" autocomplete="off" value="{{ form.order_number | escape }}" required>
+          </div>
+          <div class="ae-contact-field">
+            <label for="{{ returns_form_id }}-reason">Reason for return <span aria-hidden="true">*</span></label>
+            <select class="select" id="{{ returns_form_id }}-reason" name="contact[reason]" required>
+              <option value=""{% if form.reason == blank %} selected{% endif %}>Select a reason</option>
+              {%- for reason in returns_reasons -%}<option value="{{ reason | escape }}"{% if form.reason == reason %} selected{% endif %}>{{ reason | escape }}</option>{%- endfor -%}
+            </select>
+          </div>
+          <div class="ae-contact-field ae-contact-form__wide">
+            <label for="{{ returns_form_id }}-items">Item(s) to return <span aria-hidden="true">*</span></label>
+            <input class="field" id="{{ returns_form_id }}-items" type="text" name="contact[items]" placeholder="Product name and quantity" value="{{ form.items | escape }}" required>
+          </div>
+          <div class="ae-contact-field ae-contact-form__wide">
+            <label for="{{ returns_form_id }}-body">Details <span aria-hidden="true">*</span></label>
+            <textarea class="field" id="{{ returns_form_id }}-body" name="contact[body]" rows="5" placeholder="Tell us what happened and the item's current condition." required>{{ form.body | escape }}</textarea>
+          </div>
+          <p class="ae-returns-note ae-contact-form__wide" id="{{ returns_note_id }}">Submitting this form requests a review, not an automatic return or refund. Please wait for approval and shipping instructions.</p>
+          <div class="ae-contact-form__actions ae-contact-form__wide">
+            <button class="button" type="submit">Send return request {% render 'icon', icon: 'arrow' %}</button>
+            {%- if shop.privacy_policy.url != blank -%}<a class="ae-contact-page__link" href="{{ shop.privacy_policy.url | escape }}">Privacy policy</a>{%- endif -%}
+          </div>
+        {%- endform -%}
+
+        <div class="ae-returns-faq">
+          <h2>Return questions</h2>
+          <details>
+            <summary>Received a damaged or incorrect item?</summary>
+            <p>Contact us as soon as you notice an issue. Keep the item and packaging, and have photos ready to share with support.</p>
+          </details>
+          <details>
+            <summary>Where should I send my return?</summary>
+            <p>Wait for your request to be reviewed. If approved, support will confirm the return address and shipping instructions. Do not send items to an address printed on the package without checking first.</p>
+          </details>
+          <details>
+            <summary>What about return shipping, fees and refunds?</summary>
+            <p>Review the refund policy for eligibility, fees and refund terms. Contact support before shipping if anything is unclear.</p>
+            {%- if shop.refund_policy.url != blank -%}<a class="ae-contact-page__link" href="{{ shop.refund_policy.url | escape }}">Read the refund policy</a>{%- endif -%}
+          </details>
+        </div>
+      </div>
+
+      <aside class="ae-contact-details" aria-label="Return guidance">
+        <div class="ae-contact-details__item">
+          <h2>How it works</h2>
+          <ol class="ae-returns-steps">
+            <li><strong>Send your request</strong><p>Include your order number, item details and reason for returning.</p></li>
+            <li><strong>Wait for review</strong><p>Our team will review your request and confirm the next steps.</p></li>
+            <li><strong>Follow the instructions</strong><p>If approved, use the return address and shipping guidance provided by support.</p></li>
+          </ol>
+        </div>
+        <div class="ae-contact-details__item">
+          <h2>Before you pack</h2>
+          <ul class="ae-returns-checklist">
+            <li>Keep your receipt or order confirmation.</li>
+            <li>Keep original packaging, hardware and accessories together.</li>
+            <li>Describe any installation, use or damage in your request.</li>
+          </ul>
+        </div>
+        {%- if returns_email != blank -%}
+          <div class="ae-contact-details__item">
+            <h2>Need help or have photos?</h2>
+            <a class="ae-contact-details__address" href="mailto:{{ returns_email | escape }}">{{ returns_email | escape }}</a>
+            <p>Email support with your order number and any relevant photos. Please do not include payment-card details.</p>
+          </div>
+        {%- endif -%}
+        {%- if shop.refund_policy.url != blank or shop.shipping_policy.url != blank or pages['contact'] != blank -%}
+          <nav class="ae-contact-details__item ae-contact-details__links" aria-label="Return resources">
+            <h2>Helpful links</h2>
+            {%- if shop.refund_policy.url != blank -%}<a href="{{ shop.refund_policy.url | escape }}">Refund policy {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+            {%- if shop.shipping_policy.url != blank -%}<a href="{{ shop.shipping_policy.url | escape }}">Shipping policy {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+            {%- if pages['contact'] != blank -%}<a href="{{ pages['contact'].url | escape }}">Contact Us {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+          </nav>
+        {%- endif -%}
+      </aside>
+    </div>
+  </div>
+</section>
