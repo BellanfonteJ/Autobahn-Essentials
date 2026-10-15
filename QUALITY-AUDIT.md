@@ -2,6 +2,8 @@
 
 Code/fixture checks updated October 15, 2026; native reports below were inspected October 14. This is a scoped audit, not accessibility certification, a guarantee of no remaining bugs or enterprise-readiness sign-off.
 
+**Live follow-up, October 15 at 6:36:47 PM CDT:** Owner-authorized PR #8 merged the tested page designs into `BellanfonteJ/main` (`4be2e9a`); GitHub Theme Quality passed audit, Theme Check, tests and packaging. The public Refund policy layout was verified without preview cookies. The owner subsequently requested using the new request page for Returns: Shopify page 166812319801 is now Visible with the dedicated `returns` template. Exited draft preview and followed the live Contacts > Returns link to `/pages/returns`; the form, 14-day window and support guidance render, and the footer uses the same destination. No real request/email or financial operation was performed. This Admin-only configuration required no theme-code change, so tests were not rerun for this documentation update; the last complete local run passed all 147 checks. Earlier draft/hidden-state notes below are historical. Policy wording conflicts and inbox delivery remain unresolved.
+
 ## Automated Gates
 
 - `pnpm test`: 147 checks including eight contact browser groups, seven returns browser groups, five native refund-policy browser groups, 12 multi-car garage groups, seven SEO browser groups, Liquid fixtures, source validation and release safeguards. Product-information positioning and accordion/SKU behavior are covered at 320-1920px with and without JavaScript. Card hover-image alignment and bounds are covered at 320-1440px with normal/reduced motion on collection, search and related products.
