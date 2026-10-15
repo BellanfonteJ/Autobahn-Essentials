@@ -13,9 +13,11 @@
 <section class="ae-contact-page ae-returns-page">
   <div class="page-width">
     <header class="ae-contact-page__heading">
-      <div class="eyebrow">{{ returns_eyebrow | escape }}</div>
-      <h1>{{ returns_heading | escape }}</h1>
-      <p>{{ returns_text | escape }}</p>
+      <div class="ae-returns-heading__copy">
+        <div class="eyebrow">{{ returns_eyebrow | escape }}</div>
+        <h1>{{ returns_heading | escape }}</h1>
+        <p>{{ returns_text | escape }}</p>
+      </div>
       <p class="ae-returns-window">{% render 'icon', icon: 'shield' %}<span>Request a return within <strong>{{ returns_window | escape }} days of delivery.</strong></span></p>
     </header>
 
@@ -64,25 +66,16 @@
           </div>
         {%- endform -%}
 
-        <div class="ae-returns-faq">
-          <h2>Return questions</h2>
-          <details>
-            <summary>Received a damaged or incorrect item?</summary>
-            <p>Contact us as soon as you notice an issue. Keep the item and packaging, and have photos ready to share with support.</p>
-          </details>
-          <details>
-            <summary>Where should I send my return?</summary>
-            <p>Wait for your request to be reviewed. If approved, support will confirm the return address and shipping instructions. Do not send items to an address printed on the package without checking first.</p>
-          </details>
-          <details>
-            <summary>What about return shipping, fees and refunds?</summary>
-            <p>Review the refund policy for eligibility, fees and refund terms. Contact support before shipping if anything is unclear.</p>
-            {%- if shop.refund_policy.url != blank -%}<a class="ae-contact-page__link" href="{{ shop.refund_policy.url | escape }}">Read the refund policy</a>{%- endif -%}
-          </details>
-        </div>
       </div>
 
       <aside class="ae-contact-details" aria-label="Return guidance">
+        {%- if returns_email != blank -%}
+          <div class="ae-contact-details__item">
+            <h2>Email support</h2>
+            <a class="ae-contact-details__address" href="mailto:{{ returns_email | escape }}">{{ returns_email | escape }}</a>
+            <p>Have photos? Email them with your order number. Please do not include payment-card details.</p>
+          </div>
+        {%- endif -%}
         <div class="ae-contact-details__item">
           <h2>How it works</h2>
           <ol class="ae-returns-steps">
@@ -92,20 +85,15 @@
           </ol>
         </div>
         <div class="ae-contact-details__item">
-          <h2>Before you pack</h2>
-          <ul class="ae-returns-checklist">
-            <li>Keep your receipt or order confirmation.</li>
-            <li>Keep original packaging, hardware and accessories together.</li>
-            <li>Describe any installation, use or damage in your request.</li>
-          </ul>
+          <details class="ae-returns-pack">
+            <summary>Before you pack</summary>
+            <ul class="ae-returns-checklist">
+              <li>Keep your receipt or order confirmation.</li>
+              <li>Keep original packaging, hardware and accessories together.</li>
+              <li>Describe any installation, use or damage in your request.</li>
+            </ul>
+          </details>
         </div>
-        {%- if returns_email != blank -%}
-          <div class="ae-contact-details__item">
-            <h2>Need help or have photos?</h2>
-            <a class="ae-contact-details__address" href="mailto:{{ returns_email | escape }}">{{ returns_email | escape }}</a>
-            <p>Email support with your order number and any relevant photos. Please do not include payment-card details.</p>
-          </div>
-        {%- endif -%}
         {%- if shop.refund_policy.url != blank or shop.shipping_policy.url != blank or pages['contact'] != blank -%}
           <nav class="ae-contact-details__item ae-contact-details__links" aria-label="Return resources">
             <h2>Helpful links</h2>
@@ -116,5 +104,22 @@
         {%- endif -%}
       </aside>
     </div>
+
+    <section class="ae-returns-faq" aria-labelledby="{{ returns_form_id }}-faq-heading">
+      <h2 id="{{ returns_form_id }}-faq-heading">Return questions</h2>
+      <details>
+        <summary>Received a damaged or incorrect item?</summary>
+        <p>Contact us as soon as you notice an issue. Keep the item and packaging, and have photos ready to share with support.</p>
+      </details>
+      <details>
+        <summary>Where should I send my return?</summary>
+        <p>Wait for your request to be reviewed. If approved, support will confirm the return address and shipping instructions. Do not send items to an address printed on the package without checking first.</p>
+      </details>
+      <details>
+        <summary>What about return shipping, fees and refunds?</summary>
+        <p>Review the refund policy for eligibility, fees and refund terms. Contact support before shipping if anything is unclear.</p>
+        {%- if shop.refund_policy.url != blank -%}<a class="ae-contact-page__link" href="{{ shop.refund_policy.url | escape }}">Read the refund policy</a>{%- endif -%}
+      </details>
+    </section>
   </div>
 </section>

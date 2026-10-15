@@ -74,7 +74,12 @@
 
     <main id="MainContent" class="main-content" role="main" tabindex="-1">
       {% render 'garage-bar' %}
-      {{ content_for_layout }}
+      {%- assign policy_route_handle = request.path | split: '/' | last -%}
+      {%- if policy_route_handle == 'refund-policy' and request.path contains '/policies/' -%}
+        {% render 'refund-policy-content', policy_content: content_for_layout %}
+      {%- else -%}
+        {{ content_for_layout }}
+      {%- endif -%}
     </main>
 
     {% section 'footer' %}
