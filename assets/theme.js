@@ -5,7 +5,7 @@ const themeMessages = themeConfig.messages || {};
 const reportHealth = (code) => {
   try { window.AEHealth?.report(code); } catch { /* Diagnostics cannot interrupt shopping. */ }
 };
-const themeRoute = (path) => `${themeConfig.root || window.Shopify?.routes?.root || '/'}${path}`;
+const themeRoute = (path) => `${(themeConfig.root || window.Shopify?.routes?.root || '/').replace(/\/?$/, '/')}${path}`;
 const escapeHTML = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 })[character]);
@@ -498,17 +498,21 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
     }
 
     const mainRect = main.getBoundingClientRect();
-    const x = event.clientX - mainRect.left;
-    const y = event.clientY - mainRect.top;
+    const x = event.clientX - mainRect.left - main.clientLeft;
+    const y = event.clientY - mainRect.top - main.clientTop;
     const cursorImageX = event.clientX - imageRect.left;
     const cursorImageY = event.clientY - imageRect.top;
     const zoom = Number.parseFloat(getComputedStyle(main).getPropertyValue('--magnifier-zoom')) || 2.3;
-    const lensRadius = magnifier.clientWidth / 2;
-    const backgroundX = lensRadius - cursorImageX * zoom;
-    const backgroundY = lensRadius - cursorImageY * zoom;
+    const halfWidth = magnifier.offsetWidth / 2;
+    const halfHeight = magnifier.offsetHeight / 2;
+    const lensX = Math.min(Math.max(x, halfWidth), main.clientWidth - halfWidth);
+    const lensY = Math.min(Math.max(y, halfHeight), main.clientHeight - halfHeight);
+    // The lens can stop at the frame edge while the sampled pixel follows the pointer.
+    const backgroundX = x - lensX + magnifier.clientWidth / 2 - cursorImageX * zoom;
+    const backgroundY = y - lensY + magnifier.clientHeight / 2 - cursorImageY * zoom;
 
-    magnifier.style.setProperty('--magnifier-x', `${x}px`);
-    magnifier.style.setProperty('--magnifier-y', `${y}px`);
+    magnifier.style.setProperty('--magnifier-x', `${lensX}px`);
+    magnifier.style.setProperty('--magnifier-y', `${lensY}px`);
     magnifier.style.setProperty('--magnifier-bg-size', `${imageRect.width * zoom}px ${imageRect.height * zoom}px`);
     magnifier.style.setProperty('--magnifier-bg-position', `${backgroundX}px ${backgroundY}px`);
     cursorDot.style.setProperty('--cursor-dot-x', `${x}px`);

@@ -31,6 +31,22 @@ for (const template of ['index', 'product', 'collection', 'search', 'builds', 'c
   });
 }
 
+test('populated cart pages and drawers pass axe on mobile and desktop', async () => {
+  const item = { key: '101:key', url: '/products/test-part', url_to_remove: '/cart/change?line=1&quantity=0', product_title: 'BMW charge pipe', variant_title: 'Standard', product: { title: 'BMW charge pipe', has_only_default_variant: false }, variant: { title: 'Standard' }, image: { asset: 'brand-bmw-m4.jpg', alt: 'BMW charge pipe' }, quantity: 1, final_line_price: 12345 };
+  for (const width of [320, 1440]) {
+    const session = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
+    const page = await session.newPage();
+    try {
+      await mount(page, { template: 'cart', cart: { item_count: 1, items: [item], total_price: 12345 } });
+      await audit(page, `Populated cart at ${width}px`);
+      await page.route('**/cart.js', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ item_count: 1, currency: 'USD', total_price: 12345, items: [{ ...item, image: '/assets/brand-bmw-m4.jpg' }] }) }));
+      await page.locator('[data-cart-drawer-open]').click();
+      await page.waitForFunction(() => document.querySelector('.cart-drawer__title'));
+      await audit(page, `Populated cart drawer at ${width}px`);
+    } finally { await session.close(); }
+  }
+});
+
 test('search, garage, gallery, cart and newsletter dialogs pass axe when opened', async () => {
   const session = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await session.newPage();

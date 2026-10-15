@@ -96,7 +96,7 @@
       }
 
       function open() {
-        if (document.querySelector('[role="dialog"][aria-hidden="false"]') || document.body.classList.contains('is-menu-open')) {
+        if (document.querySelector('[role="dialog"][aria-hidden="false"], [data-search-drawer].is-open, [data-garage-drawer].is-open') || document.body.classList.contains('is-menu-open')) {
           setTimeout(open, 1000);
           return;
         }

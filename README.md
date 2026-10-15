@@ -28,7 +28,7 @@ The theme updates are maintained on `codex/theme-bug-fixes` in [slimeraps/Autoba
 
 ### October 15 Review Status
 
-The latest review-branch updates remove the large empty area below the product gallery and keep alternate card images inside their frame on hover. Specs, Fitment, Shipping and app blocks span the page below both gallery/purchase columns. Mobile reading order, native accordions, variant-specific SKU updates and hover transitions are preserved. All 97 local checks, Shopify Theme Check and packaging pass. These updates are included on `codex/theme-bug-fixes`; they do not merge into main or publish the live Shopify theme.
+The review branch includes the product-page spacing and hover-image fixes, followed by a storefront bug sweep. The sweep fixes clipped gallery magnifiers, narrow-screen cart overflow/stretched thumbnails, newsletter interruptions during Search/My Garage use, and locale-dropping navigation/cart requests. All 103 local checks, Shopify Theme Check and packaging pass. These updates are included on `codex/theme-bug-fixes`; they do not merge into main or publish the live Shopify theme. See [QUALITY-AUDIT.md](QUALITY-AUDIT.md) for reproduced issues, coverage and limits.
 
 ### October 14 Review Status
 
@@ -56,7 +56,7 @@ pnpm test
 pnpm theme:package
 ```
 
-The current suite has 97 checks: 75 browser regressions, eight accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content, single close icons, canonical brand labels, source links and grouped Brand filter IDs. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
+The current suite has 103 checks: 80 browser regressions, nine accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content, single close icons, canonical brand labels, source links and grouped Brand filter IDs. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
 
 Tests use installed Google Chrome on macOS or Playwright Chromium. If neither is available, run `pnpm exec playwright install chromium`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for another compatible Chromium installation. Set `THEME_SCREENSHOTS=1` to capture test screenshots in the ignored `.tools/screenshots/` folder.
 
@@ -125,6 +125,7 @@ The current `135i-5-intercooler-fmic` description was backed up locally and its 
 
 ### October 15, 2026
 
+- Completed a follow-up storefront code/fixture audit after pushing hover fix `baaa626`. Reproduced and fixed gallery magnifier clipping/pixel alignment, mobile cart page/drawer overflow, stretched cart thumbnails, newsletter focus interruptions and locale-dropping fallback links/API requests. Added five browser regressions and a populated-cart accessibility audit, bringing the suite to 103. Dependency audit found no high/critical advisories; the two existing lower-severity development-tool findings remain documented. This batch is included in the review-branch push only; no order, email, buyer-data submission or live release was performed.
 - Fixed alternate product-card images extending outside their frame on hover: a more-specific 100% image-size rule overrode the absolute image's auto sizing while its inset remained. Primary and alternate images now share one bounded grid cell, preserving containment, the image transition and card dimensions. Coverage checks collection, search and related cards at 320-1440px with normal/reduced motion. This 97-check follow-up is included in the review-branch push and unpublished preview, not a live release.
 - Pushed the product-page spacing follow-up and updated README/release documentation on the review branch. Specs, Fitment, Shipping and app blocks sit below both columns, removing the large empty area beside the panels. Added 320-1920px layout, accordion and variant-SKU regression coverage with and without JavaScript; all 96 checks pass. No live theme publication.
 

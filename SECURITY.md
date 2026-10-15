@@ -22,6 +22,8 @@ Syncee lists customer contact/address and device/activity access, and Products/O
 
 October 14 registry audit: zero high/critical, one moderate and one low advisory, both under development-only Shopify CLI:
 
+An October 15 `pnpm audit --audit-level high` recheck also exited successfully with zero high/critical findings and two lower-severity findings (one low, one moderate). No dependency upgrade or permission change was made during the storefront bug sweep.
+
 - `sprintf-js@1.1.3` via `global-agent/roarr`: [precision denial of service](https://github.com/advisories/GHSA-hp3w-g68c-fv3c). Registry suggested >=1.1.4, but that version was unavailable and GitHub listed no patch. No nonexistent patch/unreviewed replacement was forced into the lockfile.
 - `esbuild@0.27.4`: [Windows development-server file read](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr); registry lists >=0.28.1 as patched. Local/CI environments are macOS/Linux; Windows remediation remains open. Do not publicly expose development servers; review a compatible upstream upgrade before Windows use.
 

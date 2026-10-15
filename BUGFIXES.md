@@ -4,6 +4,10 @@ The initial fixes were based on `origin/main` at `5ddc954` and merged through PR
 
 ## Fixed
 
+- Gallery magnifiers are clamped inside the image frame, with border-aware pixel alignment even when the lens stops at an edge.
+- Populated cart pages and drawers wrap long product/option names and totals on narrow screens; thumbnails keep a stable 92px square size instead of inheriting a stretched HTML height.
+- Newsletter timers wait for Search and My Garage drawers, preserving ongoing keyboard focus until those controls close.
+- Fallback Builds/blog/contact links retain locale prefixes, and cart API routes work whether the root has a trailing slash or not.
 - Changing a product variant updates its exact price, sale price, SKU, stock status, image, URL, purchase buttons, and restock request.
 - Products requiring variant selection link to Choose options instead of adding the first variant automatically.
 - The product gallery includes every image instead of stopping at five.
@@ -32,7 +36,7 @@ The initial fixes were based on `origin/main` at `5ddc954` and merged through PR
 
 ## Verification
 
-All 97 checks pass: 75 browser regressions, eight accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Desktop and mobile fixture screenshots were inspected, including garage, Builds and product pages at 320, 390, 768, 1024 and 1440 pixels. Legacy supplier description coverage checks badge visibility, responsive video wrappers, retained fitment warnings, full-width aligned fitment guides and no-JavaScript rendering. The product-information row also has 320-1920px coverage for full-width positioning, accordion interaction and relocated SKU updates. Alternate card images share the primary image's bounded grid cell; hover framing, transition reset and stable dimensions are covered on collection, search and related cards with normal/reduced motion.
+All 103 checks pass: 80 browser regressions, nine accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Desktop and mobile fixture screenshots were inspected, including garage, Builds and product pages at 320, 390, 768, 1024 and 1440 pixels. Legacy supplier description coverage checks badge visibility, responsive video wrappers, retained fitment warnings, full-width aligned fitment guides and no-JavaScript rendering. The product-information row also has 320-1920px coverage for full-width positioning, accordion interaction and relocated SKU updates. Alternate card images share the primary image's bounded grid cell; hover framing, transition reset and stable dimensions are covered on collection, search and related cards with normal/reduced motion. Audit follow-ups cover gallery edges/pixel alignment, populated-cart bounds and thumbnail sizing, drawer interruption timing and locale-safe routes.
 
 ```sh
 pnpm install --frozen-lockfile

@@ -1,6 +1,11 @@
 {%- assign dropdown_label = label | default: 'Contacts' -%}
-{%- assign returns_url = routes.root_url | append: 'pages/shipping-returns' -%}
-{%- assign contact_url = routes.root_url | append: 'pages/contact' -%}
+{%- assign contact_root = routes.root_url | default: '/' -%}
+{%- assign contact_root_last = contact_root | slice: -1, 1 -%}
+{%- unless contact_root_last == '/' -%}
+  {%- assign contact_root = contact_root | append: '/' -%}
+{%- endunless -%}
+{%- assign returns_url = contact_root | append: 'pages/shipping-returns' -%}
+{%- assign contact_url = contact_root | append: 'pages/contact' -%}
 {%- if pages['contact'] != blank -%}
   {%- assign contact_url = pages['contact'].url -%}
 {%- endif -%}
