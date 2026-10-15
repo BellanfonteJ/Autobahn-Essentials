@@ -129,7 +129,10 @@ async function renderPage(options = {}) {
   const template = options.template || 'product';
   const name = { page: 'main-page', builds: 'page-builds-autobahn', product: 'main-product', index: 'hero-autobahn', collection: 'main-collection-product-grid', search: 'main-search', cart: 'main-cart-items', contact: 'page-contact-autobahn', returns: 'page-returns-autobahn', fitment: 'page-fitment-autobahn', password: 'main-password', article: 'main-article', blog: 'main-blog', '404': 'main-404' }[template];
   const popupSettings = { ...config.sections['popup-newsletter'].settings, enabled: Boolean(options.popup), delay_seconds: options.popupDelay ?? 30 };
-  let content = await renderSection(name, ctx, { settings: options.sectionSettings || {} });
+  // Shopify renders policy markup itself; fixtures mirror its observed native wrappers.
+  let content = template === 'policy'
+    ? `<style>.shopify-policy__container { max-width: 560px; margin: 0 auto; padding: 40px 20px; } .shopify-policy__title { text-align: center; }</style><div class="shopify-policy__container"><div class="shopify-policy__title"><h1>${escape(options.policy?.title || 'Refund policy')}</h1></div><div class="shopify-policy__body"><div class="rte">${options.policy?.body || ''}</div></div></div>`
+    : await renderSection(name, ctx, { settings: options.sectionSettings || {} });
   if (options.finder) content += await renderSection('vehicle-finder', ctx);
   if (options.cards) {
     const card = await engine.renderFile('product-card', { ...ctx, product: ctx.product });

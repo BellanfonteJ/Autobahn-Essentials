@@ -92,6 +92,17 @@ test('returns feedback and expanded guidance pass axe on mobile and desktop', as
   }
 });
 
+test('native refund policy layout passes axe on mobile and desktop without blank spacer headings', async () => {
+  for (const width of [320, 1440]) {
+    const session = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+    try {
+      const page = await session.newPage();
+      await mount(page, { template: 'policy', request: { path: '/policies/refund-policy' }, policy: { title: 'Refund policy', body: '<p>Existing merchant policy content.</p><h2><br></h2><h2>Return review</h2><p>Contact our support team before shipping an item.</p><ul><li>Keep the order confirmation.</li></ul>' }, pages: { contact: { url: '/pages/contact' } } });
+      await audit(page, `Native refund policy at ${width}px`);
+    } finally { await session.close(); }
+  }
+});
+
 test('search, garage, gallery, cart and newsletter dialogs pass axe when opened', async () => {
   const session = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await session.newPage();

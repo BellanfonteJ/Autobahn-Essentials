@@ -4180,6 +4180,138 @@ body.is-gallery-lightbox-open {
   }
 }
 
+.ae-refund-policy-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  grid-template-areas: "eyebrow eyebrow" "title title" "body support";
+  gap: 0 56px;
+  align-items: start;
+}
+
+.ae-refund-policy-eyebrow {
+  grid-area: eyebrow;
+  padding-top: 12px;
+}
+
+.ae-refund-policy-page .shopify-policy__container {
+  display: contents;
+}
+
+.ae-refund-policy-page .shopify-policy__title {
+  grid-area: title;
+  min-width: 0;
+  margin: 0 0 32px;
+  padding: 0 0 28px;
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+}
+
+.ae-refund-policy-page .shopify-policy__title h1 {
+  margin: 8px 0 0;
+  font-size: 40px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.ae-refund-policy-page .shopify-policy__body {
+  grid-area: body;
+  min-width: 0;
+  color: #c5c5c5;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.ae-refund-policy-page .rte {
+  color: inherit;
+}
+
+.ae-refund-policy-page .rte p {
+  margin: 0 0 18px;
+}
+
+.ae-refund-policy-page .rte :is(h1, h2, h3, h4, h5, h6) {
+  margin: 28px 0 12px;
+  color: var(--color-text);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.ae-refund-policy-page .rte :is(h1, h2) {
+  font-size: 22px;
+}
+
+.ae-refund-policy-page .rte :is(h3, h4, h5, h6) {
+  font-size: 18px;
+}
+
+.ae-refund-policy-page .rte strong {
+  color: var(--color-text);
+}
+
+.ae-refund-policy-page .rte :is(ul, ol) {
+  margin: 12px 0 22px;
+  padding-left: 22px;
+}
+
+.ae-refund-policy-page .rte li + li {
+  margin-top: 8px;
+}
+
+.ae-refund-policy-page .rte li p {
+  margin-bottom: 0;
+}
+
+.ae-refund-policy-page .rte :is(img, iframe, video) {
+  max-width: 100%;
+}
+
+.ae-refund-policy-page .rte :is(img, video) {
+  height: auto;
+}
+
+.ae-refund-policy-page .rte table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.ae-refund-policy-page .rte :is(th, td) {
+  padding: 12px;
+  border: 1px solid var(--color-line);
+  text-align: left;
+}
+
+.ae-refund-policy-support {
+  grid-area: support;
+}
+
+@media (max-width: 900px) {
+  .ae-refund-policy-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "eyebrow" "title" "body" "support";
+  }
+
+  .ae-refund-policy-support {
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ae-refund-policy-eyebrow {
+    padding-top: 4px;
+  }
+
+  .ae-refund-policy-page .shopify-policy__title {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+  }
+
+  .ae-refund-policy-page .shopify-policy__title h1 {
+    font-size: 32px;
+  }
+}
+
 .ae-form-status {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-left: 4px solid var(--color-accent);
