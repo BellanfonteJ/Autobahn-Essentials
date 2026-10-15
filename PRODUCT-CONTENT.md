@@ -1,6 +1,6 @@
 # Product Content Setup
 
-The draft product template puts real photography beside purchase controls on desktop and keeps the gallery first on mobile. Long descriptions occupy a dedicated full-width reading section below those controls instead of the purchase column. Product-specific CSS loads only on product templates. Descriptions retain their content/order; headings, spacing, media and tables are styled without rewriting supplier HTML.
+The draft product template puts real photography beside purchase controls on desktop and keeps the gallery first on mobile. Specs, Fitment, Shipping and app blocks occupy a full-width row below both columns so they do not leave a large empty area beneath the gallery. Variant SKU updates remain scoped to the same product. Long descriptions follow in a dedicated full-width reading section instead of the purchase column. Product-specific CSS loads only on product templates. Descriptions retain their content/order; headings, spacing, media and tables are styled without rewriting supplier HTML.
 
 Legacy supplier tab lists have their nested indentation removed, badge images share a wrapping row, and legacy video wrappers use a bounded responsive player. Description headings use restrained body typography and section dividers; fitment tables have subtle row shading. Only redundant presentation line breaks are collapsed; supplier claims and compatibility notes remain intact.
 

@@ -142,6 +142,40 @@ test('product gallery and purchase controls share the desktop viewport and resou
   }
 });
 
+test('product information follows both gallery and purchase columns instead of extending only the purchase column', async () => {
+  for (const width of [320, 390, 768, 1024, 1440, 1920]) {
+    for (const javaScriptEnabled of [true, false]) {
+      await withPage({ viewport: { width, height: 1000 }, javaScriptEnabled }, async page => {
+        const gallery = await page.locator('.product-gallery').boundingBox();
+        const purchase = await page.locator('[data-product-info]').boundingBox();
+        const information = page.locator('.product-information');
+        const panels = await information.boundingBox();
+        const productPage = await page.locator('.product-page').boundingBox();
+        assert.equal(await page.locator('[data-product-info] .product-tabs').count(), 0);
+        assert.equal(await information.locator('details').count(), 3);
+        assert.ok(panels.y >= Math.max(gallery.y + gallery.height, purchase.y + purchase.height));
+        assert.ok(panels.y - Math.max(gallery.y + gallery.height, purchase.y + purchase.height) <= 49, 'Panels follow the taller column without an extra spacer');
+        assert.ok(Math.abs(panels.width - productPage.width) < 1, 'Panels span both columns');
+        const description = await page.locator('.product-details').boundingBox();
+        assert.ok(description.y >= panels.y + panels.height);
+        await information.getByText('Fitment', { exact: true }).click();
+        await information.getByText('Shipping', { exact: true }).click();
+        assert.equal(await information.locator('details[open]').count(), 3);
+        if (javaScriptEnabled) {
+          await page.locator('select[name="id"]').selectOption('102');
+          assert.equal(await information.locator('[data-product-sku]').textContent(), 'AE-PREMIUM');
+        }
+        assert.equal(await page.locator('html').evaluate(node => node.scrollWidth <= innerWidth), true);
+        if (process.env.THEME_SCREENSHOTS && javaScriptEnabled) {
+          fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+          await information.locator('summary').first().scrollIntoViewIfNeeded();
+          await page.screenshot({ path: path.join(root, `.tools/screenshots/product-gap-fix-${width}.png`) });
+        }
+      });
+    }
+  }
+});
+
 test('supplier alias display is consistent on cards and product specs while other brands remain escaped', async () => {
   for (const vendor of ['armmotorsports', 'ARM Motorsports']) {
     await withPage({ cards: true, product: { vendor } }, async (page) => {

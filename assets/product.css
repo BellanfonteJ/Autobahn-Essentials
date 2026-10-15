@@ -13,6 +13,15 @@
   line-height: 1.12;
 }
 
+.product-information {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.product-information .product-tabs {
+  margin-top: 0;
+}
+
 .product-details {
   grid-column: 1 / -1;
   width: 100%;

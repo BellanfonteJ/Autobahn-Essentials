@@ -601,6 +601,8 @@ document.querySelectorAll('[data-product-info]').forEach((info) => {
   const variantData = info.querySelector('[data-product-variants]');
   if (!select || !variantData) return;
   const variants = JSON.parse(variantData.content.textContent);
+  const productPage = info.closest('.product-page');
+  const sku = productPage.querySelector('[data-product-sku]');
 
   select.addEventListener('change', () => {
     const variant = variants.find((item) => String(item.id) === select.value);
@@ -613,7 +615,7 @@ document.querySelectorAll('[data-product-info]').forEach((info) => {
     const stock = info.querySelector('[data-product-stock]');
     stock.querySelector('.stock-counter__dot').className = `stock-counter__dot${variant.stockState === 'available' ? '' : ` stock-counter__dot--${variant.stockState}`}`;
     stock.querySelector('span:last-child').textContent = variant.stockLabel;
-    info.querySelector('[data-product-sku]').textContent = variant.sku;
+    if (sku) sku.textContent = variant.sku;
     const notification = info.querySelector('[data-back-in-stock]');
     notification.hidden = variant.available;
     const body = notification.querySelector('[name="contact[body]"]');
@@ -622,7 +624,7 @@ document.querySelectorAll('[data-product-info]').forEach((info) => {
     if (payment) payment.hidden = !variant.available;
     const error = form.querySelector('[data-product-error]');
     if (error) error.hidden = true;
-    const thumb = Array.from(info.closest('.product-page').querySelectorAll('[data-gallery-thumb]'))
+    const thumb = Array.from(productPage.querySelectorAll('[data-gallery-thumb]'))
       .find((item) => item.dataset.mediaId === String(variant.imageId));
     thumb?.click();
     const url = new URL(window.location.href);

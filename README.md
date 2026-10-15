@@ -26,6 +26,10 @@ The development command does not publish the live theme. However, pushes to a Sh
 
 The theme updates are maintained on `codex/theme-bug-fixes` in [slimeraps/Autobahn-Essentials](https://github.com/slimeraps/Autobahn-Essentials/tree/codex/theme-bug-fixes). The garage work was merged through PR #49, and the collection, footer and Builds modernization through PR #50 (`main` at `ea81ab2`, verified by fetch October 14). The earlier motion and close-icon fixes were merged through PR #48. The newest enterprise, description and fitment-guide changes are a separate review-branch update, not a main merge or live publication.
 
+### October 15 Review Status
+
+The latest review-branch update removes the large empty area below the product gallery. Specs, Fitment, Shipping and app blocks now span the page below both gallery/purchase columns. Mobile reading order, native accordions and variant-specific SKU updates are preserved. All 96 local checks, Shopify Theme Check and packaging pass. This update is included on `codex/theme-bug-fixes`; it does not merge into main or publish the live Shopify theme.
+
 ### October 14 Review Status
 
 The earlier theme modernization was pushed in [commit `576c3ae`](https://github.com/slimeraps/Autobahn-Essentials/commit/576c3ae) and subsequently merged through PR #50. [Review the newest branch changes against main](https://github.com/slimeraps/Autobahn-Essentials/compare/main...codex/theme-bug-fixes). The latest review-branch batch includes enterprise-readiness items 1-7, full-width description cleanup and the responsive fitment guide. Verification passed all 95 tests, Shopify Theme Check and theme packaging.
@@ -52,7 +56,7 @@ pnpm test
 pnpm theme:package
 ```
 
-The current suite has 95 checks: 73 browser regressions, eight accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content, single close icons, canonical brand labels, source links and grouped Brand filter IDs. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
+The current suite has 96 checks: 74 browser regressions, eight accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content, single close icons, canonical brand labels, source links and grouped Brand filter IDs. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
 
 Tests use installed Google Chrome on macOS or Playwright Chromium. If neither is available, run `pnpm exec playwright install chromium`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for another compatible Chromium installation. Set `THEME_SCREENSHOTS=1` to capture test screenshots in the ignored `.tools/screenshots/` folder.
 
@@ -119,8 +123,13 @@ The current `135i-5-intercooler-fmic` description was backed up locally and its 
 
 ## Changelog
 
+### October 15, 2026
+
+- Pushed the product-page spacing follow-up and updated README/release documentation on the review branch. Specs, Fitment, Shipping and app blocks sit below both columns, removing the large empty area beside the panels. Added 320-1920px layout, accordion and variant-SKU regression coverage with and without JavaScript; all 96 checks pass. No live theme publication.
+
 ### October 14, 2026
 
+- Removed the large empty area below the desktop gallery by moving Specs, Fitment, Shipping and app blocks into a full-width row after the gallery/purchase area. Retained mobile reading order, native accordions and variant SKU updates. This 96-check follow-up is on the unpublished preview and included in the October 15 review-branch push.
 - Included all pending enterprise-readiness, description and fitment-guide improvements in the GitHub review-branch update. README and release runbooks reflect 95 passing checks and distinguish the unpublished preview from a live release. Private exports, local backups, screenshots, CLI state and generated ZIPs are excluded.
 - Fixed the long product description being squeezed into the purchase column. Added a dedicated full-width reading section with readable headings/spacing, bounded media/tables and unchanged original content/order. Responsive regression coverage brings the suite to 93; changes remain on the unpublished preview and review branch.
 - Cleaned up legacy supplier description formatting with compact wrapping badges, restrained heading typography/dividers, responsive video wrappers and subtle fitment row shading. Product content stays unchanged; no-JavaScript responsive coverage brings the suite to 94.
