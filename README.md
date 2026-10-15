@@ -28,7 +28,7 @@ The theme updates are maintained on `codex/theme-bug-fixes` in [slimeraps/Autoba
 
 ### October 15 Review Status
 
-The latest review-branch update removes the large empty area below the product gallery. Specs, Fitment, Shipping and app blocks now span the page below both gallery/purchase columns. Mobile reading order, native accordions and variant-specific SKU updates are preserved. All 96 local checks, Shopify Theme Check and packaging pass. This update is included on `codex/theme-bug-fixes`; it does not merge into main or publish the live Shopify theme.
+The latest review-branch updates remove the large empty area below the product gallery and keep alternate card images inside their frame on hover. Specs, Fitment, Shipping and app blocks span the page below both gallery/purchase columns. Mobile reading order, native accordions, variant-specific SKU updates and hover transitions are preserved. All 97 local checks, Shopify Theme Check and packaging pass. These updates are included on `codex/theme-bug-fixes`; they do not merge into main or publish the live Shopify theme.
 
 ### October 14 Review Status
 
@@ -56,7 +56,7 @@ pnpm test
 pnpm theme:package
 ```
 
-The current suite has 96 checks: 74 browser regressions, eight accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content, single close icons, canonical brand labels, source links and grouped Brand filter IDs. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
+The current suite has 97 checks: 75 browser regressions, eight accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Browser tests render the real Liquid source with representative Shopify data and mocked cart/section responses. They cover variants, cart failures and quantities, keyboard focus, escaping, structured garage matching, pagination failures, responsive layouts, normal/reduced motion, theme-editor section reloads, footer fallbacks, Builds content, single close icons, canonical brand labels, source links and grouped Brand filter IDs. Python checks require Python 3; set `PYTHON_EXECUTABLE` to select another installation.
 
 Tests use installed Google Chrome on macOS or Playwright Chromium. If neither is available, run `pnpm exec playwright install chromium`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for another compatible Chromium installation. Set `THEME_SCREENSHOTS=1` to capture test screenshots in the ignored `.tools/screenshots/` folder.
 
@@ -125,6 +125,7 @@ The current `135i-5-intercooler-fmic` description was backed up locally and its 
 
 ### October 15, 2026
 
+- Fixed alternate product-card images extending outside their frame on hover: a more-specific 100% image-size rule overrode the absolute image's auto sizing while its inset remained. Primary and alternate images now share one bounded grid cell, preserving containment, the image transition and card dimensions. Coverage checks collection, search and related cards at 320-1440px with normal/reduced motion. This 97-check follow-up is included in the review-branch push and unpublished preview, not a live release.
 - Pushed the product-page spacing follow-up and updated README/release documentation on the review branch. Specs, Fitment, Shipping and app blocks sit below both columns, removing the large empty area beside the panels. Added 320-1920px layout, accordion and variant-SKU regression coverage with and without JavaScript; all 96 checks pass. No live theme publication.
 
 ### October 14, 2026

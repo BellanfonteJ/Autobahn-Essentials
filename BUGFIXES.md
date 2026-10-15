@@ -32,7 +32,7 @@ The initial fixes were based on `origin/main` at `5ddc954` and merged through PR
 
 ## Verification
 
-All 96 checks pass: 74 browser regressions, eight accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Desktop and mobile fixture screenshots were inspected, including garage, Builds and product pages at 320, 390, 768, 1024 and 1440 pixels. Legacy supplier description coverage checks badge visibility, responsive video wrappers, retained fitment warnings, full-width aligned fitment guides and no-JavaScript rendering. The product-information row also has 320-1920px coverage for full-width positioning, accordion interaction and relocated SKU updates.
+All 97 checks pass: 75 browser regressions, eight accessibility audits, seven CSV-import/source-review checks, three catalog audits, three performance budgets and one release-workflow check. Shopify Theme Check reports no errors or warnings. Desktop and mobile fixture screenshots were inspected, including garage, Builds and product pages at 320, 390, 768, 1024 and 1440 pixels. Legacy supplier description coverage checks badge visibility, responsive video wrappers, retained fitment warnings, full-width aligned fitment guides and no-JavaScript rendering. The product-information row also has 320-1920px coverage for full-width positioning, accordion interaction and relocated SKU updates. Alternate card images share the primary image's bounded grid cell; hover framing, transition reset and stable dimensions are covered on collection, search and related cards with normal/reduced motion.
 
 ```sh
 pnpm install --frozen-lockfile

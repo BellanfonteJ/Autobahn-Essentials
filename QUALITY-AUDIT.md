@@ -4,7 +4,7 @@ Checked October 14, 2026. This is a first-stage audit, not accessibility certifi
 
 ## Automated Gates
 
-- `pnpm test`: 96 checks including Liquid fixtures, source validation and release safeguards. Product-information positioning and accordion/SKU behavior are covered at 320-1920px with and without JavaScript.
+- `pnpm test`: 97 checks including Liquid fixtures, source validation and release safeguards. Product-information positioning and accordion/SKU behavior are covered at 320-1920px with and without JavaScript. Card hover-image alignment and bounds are covered at 320-1440px with normal/reduced motion on collection, search and related products.
 - `pnpm test:accessibility`: axe-core WCAG A/AA checks on homepage, product, collection, search, Builds and contact fixtures at 390/1440px; opened newsletter, search, garage, gallery, cart and native filter controls included.
 - `pnpm test:budgets`: first-party scripts <=40 KiB gzip and styles <=30 KiB gzip per representative template; scripts deferred, lead product media sized/responsive/eager, lightbox media deferred until opening.
 - Hero caps: 40/90/220 KiB for 640/1200/2400px WebP. Each local font <=45 KiB.

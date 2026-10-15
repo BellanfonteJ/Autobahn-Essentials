@@ -373,6 +373,45 @@ test('garage bar stays below the sticky header and follows its hidden and resize
   });
 });
 
+test('product-card hover previews share the primary image frame without cropping or layout shifts', async () => {
+  for (const template of ['collection', 'search', 'product']) {
+    for (const width of [320, 390, 768, 1024, 1440]) {
+      for (const reducedMotion of ['reduce', 'no-preference']) {
+        await withPage({ template, cards: template === 'product', viewport: { width, height: 1000 }, reducedMotion, observerUnavailable: true }, async page => {
+          const card = page.locator('[data-product-card]').first();
+          const media = card.locator('.product-card__media');
+          const primary = media.locator('img').first();
+          const alternate = media.locator('.product-card__image--hover');
+          await media.scrollIntoViewIfNeeded();
+          await page.waitForFunction(() => [...document.querySelectorAll('.product-card__media img')].every(image => image.complete && image.naturalWidth > 0));
+          const before = await media.boundingBox();
+          assert.equal(await alternate.evaluate(node => getComputedStyle(node).opacity), '0');
+          await card.hover();
+          await page.waitForFunction(() => getComputedStyle(document.querySelector('.product-card__image--hover')).opacity === '1');
+          const frame = await media.boundingBox();
+          const first = await primary.boundingBox();
+          const second = await alternate.boundingBox();
+          assert.ok(Math.abs(before.width - frame.width) < 1 && Math.abs(before.height - frame.height) < 1, 'Hover does not resize the media frame');
+          for (const image of [first, second]) {
+            assert.ok(image.x >= frame.x - 1 && image.y >= frame.y - 1 && image.x + image.width <= frame.x + frame.width + 1 && image.y + image.height <= frame.y + frame.height + 1, `${template} ${width}px ${reducedMotion}: image stays inside the frame`);
+          }
+          for (const dimension of ['x', 'y', 'width', 'height']) assert.ok(Math.abs(first[dimension] - second[dimension]) < 1, `Both images share ${dimension}`);
+          assert.equal(await alternate.evaluate(node => getComputedStyle(node).objectFit), 'contain');
+          await page.mouse.move(0, 0);
+          await page.waitForFunction(() => getComputedStyle(document.querySelector('.product-card__image--hover')).opacity === '0');
+          assert.equal(await page.locator('html').evaluate(node => node.scrollWidth <= innerWidth), true);
+          if (process.env.THEME_SCREENSHOTS && template === 'collection' && reducedMotion === 'no-preference') {
+            await card.hover();
+            await page.waitForFunction(() => getComputedStyle(document.querySelector('.product-card__image--hover')).opacity === '1');
+            fs.mkdirSync(path.join(root, '.tools/screenshots'), { recursive: true });
+            await page.screenshot({ path: path.join(root, `.tools/screenshots/product-card-hover-${width}.png`) });
+          }
+        });
+      }
+    }
+  }
+});
+
 test('collection layout, cards and mobile drawer fit all supported viewports with visible image pixels', async () => {
   for (const width of [320, 390, 768, 1024, 1440]) {
     const products = [
