@@ -1202,12 +1202,12 @@ test('mobile and desktop headers and hero fit their containers', async () => {
     await withPage({ template: 'index', viewport: { width, height: 900 } }, async (page) => {
       const metrics = await page.evaluate(() => {
         const logo = document.querySelector('.header-logo').getBoundingClientRect();
-        const actions = document.querySelector('.header-actions').getBoundingClientRect();
+        const actions = Array.from(document.querySelectorAll('.header-actions .icon-button'), element => element.getBoundingClientRect()).filter(rect => rect.width && rect.height).map(rect => ({ left: rect.left, right: rect.right }));
         const hero = document.querySelector('.hero__content').getBoundingClientRect();
         const lines = Array.from(document.querySelectorAll('.hero-typewriter__line'), (element) => element.getBoundingClientRect().right);
-        return { logoRight: logo.right, actionsLeft: actions.left, heroRight: hero.right, lines };
+        return { logoLeft: logo.left, logoRight: logo.right, actions, heroRight: hero.right, lines };
       });
-      assert.ok(metrics.logoRight <= metrics.actionsLeft + 1, `Header at ${width}px`);
+      assert.ok(metrics.actions.every(action => metrics.logoRight <= action.left + 1 || action.right <= metrics.logoLeft + 1), `Header at ${width}px`);
       assert.ok(metrics.lines.every((right) => right <= metrics.heroRight + 1), `Hero at ${width}px`);
       assert.ok(await page.locator('.hero__media img').evaluate((image) => image.complete && image.naturalWidth > 0 && image.currentSrc.includes('.webp')), 'Hero WebP loads');
       if (width < 991) {
