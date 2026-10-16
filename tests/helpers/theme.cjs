@@ -34,7 +34,15 @@ engine.registerFilter('t', (key, ...args) => {
 engine.registerFilter('payment_button', () => '<div class="shopify-payment-button"><button type="button">Buy now</button></div>');
 engine.registerFilter('metafield_tag', (value) => `<p>${escape(value?.value || value)}</p>`);
 engine.registerFilter('default_errors', () => '<p>Please enter a valid email.</p>');
-engine.registerFilter('default_pagination', () => '');
+// Mirror the observed native wrappers; Shopify generates the actual pagination HTML.
+engine.registerFilter('default_pagination', (paginate) => {
+  if (!paginate.parts) return '';
+  const link = (part) => `<a href="${escape(part.url)}" title="">${escape(part.title)}</a>`;
+  const parts = paginate.parts.map((part) => `<span class="${part.is_link || String(part.title) === String(paginate.current_page) ? 'page' : 'deco'}${String(part.title) === String(paginate.current_page) ? ' current' : ''}">${part.is_link ? link(part) : escape(part.title)}</span>`);
+  if (paginate.previous) parts.unshift(`<span class="prev">${link({ ...paginate.previous, title: paginate.previous.title || '\u00ab Previous' })}</span>`);
+  if (paginate.next) parts.push(`<span class="next">${link({ ...paginate.next, title: paginate.next.title || 'Next \u00bb' })}</span>`);
+  return parts.join(' ');
+});
 engine.registerFilter('placeholder_svg_tag', () => '<svg width="100" height="100" aria-hidden="true"></svg>');
 engine.registerFilter('link_to_tag', (value) => `<a href="/collections/bmw/${value}">${escape(value)}</a>`);
 

@@ -4412,18 +4412,33 @@ body.is-gallery-lightbox-open {
 
 .pagination {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
   gap: 10px;
   margin-top: 36px;
 }
 
+.pagination > span {
+  display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .pagination a,
-.pagination span {
-  min-width: 42px;
-  height: 42px;
+.pagination > .current,
+.pagination > .deco {
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 8px 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  line-height: 1.4;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.05);
