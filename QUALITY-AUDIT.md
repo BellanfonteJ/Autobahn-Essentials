@@ -1,8 +1,20 @@
 # Quality Audit
 
-Code/fixture checks updated October 15, 2026; native reports below were inspected October 14. This is a scoped audit, not accessibility certification, a guarantee of no remaining bugs or enterprise-readiness sign-off.
+Code/fixture checks documented through October 16, 2026; native reports below were inspected October 14. This is a scoped audit, not accessibility certification, a guarantee of no remaining bugs or enterprise-readiness sign-off.
 
 **Live follow-up, October 15 at 6:36:47 PM CDT:** Owner-authorized PR #8 merged the tested page designs into `BellanfonteJ/main` (`4be2e9a`); GitHub Theme Quality passed audit, Theme Check, tests and packaging. The public Refund policy layout was verified without preview cookies. The owner subsequently requested using the new request page for Returns: Shopify page 166812319801 is now Visible with the dedicated `returns` template. Exited draft preview and followed the live Contacts > Returns link to `/pages/returns`; the form, 14-day window and support guidance render, and the footer uses the same destination. No real request/email or financial operation was performed. This Admin-only configuration required no theme-code change, so tests were not rerun for this documentation update; the last complete local run passed all 147 checks. Earlier draft/hidden-state notes below are historical. Policy wording conflicts and inbox delivery remain unresolved.
+
+## Shipping Policy Follow-Up
+
+**October 15, 2026, local/unpublished draft only:** Styled the actual `/policies/shipping-policy` route to match Contact Us, Returns and the native Refund policy. Shared `.ae-policy-*` styles now provide the compact title, bounded reading column, readable merchant headings/lists/media and desktop support sidebar with stacked phone layout. The sidebar uses the real store email, simple tracking guidance and only supplied Contact/Returns/Refund links. No delivery deadline, rate, fee, destination or policy body was changed. Other native policies remain outside this styling; the Refund policy keeps the same layout and behavior.
+
+**GitHub update, October 16 at 12:17:32 AM CDT:** Included this redesign, tests and timestamped documentation in the `codex/seo-foundations` update for BellanfonteJ and slimeraps. No main-branch merge or live theme publication is included; the draft target remains 167398703161.
+
+Five shipping regression groups cover 320-1440px, JavaScript/no-JavaScript rendering, original HTML/links/terms, localized/exact route scope, keyboard links, missing resources, long references/email/media/tables and empty-heading cleanup without hiding meaningful headings. A fifteenth standalone axe group covers the shipping page at 320/1440px. The focused policy/accessibility run passed 25/25, followed by a complete **167/167** run with no failures, cancellations or skipped checks.
+
+The real hosted draft was checked at 1280px and a measured 390x844 viewport. The shipping policy's original 2,224-character text, entire body markup and link list matched exactly after the change, and the phone document had no horizontal overflow. Original merchant processing/delivery/claim windows were retained, not verified as operational promises. The new sidebar adds no form, order lookup or tracking API. No message, customer-data submission, policy-setting edit or live release occurred. Screenshots remain ignored local output.
+
+Shopify CLI Theme Check is clean and packaging passed. The separate Shopify AI Toolkit validator could not start because its bundled `@shopify/theme-check-common` dependency is missing; its docs search also failed, so official Shopify Liquid/policy and performance documentation was checked directly instead. CLI Theme Check and browser regression tests provide the working validation path; the plugin cache was not modified to repair the helper.
 
 ## Mobile Experience Follow-Up
 
@@ -18,8 +30,8 @@ Actual Lighthouse mobile measurements informed offscreen supplier-media deferral
 
 ## Automated Gates
 
-- `pnpm test`: 161 checks including 11 mobile experience groups, three pagination browser groups, eight contact browser groups, seven returns browser groups, five native refund-policy browser groups, 12 multi-car garage groups, seven SEO browser groups, Liquid fixtures, source validation and release safeguards. Product-information positioning and accordion/SKU behavior are covered at 320-1920px with and without JavaScript. Card hover-image alignment and bounds are covered at 320-1440px with normal/reduced motion on collection, search and related products.
-- `pnpm test:accessibility`: fourteen axe-core WCAG A/AA checks, covering homepage, product, collection, search, Builds, contact and returns fixtures at 390/1440px plus the native refund policy, populated cart pages/drawers, saved multi-car garage/edit controls, contact error/success states and returns feedback/expanded guidance at 320/1440px; opened newsletter, search, gallery, cart and native filter controls included.
+- `pnpm test`: 167 checks including five shipping-policy groups, 11 mobile experience groups, three pagination browser groups, eight contact browser groups, seven returns browser groups, five native refund-policy browser groups, 12 multi-car garage groups, seven SEO browser groups, Liquid fixtures, source validation and release safeguards. Product-information positioning and accordion/SKU behavior are covered at 320-1920px with and without JavaScript. Card hover-image alignment and bounds are covered at 320-1440px with normal/reduced motion on collection, search and related products.
+- `pnpm test:accessibility`: fifteen axe-core WCAG A/AA checks, covering homepage, product, collection, search, Builds, contact and returns fixtures at 390/1440px plus the native refund/shipping policies, populated cart pages/drawers, saved multi-car garage/edit controls, contact error/success states and returns feedback/expanded guidance at 320/1440px; opened newsletter, search, gallery, cart and native filter controls included.
 - `pnpm test:budgets`: first-party scripts <=40 KiB gzip and styles <=30 KiB gzip per representative template; scripts deferred, lead product media sized/responsive/eager, lightbox media deferred until opening.
 - Hero caps: 40/90/220 KiB for 640/1200/2400px WebP. Each local font <=45 KiB.
 - Product layout/resource bounds tested at 320, 390, 768, 1024 and 1440px, alongside existing reduced-motion, failure, escaping and keyboard checks.

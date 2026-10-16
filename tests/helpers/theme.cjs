@@ -13,6 +13,15 @@ const escape = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
 const hashes = (args) => Object.fromEntries(args.filter(Array.isArray));
 
 const engine = new Liquid({ root: path.join(root, 'snippets'), extname: '.liquid' });
+engine.registerTag('doc', {
+  parse(token, tokens) {
+    const stream = this.liquid.parser.parseStream(tokens)
+      .on('token', token => { if (token.name === 'enddoc') stream.stop(); })
+      .on('end', () => { throw new Error('Unclosed LiquidDoc block'); });
+    stream.start();
+  },
+  render() { return ''; },
+});
 engine.registerFilter('json', (value) => JSON.stringify(value ?? null));
 // Shopify supplies this filter; fixtures verify delegation, not Shopify's schema generator.
 engine.registerFilter('structured_data', (value) => JSON.stringify(value._structuredData));

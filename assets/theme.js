@@ -1,7 +1,7 @@
 document.documentElement.classList.remove('no-js');
 
 // Native Shopify policies can contain empty headings used only as spacers.
-document.querySelectorAll('.ae-refund-policy-page .shopify-policy__body :is(h1, h2, h3, h4, h5, h6)').forEach((heading) => {
+document.querySelectorAll('.ae-policy-page .shopify-policy__body :is(h1, h2, h3, h4, h5, h6)').forEach((heading) => {
   if (!heading.textContent.trim() && Array.from(heading.children).every((child) => child.tagName === 'BR')) {
     heading.hidden = true;
   }

@@ -73,7 +73,8 @@ test('only the refund-policy route is enhanced, including localized policy paths
     await withPolicy({ request: { path: policyPath }, routes: { root_url: '/fr/' } }, async page => {
       const expected = ['/policies/refund-policy', '/fr/policies/refund-policy'].includes(policyPath);
       assert.equal(await page.locator('.ae-refund-policy-page').count(), expected ? 1 : 0, policyPath);
-      assert.equal(await page.locator('.shopify-policy__body h2[hidden]').count(), expected ? 1 : 0, policyPath);
+      const styledPolicy = expected || policyPath === '/policies/shipping-policy';
+      assert.equal(await page.locator('.shopify-policy__body h2[hidden]').count(), styledPolicy ? 1 : 0, policyPath);
       if (expected) assert.equal(await page.locator('[aria-label="Breadcrumbs"] a').getAttribute('href'), '/fr/');
     });
   }

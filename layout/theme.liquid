@@ -84,6 +84,8 @@
       {%- assign policy_route_handle = request.path | split: '/' | last -%}
       {%- if policy_route_handle == 'refund-policy' and request.path contains '/policies/' -%}
         {% render 'refund-policy-content', policy_content: content_for_layout %}
+      {%- elsif policy_route_handle == 'shipping-policy' and request.path contains '/policies/' -%}
+        {% render 'shipping-policy-content', policy_content: content_for_layout %}
       {%- else -%}
         {{ content_for_layout }}
       {%- endif -%}
