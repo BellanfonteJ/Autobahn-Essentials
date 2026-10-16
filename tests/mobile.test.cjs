@@ -52,7 +52,24 @@ test('mobile header has compact, nonoverlapping 44px targets without losing desk
     for (const javaScriptEnabled of [true, false]) {
       await withPage({ context: { viewport: { width, height: 844 }, javaScriptEnabled } }, async page => {
         await bounded(page);
-        if (width > 640) return;
+        const position = await page.locator('.site-header__inner').evaluate(node => {
+          const box = selector => {
+            const rect = node.querySelector(selector).getBoundingClientRect();
+            return { x: rect.x, right: rect.right, center: rect.x + rect.width / 2 };
+          };
+          return { menu: box('[data-menu-toggle]'), garage: box('[data-garage-toggle]'), logo: box('.header-logo'), search: box('[data-search-toggle]'), cart: box('.cart-toggle'), center: node.getBoundingClientRect().x + node.getBoundingClientRect().width / 2 };
+        });
+        if (width > 640) {
+          if (javaScriptEnabled) assert.ok(position.garage.x >= position.logo.right, `Garage stays on the right at ${width}px`);
+          return;
+        }
+        if (javaScriptEnabled) {
+          assert.ok(position.menu.right <= position.garage.x);
+          assert.ok(position.garage.right <= position.logo.x);
+          assert.ok(position.logo.right <= position.search.x);
+          assert.ok(position.search.right <= position.cart.x);
+          assert.ok(Math.abs(position.logo.center - position.center) < 1, `Logo is centered at ${width}px`);
+        }
         const boxes = await page.locator('.mobile-menu-trigger, .header-logo, .header-actions .icon-button').evaluateAll(nodes => nodes.filter(node => node.getClientRects().length && getComputedStyle(node).visibility !== 'hidden').map(node => {
           const r = node.getBoundingClientRect();
           return { x: r.x, right: r.right, width: r.width, height: r.height, name: node.className };
@@ -60,7 +77,13 @@ test('mobile header has compact, nonoverlapping 44px targets without losing desk
         for (const box of boxes) assert.ok(box.width >= 44 && box.height >= 44, box.name);
         for (let i = 0; i < boxes.length; i++) for (const other of boxes.slice(i + 1)) assert.ok(boxes[i].right <= other.x + 1 || other.right <= boxes[i].x + 1, `${boxes[i].name} overlaps ${other.name}`);
         if (javaScriptEnabled) assert.ok(await page.locator('.site-header').evaluate(node => node.getBoundingClientRect().height) <= 62);
-        if (javaScriptEnabled) await saveScreenshot(page, `header-${width}`);
+        if (javaScriptEnabled) {
+          await saveScreenshot(page, `header-${width}`);
+          await page.locator('[data-garage-toggle]').click();
+          assert.equal(await page.locator('[data-garage-drawer]').getAttribute('aria-hidden'), 'false');
+          await page.keyboard.press('Escape');
+          assert.equal(await page.locator('[data-garage-toggle]').evaluate(node => node === document.activeElement), true);
+        }
       });
     }
   }
