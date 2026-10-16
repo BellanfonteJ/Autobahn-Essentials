@@ -38,6 +38,14 @@
       </div>
 
       {%- if gallery_images.size > 1 -%}
+        <div class="product-gallery__inline-nav" data-gallery-inline-controls hidden>
+          <button class="icon-button" type="button" data-gallery-inline-prev aria-label="Previous product image" title="Previous product image">{% render 'icon', icon: 'arrow' %}</button>
+          <span data-gallery-inline-status role="status" aria-label="Product image">1 / {{ gallery_images.size }}</span>
+          <button class="icon-button" type="button" data-gallery-inline-next aria-label="Next product image" title="Next product image">{% render 'icon', icon: 'arrow' %}</button>
+        </div>
+      {%- endif -%}
+
+      {%- if gallery_images.size > 1 -%}
         <div class="product-thumbs">
           {%- for media in gallery_images -%}
             {%- assign thumb_image = media.preview_image -%}
@@ -132,7 +140,8 @@
       </div>
       {% render 'fitment-badge', product: product, context: 'product' %}
 
-      {%- form 'product', product, class: 'product-form', data-product-form: '', data-variant-available: current_variant.available -%}
+      {%- assign product_form_id = 'ProductForm-' | append: section.id -%}
+      {%- form 'product', product, id: product_form_id, class: 'product-form', data-product-form: '', data-variant-available: current_variant.available -%}
         {%- if product.has_only_default_variant -%}
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
         {%- else -%}
@@ -167,6 +176,13 @@
         <div data-product-payment{% unless current_variant.available %} hidden{% endunless %}>{{ form | payment_button }}</div>
         <p class="form-error" data-product-error role="alert" hidden></p>
       {%- endform -%}
+
+      <div class="mobile-purchase" data-mobile-purchase role="region" aria-label="Purchase {{ product.title | escape }}" hidden>
+        <div class="mobile-purchase__price" data-mobile-purchase-price>{% render 'price', product: product, use_variant: true %}</div>
+        <button class="button" type="submit" form="{{ product_form_id }}" data-mobile-purchase-submit{% unless current_variant.available %} disabled{% endunless %}>{{ 'products.product.add_to_cart' | t }}</button>
+        {%- unless product.has_only_default_variant -%}<button class="mobile-purchase__variant" type="button" data-mobile-purchase-variant aria-label="Change selected product option">{{ current_variant.title | escape }}</button>{%- endunless -%}
+        <p class="form-error" data-mobile-purchase-error hidden></p>
+      </div>
 
       {%- capture product_variants_json -%}
         [
@@ -308,7 +324,7 @@
     {%- if product.description != blank -%}
       <section class="product-details" aria-labelledby="ProductDescription-{{ section.id }}">
         <h2 class="product-details__heading" id="ProductDescription-{{ section.id }}">{{ 'products.product.description' | t }}</h2>
-        <div class="rte product-description" data-product-description>{{ product.description }}</div>
+        <div class="rte product-description" data-product-description><template data-product-content>{{ product.description }}</template><noscript>{{ product.description }}</noscript></div>
       </section>
     {%- endif -%}
   </div>

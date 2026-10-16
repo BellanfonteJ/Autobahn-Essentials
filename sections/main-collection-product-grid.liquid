@@ -2,6 +2,13 @@
 {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 {%- assign has_filters = false -%}
 {%- if collection.filters.size > 0 -%}{%- assign has_filters = true -%}{%- endif -%}
+{%- assign active_filter_count = 0 -%}
+{%- for filter in collection.filters -%}
+  {%- assign active_filter_count = active_filter_count | plus: filter.active_values.size -%}
+  {%- if filter.type == 'price_range' -%}
+    {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}{%- assign active_filter_count = active_filter_count | plus: 1 -%}{%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
 
 <section class="section collection-browser">
   <div class="page-width">
@@ -14,17 +21,18 @@
     </div>
 
     <div class="collection-browser__toolbar">
-      {%- if has_filters -%}
-        <button class="button button--secondary collection-browser__filter-open" type="button" data-facet-open aria-expanded="false" aria-controls="CollectionFilters-{{ section.id }}">
-          {% render 'icon', icon: 'menu' %} {{ 'collections.filters.title' | t }}
-        </button>
-      {%- endif -%}
       <form class="collection-browser__search" action="{{ routes.search_url }}" method="get" role="search">
         <input type="hidden" name="type" value="product">
         <label class="visually-hidden" for="CollectionSearchQuery">{{ 'general.search.search' | t }}</label>
         <input id="CollectionSearchQuery" class="field" type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}">
         <button class="icon-button" type="submit" aria-label="{{ 'general.search.submit' | t }}" title="{{ 'general.search.submit' | t }}">{% render 'icon', icon: 'search' %}</button>
       </form>
+      <div class="collection-browser__tools">
+      {%- if has_filters -%}
+        <button class="button button--secondary collection-browser__filter-open" type="button" data-facet-open aria-expanded="false" aria-controls="CollectionFilters-{{ section.id }}">
+          {% render 'icon', icon: 'menu' %} {{ 'collections.filters.title' | t }}{% if active_filter_count > 0 %} <span data-active-filter-count>({{ active_filter_count }})</span>{% endif %}
+        </button>
+      {%- endif -%}
       <form class="collection-browser__sort" method="get" data-collection-sort>
         {% render 'collection-sort-fields', collection: collection %}
         <label for="SortBy">{{ 'collections.sorting.title' | t }}</label>
@@ -35,6 +43,7 @@
         </select>
         <noscript><button class="button button--secondary" type="submit">{{ 'collections.filters.apply' | t }}</button></noscript>
       </form>
+      </div>
     </div>
 
     {% render 'collection-active-filters', collection: collection %}

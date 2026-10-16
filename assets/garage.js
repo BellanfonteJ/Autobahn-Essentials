@@ -24,6 +24,71 @@
   let editingId = null;
   let addingVehicle = false;
   let pageOnly = false;
+  const phone = matchMedia('(max-width: 640px)');
+  const drawerParent = drawer?.parentElement;
+  const drawerNextSibling = drawer?.nextSibling;
+  let vehicleStep = 0;
+  const stepNames = [...fields, 'year'];
+
+  function renderSteps(focus = false) {
+    const form = drawer?.querySelector('[data-garage-form]');
+    if (!form) return;
+    const controls = form.querySelector('[data-garage-step-controls]');
+    const summary = form.querySelector('[data-garage-step-summary]');
+    const steps = stepNames.filter(name => field(form, name) && !field(form, name).disabled);
+    vehicleStep = Math.max(0, Math.min(vehicleStep, steps.length - 1));
+    const activeName = steps[vehicleStep];
+    const enabled = phone.matches && steps.length > 0;
+    form.classList.toggle('is-stepped', enabled);
+    if (controls) controls.hidden = !enabled;
+    if (summary) summary.hidden = !enabled;
+    form.querySelectorAll('.garage-field').forEach(group => {
+      group.hidden = enabled && group.querySelector('[name]')?.name !== `vehicle_${activeName}`;
+    });
+    const actions = form.querySelector('.garage-form__actions');
+    if (actions) actions.hidden = enabled && activeName !== 'year';
+    if (controls) {
+      controls.querySelector('[data-garage-step-back]').disabled = vehicleStep === 0;
+      const progress = controls.querySelector('progress');
+      progress.max = stepNames.length;
+      progress.value = stepNames.indexOf(activeName) + 1;
+      controls.querySelector('[data-garage-step-status]').textContent = `${progress.value} / ${stepNames.length}`;
+    }
+    if (summary) {
+      summary.replaceChildren();
+      steps.slice(0, vehicleStep).forEach((name, index) => {
+        const value = field(form, name).value;
+        if (!value) return;
+        const item = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = value;
+        button.setAttribute('aria-label', `Change ${labels[name] || 'year'}: ${value}`);
+        button.addEventListener('click', event => { event.stopPropagation(); vehicleStep = index; renderSteps(true); });
+        item.append(button);
+        summary.append(item);
+      });
+    }
+    if (focus && enabled) field(form, activeName)?.focus();
+  }
+
+  function preparePhoneDrawer() {
+    if (!drawer) return;
+    if (phone.matches) {
+      document.body.append(drawer);
+      drawer.setAttribute('role', 'dialog');
+      drawer.setAttribute('aria-modal', 'true');
+      drawer.setAttribute('aria-label', 'My Garage');
+    } else {
+      if (drawerParent) drawerParent.insertBefore(drawer, drawerNextSibling);
+      drawer.removeAttribute('role');
+      drawer.removeAttribute('aria-modal');
+      drawer.removeAttribute('aria-hidden');
+      drawer.inert = false;
+    }
+    vehicleStep = 0;
+    renderSteps();
+  }
 
   const clean = (value = {}) => Object.fromEntries(['year', ...fields].map((field) => [field, String(value?.[field] || '').trim()]));
   const normalize = (value) => String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -169,6 +234,7 @@
       year.value = draft.year;
       year.max = String(new Date().getFullYear() + 1);
     }
+    if (form.matches('[data-garage-form]')) renderSteps();
   }
 
   function formError(form, message) {
@@ -184,6 +250,11 @@
       formError(form, 'Vehicle fitment data is unavailable. Please try again later.');
       return null;
     }
+    if (phone.matches && form.matches('[data-garage-form]')) {
+      const steps = stepNames.filter(name => field(form, name) && !field(form, name).disabled);
+      const invalid = steps.findIndex(name => !field(form, name).checkValidity());
+      if (invalid >= 0) { vehicleStep = invalid; renderSteps(true); }
+    }
     if (!form.reportValidity() || !yearValid(garage) || !complete(garage)) {
       formError(form, 'Select a complete listed vehicle and engine before saving.');
       return null;
@@ -193,7 +264,9 @@
   }
 
   function close() {
+    if (drawer?.getAttribute('aria-modal') === 'true' && drawer.classList.contains('is-open')) drawer.dispatchEvent(new CustomEvent('ae:modal-closed', { bubbles: true }));
     drawer?.classList.remove('is-open');
+    document.body.classList.remove('is-garage-open');
     toggle?.setAttribute('aria-expanded', 'false');
     if (drawer?.contains(document.activeElement)) toggle?.focus();
     resetEditor();
@@ -203,12 +276,19 @@
     drawer?.classList.add('is-open');
     toggle?.setAttribute('aria-expanded', 'true');
     document.dispatchEvent(new CustomEvent('ae:garage-open'));
+    vehicleStep = 0;
+    renderSteps();
+    if (phone.matches) {
+      document.body.classList.add('is-garage-open');
+      drawer?.dispatchEvent(new CustomEvent('ae:open-modal', { bubbles: true }));
+    }
     field(drawer, 'make')?.focus();
   }
 
   function resetEditor() {
     editingId = null;
     addingVehicle = false;
+    vehicleStep = 0;
     const form = drawer?.querySelector('[data-garage-form]');
     if (!form) return;
     populate(form, read());
@@ -491,6 +571,11 @@
       fields.slice(index + 1).forEach((child) => { if (field(form, child)) field(form, child).value = ''; });
       populate(form, fromForm(form));
       formError(form, '');
+      if (phone.matches && form.matches('[data-garage-form]')) {
+        const steps = stepNames.filter(name => field(form, name) && !field(form, name).disabled);
+        vehicleStep = Math.min(steps.indexOf(name) + 1, steps.length - 1);
+        renderSteps(true);
+      }
     }));
     form.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -512,6 +597,7 @@
     else if (event.target.closest('[data-garage-open]')) { event.preventDefault(); open(); }
     else if (event.target.closest('[data-garage-close]')) close();
     else if (event.target.closest('[data-garage-add]')) {
+      vehicleStep = 0;
       editingId = null;
       addingVehicle = true;
       const form = drawer.querySelector('[data-garage-form]');
@@ -532,7 +618,9 @@
       populate(form, garage);
       formError(form, '');
       editorLabels();
-      field(form, 'make')?.focus();
+      vehicleStep = phone.matches ? stepNames.filter(name => !field(form, name)?.disabled).length - 1 : 0;
+      renderSteps();
+      field(form, phone.matches ? 'year' : 'make')?.focus();
     } else if (event.target.closest('[data-garage-remove]')) {
       removeVehicle(event.target.closest('[data-garage-vehicle]')?.dataset.garageVehicle);
     }
@@ -600,6 +688,10 @@
     history.replaceState({}, '', url);
   }
   window.AEGarage = { open, close, read, state, complete, update, list: () => readCollection().vehicles };
+  drawer?.querySelector('[data-garage-step-back]')?.addEventListener('click', () => { vehicleStep -= 1; renderSteps(true); });
+  drawer?.addEventListener('ae:close-modal', close);
+  phone.addEventListener('change', () => { close(); preparePhoneDrawer(); });
+  preparePhoneDrawer();
   const header = document.querySelector('.site-header--sticky');
   const ticker = document.querySelector('.announcement-bar');
   let offsetFrame = 0;
