@@ -103,6 +103,17 @@ test('native refund policy layout passes axe on mobile and desktop without blank
   }
 });
 
+test('native shipping policy passes axe on phone and desktop with support links', async () => {
+  for (const width of [320, 1440]) {
+    const session = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+    try {
+      const page = await session.newPage();
+      await mount(page, { template: 'policy', pageTitle: 'Shipping policy', request: { path: '/policies/shipping-policy' }, policy: { title: 'Shipping policy', body: '<p>Existing shipping terms.</p><h2><br></h2><h3>Order processing</h3><p>Merchant processing and delivery details remain unchanged.</p>' }, pages: { contact: { url: '/pages/contact' }, returns: { url: '/pages/returns' } }, shop: { email: 'orders@example.test', refund_policy: { url: '/policies/refund-policy' } } });
+      await audit(page, `Native shipping policy at ${width}px`);
+    } finally { await session.close(); }
+  }
+});
+
 test('search, garage, gallery, cart and newsletter dialogs pass axe when opened', async () => {
   const session = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await session.newPage();

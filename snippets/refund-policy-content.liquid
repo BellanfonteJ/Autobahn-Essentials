@@ -1,10 +1,10 @@
 {%- assign policy_support_email = shop.email | strip -%}
 {% render 'breadcrumbs' %}
-<section class="ae-contact-page ae-refund-policy-page">
-  <div class="page-width ae-refund-policy-grid">
-    <div class="eyebrow ae-refund-policy-eyebrow">{{ shop.name | escape }} Support</div>
+<section class="ae-contact-page ae-policy-page ae-refund-policy-page">
+  <div class="page-width ae-policy-grid ae-refund-policy-grid">
+    <div class="eyebrow ae-policy-eyebrow ae-refund-policy-eyebrow">{{ shop.name | escape }} Support</div>
     {{ policy_content }}
-    <aside class="ae-contact-details ae-refund-policy-support" aria-label="Refund policy support">
+    <aside class="ae-contact-details ae-policy-support ae-refund-policy-support" aria-label="Refund policy support">
       {%- if policy_support_email != blank -%}
         <div class="ae-contact-details__item">
           <h2>Email support</h2>

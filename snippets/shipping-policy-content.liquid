@@ -1,0 +1,33 @@
+{% doc %}
+  Presents Shopify's unchanged shipping policy with the shared support-page layout.
+  @param {string} policy_content - Native Shopify policy markup.
+{% enddoc %}
+{%- assign policy_support_email = shop.email | strip -%}
+{% render 'breadcrumbs' %}
+<section class="ae-contact-page ae-policy-page ae-shipping-policy-page">
+  <div class="page-width ae-policy-grid">
+    <div class="eyebrow ae-policy-eyebrow">{{ 'policies.shipping.eyebrow' | t }}</div>
+    {{ policy_content }}
+    <aside class="ae-contact-details ae-policy-support" aria-label="{{ 'policies.shipping.support_label' | t }}">
+      {%- if policy_support_email != blank -%}
+        <div class="ae-contact-details__item">
+          <h2>{{ 'policies.shipping.email_heading' | t }}</h2>
+          <a class="ae-contact-details__address" href="mailto:{{ policy_support_email | escape }}">{{ policy_support_email | escape }}</a>
+          <p>{{ 'policies.shipping.email_note' | t }}</p>
+        </div>
+      {%- endif -%}
+      <div class="ae-contact-details__item">
+        <h2>{{ 'policies.shipping.tracking_heading' | t }}</h2>
+        <p>{{ 'policies.shipping.tracking_note' | t }}</p>
+      </div>
+      {%- if pages['contact'] != blank or pages['returns'] != blank or shop.refund_policy.url != blank -%}
+        <nav class="ae-contact-details__item ae-contact-details__links" aria-label="{{ 'policies.shipping.resources_label' | t }}">
+          <h2>{{ 'policies.shipping.links_heading' | t }}</h2>
+          {%- if pages['contact'] != blank -%}<a href="{{ pages['contact'].url | escape }}">{{ 'policies.shipping.contact_link' | t }} {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+          {%- if pages['returns'] != blank -%}<a href="{{ pages['returns'].url | escape }}">{{ 'policies.shipping.returns_link' | t }} {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+          {%- if shop.refund_policy.url != blank -%}<a href="{{ shop.refund_policy.url | escape }}">{{ 'policies.shipping.refund_link' | t }} {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+        </nav>
+      {%- endif -%}
+    </aside>
+  </div>
+</section>

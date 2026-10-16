@@ -128,6 +128,21 @@
       "title": "Sort by"
     }
   },
+  "policies": {
+    "shipping": {
+      "eyebrow": "Shipping & delivery",
+      "support_label": "Shipping policy support",
+      "email_heading": "Email support",
+      "email_note": "Include your order number and the item you're asking about.",
+      "tracking_heading": "Order tracking",
+      "tracking_note": "Have your shipping confirmation and tracking details ready when contacting support.",
+      "resources_label": "Shipping policy resources",
+      "links_heading": "Helpful links",
+      "contact_link": "Contact Us",
+      "returns_link": "Return request",
+      "refund_link": "Refund policy"
+    }
+  },
   "garage": {
     "choose": "Choose vehicle",
     "change": "Change",
