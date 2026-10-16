@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="{{ settings.color_background }}">
+    {{ 'roboto-latin-400-900.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'montserrat-latin-800-900.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
     {% render 'seo-meta' %}
     {% render 'structured-data' %}
 
@@ -49,6 +51,7 @@
     {{ 'browsing.css' | asset_url | stylesheet_tag }}
     {%- if template.name == 'product' -%}
       {{ 'product.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'product-content.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
     {{ content_for_header }}
     {%- if page.handle == 'builds' -%}
@@ -61,6 +64,10 @@
     {%- if template.name == 'collection' -%}
       {{ 'collection.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {{ 'mobile.css' | asset_url | stylesheet_tag }}
+    {%- if template.name == 'product' -%}
+      <script src="{{ 'mobile-product.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
   </head>
 

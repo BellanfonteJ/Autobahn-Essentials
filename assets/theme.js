@@ -436,6 +436,12 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
   let galleryItems = getGalleryItems();
   let activeIndex = Math.max(0, galleryItems.findIndex((item) => item.thumb?.classList.contains('is-active')));
   let swipeStartX = null;
+  const inlineControls = gallery.querySelector('[data-gallery-inline-controls]');
+  const inlineStatus = gallery.querySelector('[data-gallery-inline-status]');
+  const syncInline = () => {
+    if (inlineControls) inlineControls.hidden = galleryItems.length < 2;
+    if (inlineStatus) inlineStatus.textContent = `${activeIndex + 1} / ${galleryItems.length}`;
+  };
 
   const updateMagnifierImage = () => {
     if (!magnifier) return;
@@ -476,6 +482,7 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
     lightbox.classList.remove('is-open');
     document.body.classList.remove('is-gallery-lightbox-open');
     closeModal(lightbox);
+    galleryItems[activeIndex]?.thumb?.click();
   };
 
   const showPreviousImage = () => updateLightbox(activeIndex - 1);
@@ -600,10 +607,32 @@ document.querySelectorAll('.product-gallery').forEach((gallery) => {
 
       const nextIndex = galleryItems.findIndex((item) => item.thumb === thumbButton);
       if (nextIndex >= 0) activeIndex = nextIndex;
+      syncInline();
       if (lightbox?.classList.contains('is-open')) updateLightbox(activeIndex);
       requestAnimationFrame(updateMagnifierImage);
     });
   });
+  const selectInline = (delta) => galleryItems[(activeIndex + delta + galleryItems.length) % galleryItems.length]?.thumb?.click();
+  gallery.querySelector('[data-gallery-inline-prev]')?.addEventListener('click', () => selectInline(-1));
+  gallery.querySelector('[data-gallery-inline-next]')?.addEventListener('click', () => selectInline(1));
+  let gesture = null;
+  main.addEventListener('pointerdown', (event) => {
+    if (!event.isPrimary) { gesture = null; return; }
+    if (!['touch', 'pen'].includes(event.pointerType) || event.target.closest('button')) return;
+    gesture = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    try { main.setPointerCapture?.(event.pointerId); } catch { /* Synthetic pointers may not be active. */ }
+  });
+  main.addEventListener('pointerup', (event) => {
+    if (!gesture || gesture.id !== event.pointerId) return;
+    const dx = event.clientX - gesture.x;
+    const dy = event.clientY - gesture.y;
+    gesture = null;
+    if (Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(dy) * 1.5 && galleryItems.length > 1) {
+      selectInline(dx > 0 ? -1 : 1);
+    }
+  });
+  main.addEventListener('pointercancel', () => { gesture = null; });
+  syncInline();
 });
 
 document.querySelectorAll('[data-product-info]').forEach((info) => {

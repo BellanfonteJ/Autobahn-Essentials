@@ -87,4 +87,54 @@
     url.searchParams.delete('page');
     location.assign(url);
   }));
+
+  const garageBar = document.querySelector('[data-garage-bar]');
+  const header = document.querySelector('.site-header--sticky');
+  const ticker = document.querySelector('.announcement-bar');
+  let offsetFrame = 0;
+  const offset = () => {
+    offsetFrame = 0;
+    const bottom = Math.max(0, ...[garageBar, header, ticker].map(node => node?.getBoundingClientRect().bottom || 0));
+    const value = `${Math.round(bottom)}px`;
+    if (document.documentElement.style.getPropertyValue('--mobile-browse-offset') !== value) {
+      document.documentElement.style.setProperty('--mobile-browse-offset', value);
+    }
+  };
+  const queueOffset = () => { if (!offsetFrame) offsetFrame = requestAnimationFrame(offset); };
+  window.addEventListener('scroll', queueOffset, { passive: true });
+  window.addEventListener('resize', queueOffset);
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(queueOffset);
+    [garageBar, header, ticker].filter(Boolean).forEach(node => observer.observe(node));
+  }
+  new MutationObserver(queueOffset).observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+  offset();
+
+  // One short-lived, tab-local return position; never sent to a service.
+  const positionKey = 'autobahn:browse-return';
+  document.addEventListener('click', event => {
+    const link = event.target.closest('[data-product-card] a[href]');
+    if (!link || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = new URL(link.href);
+    if (target.origin !== location.origin || !target.pathname.includes('/products/')) return;
+    const card = link.closest('[data-product-card]');
+    try {
+      sessionStorage.setItem(positionKey, JSON.stringify({ path: location.pathname + location.search, href: link.getAttribute('href'), y: scrollY, top: card.getBoundingClientRect().top, time: Date.now() }));
+    } catch { /* Native navigation still works without session storage. */ }
+  });
+  const restorePosition = (event) => {
+    if (!event.persisted && performance.getEntriesByType('navigation')[0]?.type !== 'back_forward') return;
+    let saved;
+    try { saved = JSON.parse(sessionStorage.getItem(positionKey)); } catch { return; }
+    if (!saved || saved.path !== location.pathname + location.search || Date.now() - saved.time > 1800000) return;
+    try { sessionStorage.removeItem(positionKey); } catch { /* Restoration is optional. */ }
+    const restore = () => {
+      const link = Array.from(document.querySelectorAll('[data-product-card] a[href]')).find(link => link.getAttribute('href') === saved.href);
+      const card = link?.closest('[data-product-card]');
+      const y = card ? scrollY + card.getBoundingClientRect().top - saved.top : saved.y;
+      if (Number.isFinite(y) && y >= 0) window.scrollTo({ top: y, behavior: 'instant' });
+    };
+    document.fonts.ready.then(() => requestAnimationFrame(restore));
+  };
+  window.addEventListener('pageshow', restorePosition);
 })();

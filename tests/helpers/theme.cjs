@@ -19,6 +19,7 @@ engine.registerFilter('structured_data', (value) => JSON.stringify(value._struct
 engine.registerFilter('handle', (value) => String(value).toLowerCase().replace(/\W+/g, '-'));
 engine.registerFilter('asset_url', (value) => `/assets/${value}`);
 engine.registerFilter('stylesheet_tag', (value) => `<link rel="stylesheet" href="${value}">`);
+engine.registerFilter('preload_tag', (value, ...args) => `<link rel="preload" href="${escape(value)}" ${Object.entries(hashes(args)).map(([name, value]) => `${name}="${escape(value)}"`).join(' ')}>`);
 engine.registerFilter('image_url', (image) => `/assets/${image?.asset || 'brand-bmw-m4.jpg'}`);
 engine.registerFilter('image_tag', (src, ...args) => {
   const attributes = hashes(args);

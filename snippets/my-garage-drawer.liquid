@@ -46,6 +46,12 @@
       </template>
       <form class="garage-form" data-garage-form>
         <h3 class="garage-form__heading" data-garage-editor-title data-add-label="{{ 'sections.multi_vehicle_garage.details' | t | escape }}" data-edit-label="{{ 'sections.multi_vehicle_garage.edit_vehicle' | t | escape }}">{{ 'sections.multi_vehicle_garage.details' | t }}</h3>
+        <div class="garage-step-controls" data-garage-step-controls hidden>
+          <button class="icon-button" type="button" data-garage-step-back aria-label="Previous vehicle detail" title="Previous vehicle detail">{% render 'icon', icon: 'arrow' %}</button>
+          <progress data-garage-step-progress max="6" value="1" aria-label="Vehicle details progress"></progress>
+          <span data-garage-step-status role="status"></span>
+        </div>
+        <ul class="garage-step-summary" data-garage-step-summary hidden aria-label="Selected vehicle details"></ul>
         {% render 'garage-fields', prefix: 'Garage' %}
 
         <div class="garage-form__actions">
