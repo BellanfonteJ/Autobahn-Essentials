@@ -4286,6 +4286,72 @@ body.is-gallery-lightbox-open {
   grid-area: support;
 }
 
+.ae-contact-policy-page .rte > p:first-child {
+  color: var(--color-text);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.ae-contact-policy-page .shopify-policy__title h1 {
+  text-transform: capitalize;
+}
+
+.ae-contact-policy-page .rte > p + p {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-line);
+}
+
+.ae-contact-policy-page .shopify-policy__body a:is([href^="tel:"], [href^="mailto:"]) {
+  display: inline-block;
+  min-height: 44px;
+  max-width: 100%;
+  padding-block: 6px;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  text-underline-offset: 4px;
+}
+
+.ae-contact-policy-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c5c5c5;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.ae-contact-policy-label svg {
+  color: var(--color-accent);
+}
+
+.ae-contact-policy-page .ae-contact-policy-detail > a {
+  display: block;
+  width: fit-content;
+  max-width: calc(100% - 26px);
+  margin-left: 26px;
+}
+
+.ae-contact-policy-page .ae-contact-details__links h2,
+.ae-contact-policy-page .ae-contact-details__links a {
+  color: #c5c5c5;
+  font-size: 13px;
+}
+
+.ae-contact-policy-page .ae-contact-details__links a {
+  min-height: 44px;
+}
+
+.ae-contact-policy-message {
+  margin-top: 18px;
+  min-height: 44px;
+  max-width: 100%;
+  gap: 10px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 900px) {
   .ae-policy-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -4298,6 +4364,41 @@ body.is-gallery-lightbox-open {
 }
 
 @media (max-width: 640px) {
+  .ae-contact-policy-page {
+    padding: 8px 0 40px;
+  }
+
+  .ae-contact-policy-page.ae-policy-page .shopify-policy__title {
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+  }
+
+  .ae-contact-policy-page .shopify-policy__body {
+    line-height: 1.5;
+  }
+
+  .ae-contact-policy-page .rte > p {
+    margin-bottom: 10px;
+  }
+
+  .ae-contact-policy-page .rte > p + p {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+
+  .ae-contact-policy-page .ae-policy-support {
+    margin-top: 18px;
+  }
+
+  .ae-contact-policy-page .ae-contact-details__item + .ae-contact-details__item {
+    margin-top: 18px;
+    padding-top: 18px;
+  }
+
+  .ae-contact-policy-message {
+    margin-top: 12px;
+  }
+
   .ae-policy-eyebrow {
     padding-top: 4px;
   }

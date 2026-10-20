@@ -86,6 +86,8 @@
         {% render 'refund-policy-content', policy_content: content_for_layout %}
       {%- elsif policy_route_handle == 'shipping-policy' and request.path contains '/policies/' -%}
         {% render 'shipping-policy-content', policy_content: content_for_layout %}
+      {%- elsif policy_route_handle == 'contact-information' and request.path contains '/policies/' -%}
+        {% render 'contact-information-policy', policy_content: content_for_layout %}
       {%- else -%}
         {{ content_for_layout }}
       {%- endif -%}

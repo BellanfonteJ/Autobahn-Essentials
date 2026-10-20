@@ -129,6 +129,18 @@
     }
   },
   "policies": {
+    "contact": {
+      "eyebrow": "Get in touch",
+      "support_label": "Contact information support",
+      "order_heading": "Need help?",
+      "order_note": "Include your order number and item details when contacting us.",
+      "message_link": "Send a message",
+      "resources_label": "Contact information resources",
+      "links_heading": "Helpful links",
+      "shipping_link": "Shipping policy",
+      "returns_link": "Return request",
+      "refund_link": "Refund policy"
+    },
     "shipping": {
       "eyebrow": "Shipping & delivery",
       "support_label": "Shipping policy support",
