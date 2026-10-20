@@ -1,0 +1,31 @@
+{% doc %}
+  Presents the native contact-information policy without replacing merchant details.
+  @param {string} policy_content - Native Shopify policy markup.
+{% enddoc %}
+{% render 'breadcrumbs' %}
+<section class="ae-contact-page ae-policy-page ae-contact-policy-page">
+  <div class="page-width ae-policy-grid">
+    <div class="eyebrow ae-policy-eyebrow">{{ 'policies.contact.eyebrow' | t }}</div>
+    {{ policy_content }}
+    <aside class="ae-contact-details ae-policy-support" aria-label="{{ 'policies.contact.support_label' | t | escape }}">
+      <div class="ae-contact-details__item">
+        <h2>{{ 'policies.contact.order_heading' | t }}</h2>
+        <p>{{ 'policies.contact.order_note' | t }}</p>
+        {%- if pages['contact'] != blank -%}
+          <a class="button button--secondary ae-contact-policy-message" href="{{ pages['contact'].url | escape }}">{{ 'policies.contact.message_link' | t }} {% render 'icon', icon: 'arrow' %}</a>
+        {%- endif -%}
+      </div>
+      {%- if pages['returns'] != blank or shop.shipping_policy.url != blank or shop.refund_policy.url != blank -%}
+        <nav class="ae-contact-details__item ae-contact-details__links" aria-label="{{ 'policies.contact.resources_label' | t | escape }}">
+          <h2>{{ 'policies.contact.links_heading' | t }}</h2>
+          {%- if shop.shipping_policy.url != blank -%}<a href="{{ shop.shipping_policy.url | escape }}">{{ 'policies.contact.shipping_link' | t }} {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+          {%- if pages['returns'] != blank -%}<a href="{{ pages['returns'].url | escape }}">{{ 'policies.contact.returns_link' | t }} {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+          {%- if shop.refund_policy.url != blank -%}<a href="{{ shop.refund_policy.url | escape }}">{{ 'policies.contact.refund_link' | t }} {% render 'icon', icon: 'arrow' %}</a>{%- endif -%}
+        </nav>
+      {%- endif -%}
+    </aside>
+  </div>
+  <template data-contact-policy-icon="phone">{% render 'icon', icon: 'phone' %}</template>
+  <template data-contact-policy-icon="email">{% render 'icon', icon: 'mail' %}</template>
+</section>
+<script src="{{ 'contact-information.js' | asset_url }}" defer="defer"></script>

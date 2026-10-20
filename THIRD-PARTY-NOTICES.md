@@ -1,6 +1,7 @@
 # Third-Party Notices
 
 The pencil icon in `snippets/icon.liquid` is from [Lucide](https://github.com/lucide-icons/lucide/blob/main/icons/pencil.svg).
+The phone and email icons in the same snippet are Lucide's [phone](https://github.com/lucide-icons/lucide/blob/main/icons/phone.svg) and [mail](https://github.com/lucide-icons/lucide/blob/main/icons/mail.svg) icons.
 
 ## Lucide ISC License
 

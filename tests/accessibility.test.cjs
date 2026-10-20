@@ -114,6 +114,17 @@ test('native shipping policy passes axe on phone and desktop with support links'
   }
 });
 
+test('native contact-information policy passes axe with clickable business details on mobile and desktop', async () => {
+  for (const width of [320, 1440]) {
+    const session = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+    try {
+      const page = await session.newPage();
+      await mount(page, { template: 'policy', pageTitle: 'Contact information', request: { path: '/policies/contact-information' }, policy: { title: 'Contact information', body: '<p>Merchant business name</p><p>Phone number: +1(202)555-0123</p><p>Email: orders@example.test</p>' }, pages: { contact: { url: '/pages/contact' }, returns: { url: '/pages/returns' } }, shop: { shipping_policy: { url: '/policies/shipping-policy' }, refund_policy: { url: '/policies/refund-policy' } } });
+      await audit(page, `Native contact information at ${width}px`);
+    } finally { await session.close(); }
+  }
+});
+
 test('search, garage, gallery, cart and newsletter dialogs pass axe when opened', async () => {
   const session = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await session.newPage();
