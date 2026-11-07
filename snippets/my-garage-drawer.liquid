@@ -50,6 +50,7 @@
           <button class="icon-button" type="button" data-garage-step-back aria-label="Previous vehicle detail" title="Previous vehicle detail">{% render 'icon', icon: 'arrow' %}</button>
           <progress data-garage-step-progress max="6" value="1" aria-label="Vehicle details progress"></progress>
           <span data-garage-step-status role="status"></span>
+          <button class="icon-button" type="button" data-garage-step-next aria-label="{{ 'sections.multi_vehicle_garage.next_detail' | t | escape }}" title="{{ 'sections.multi_vehicle_garage.next_detail' | t | escape }}">{% render 'icon', icon: 'arrow' %}</button>
         </div>
         <ul class="garage-step-summary" data-garage-step-summary hidden aria-label="Selected vehicle details"></ul>
         {% render 'garage-fields', prefix: 'Garage' %}

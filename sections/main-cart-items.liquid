@@ -1,5 +1,9 @@
-<section class="section">
-  <div class="page-width">
+<section class="section" data-cart-page data-cart-section="{{ section.id }}">
+  <div class="page-width" data-cart-page-feedback hidden>
+    <p class="form-error" role="alert">{{ 'sections.cart.page_sync_error' | t }}</p>
+    <button class="button button--secondary" type="button" data-cart-page-retry>{{ 'sections.cart.retry' | t }}</button>
+  </div>
+  <div class="page-width" data-cart-page-content>
     <div class="section-heading">
       <div>
         <div class="eyebrow">{{ 'templates.cart.cart' | t }}</div>

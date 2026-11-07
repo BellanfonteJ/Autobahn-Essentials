@@ -49,6 +49,7 @@
     if (actions) actions.hidden = enabled && activeName !== 'year';
     if (controls) {
       controls.querySelector('[data-garage-step-back]').disabled = vehicleStep === 0;
+      controls.querySelector('[data-garage-step-next]').hidden = vehicleStep === steps.length - 1;
       const progress = controls.querySelector('progress');
       progress.max = stepNames.length;
       progress.value = stepNames.indexOf(activeName) + 1;
@@ -689,6 +690,14 @@
   }
   window.AEGarage = { open, close, read, state, complete, update, list: () => readCollection().vehicles };
   drawer?.querySelector('[data-garage-step-back]')?.addEventListener('click', () => { vehicleStep -= 1; renderSteps(true); });
+  drawer?.querySelector('[data-garage-step-next]')?.addEventListener('click', () => {
+    const form = drawer.querySelector('[data-garage-form]');
+    const steps = stepNames.filter(name => field(form, name) && !field(form, name).disabled);
+    const input = field(form, steps[vehicleStep]);
+    if (!input?.reportValidity()) return;
+    vehicleStep = Math.min(vehicleStep + 1, steps.length - 1);
+    renderSteps(true);
+  });
   drawer?.addEventListener('ae:close-modal', close);
   phone.addEventListener('change', () => { close(); preparePhoneDrawer(); });
   preparePhoneDrawer();
