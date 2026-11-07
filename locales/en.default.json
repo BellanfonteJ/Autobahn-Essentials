@@ -38,7 +38,8 @@
       "details": "Vehicle details",
       "clear_active": "Clear selection",
       "empty_title": "No vehicle saved",
-      "save": "Save Vehicle"
+      "save": "Save Vehicle",
+      "next_detail": "Next vehicle detail"
     },
     "header": {
       "menu": "Open menu",
@@ -58,6 +59,8 @@
       "increase": "Increase quantity",
       "error": "We couldn't update your cart. Check your connection and try again.",
       "added_refresh_error": "Your item was added, but the cart couldn't refresh. Open the cart to review it before adding again.",
+      "page_sync_error": "Your cart changed, but this page couldn't refresh. Retry before updating the cart or checking out.",
+      "retry": "Retry",
       "headings": {
         "product": "Product",
         "quantity": "Quantity",

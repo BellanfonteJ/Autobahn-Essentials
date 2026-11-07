@@ -1,9 +1,11 @@
 {% render 'breadcrumbs' %}
 
 {%- assign gallery_images = product.media | where: 'media_type', 'image' -%}
-{%- assign featured_image = product.featured_media.preview_image -%}
-{%- if product.featured_media.media_type != 'image' and gallery_images.size > 0 -%}
+{%- assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+{%- assign featured_image = featured_media.preview_image -%}
+{%- if featured_media.media_type != 'image' and gallery_images.size > 0 -%}
   {%- assign first_gallery_image = gallery_images | first -%}
+  {%- assign featured_media = first_gallery_image -%}
   {%- assign featured_image = first_gallery_image.preview_image -%}
 {%- endif -%}
 
@@ -50,9 +52,7 @@
           {%- for media in gallery_images -%}
             {%- assign thumb_image = media.preview_image -%}
             {%- assign is_active_thumb = false -%}
-            {%- if media.id == product.featured_media.id -%}
-              {%- assign is_active_thumb = true -%}
-            {%- elsif product.featured_media.media_type != 'image' and forloop.first -%}
+            {%- if media.id == featured_media.id -%}
               {%- assign is_active_thumb = true -%}
             {%- endif -%}
             <button

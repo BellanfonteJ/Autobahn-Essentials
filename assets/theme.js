@@ -727,6 +727,51 @@ const cartError = cartDrawer?.querySelector('[data-cart-error]');
 let cartRequestQueue = Promise.resolve();
 let cartBusyCount = 0;
 let lastConfirmedCart;
+const cartPage = document.querySelector('[data-cart-page]');
+
+function setCartPageState() {
+  const form = cartPage?.querySelector('form');
+  if (form) form.inert = cartBusyCount > 0 || cartPage.dataset.cartStale === 'true';
+}
+
+async function syncCartPage() {
+  if (!cartPage) return;
+  cartPage.dataset.cartStale = 'true';
+  cartPage.setAttribute('aria-busy', 'true');
+  setCartPageState();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    const url = new URL(themeConfig.cartUrl || themeRoute('cart'), location.origin);
+    url.searchParams.set('section_id', cartPage.dataset.cartSection);
+    const response = await fetch(url, { cache: 'no-store', signal: controller.signal, headers: { Accept: 'text/html' } });
+    if (!response.ok) throw new Error('Cart section unavailable');
+    const next = new DOMParser().parseFromString(await response.text(), 'text/html').querySelector('[data-cart-page]');
+    const content = next?.querySelector('[data-cart-page-content]');
+    if (next?.dataset.cartSection !== cartPage.dataset.cartSection || !content?.querySelector('form[action], .empty-state')) throw new Error('Invalid cart section');
+    const note = cartPage.querySelector('[name="note"]')?.value;
+    cartPage.querySelector('[data-cart-page-content]').replaceChildren(...content.childNodes);
+    const noteInput = cartPage.querySelector('[name="note"]');
+    if (noteInput && note !== undefined) noteInput.value = note;
+    delete cartPage.dataset.cartStale;
+  } catch {
+    reportHealth('cart_refresh_error');
+  } finally {
+    clearTimeout(timeout);
+    cartPage.setAttribute('aria-busy', 'false');
+    cartPage.querySelector('[data-cart-page-feedback]').hidden = cartPage.dataset.cartStale !== 'true';
+    setCartPageState();
+  }
+}
+
+cartPage?.addEventListener('submit', event => {
+  if (cartBusyCount > 0 || cartPage.dataset.cartStale === 'true') event.preventDefault();
+});
+cartPage?.querySelector('[data-cart-page-retry]')?.addEventListener('click', event => {
+  const button = event.currentTarget;
+  button.disabled = true;
+  queueCartRequest(syncCartPage).finally(() => { button.disabled = false; });
+});
 
 function queueCartRequest(task) {
   const request = cartRequestQueue.then(task);
@@ -742,6 +787,7 @@ function showCartError(message = '') {
 
 function setCartBusy(busy) {
   cartBusyCount += busy ? 1 : -1;
+  setCartPageState();
   cartDrawer?.setAttribute('aria-busy', String(cartBusyCount > 0));
   cartDrawerBody?.querySelectorAll('button, input').forEach((control) => {
     control.disabled = cartBusyCount > 0;
@@ -847,9 +893,10 @@ function renderCartDrawer(cart) {
   cartDrawerBody.querySelectorAll('button, input').forEach((control) => { control.disabled = cartBusyCount > 0; });
 }
 
-async function refreshCart() {
+async function refreshCart(syncPage = false) {
   const response = await fetch(themeRoute('cart.js'), { headers: { Accept: 'application/json' } });
   renderCartDrawer(await cartResponse(response));
+  if (syncPage) await syncCartPage();
 }
 
 async function changeCartLine(key, quantity) {
@@ -867,6 +914,7 @@ async function changeCartLine(key, quantity) {
       body: JSON.stringify({ id: key, quantity }),
       });
       renderCartDrawer(await cartResponse(res));
+      await syncCartPage();
     });
   } catch (error) {
     if (lastConfirmedCart) renderCartDrawer(lastConfirmedCart);
@@ -959,7 +1007,7 @@ if (cartDrawer) {
         await cartResponse(res);
         added = true;
         reportHealth('cart_add');
-        await refreshCart();
+        await refreshCart(true);
       });
       showCartError();
       openCartDrawer();
