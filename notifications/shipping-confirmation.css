@@ -1,0 +1,18 @@
+.content__cell .disclaimer__subtext {
+  margin: 22px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid #e5e5e5;
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.content__cell .disclaimer__subtext > br:first-child {
+  display: none;
+}
+.content__cell .disclaimer__subtext a {
+  color: #b83120;
+  font-weight: 700;
+  text-decoration: underline;
+}

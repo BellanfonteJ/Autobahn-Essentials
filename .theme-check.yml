@@ -1,0 +1,3 @@
+extends: theme-check:recommended
+ignore:
+  - notifications/**

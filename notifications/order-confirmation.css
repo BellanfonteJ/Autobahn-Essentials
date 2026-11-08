@@ -1,0 +1,142 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #f1f2f3;
+}
+.body {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+body, td, p, a, h1, h2, h3, h4 {
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 0;
+}
+.container {
+  width: 560px;
+  max-width: 100%;
+}
+.header {
+  margin: 0;
+  background: #151515;
+  border-bottom: 4px solid #e8432a;
+}
+.header__cell {
+  padding: 28px 0;
+}
+.shop-name__cell img {
+  display: block;
+  max-width: 180px;
+  height: auto;
+  border: 0;
+}
+.shop-name__text {
+  margin: 12px 0 0;
+  font-size: 17px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+.shop-name__text a,
+.shop-name__text a:visited {
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.order-number__text, .po-number__text {
+  color: #eeeeee;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.content__cell {
+  padding: 32px 0;
+}
+h2 {
+  margin: 0 0 16px;
+  color: #151515;
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+h3 {
+  color: #151515;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+h4 {
+  color: #151515;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+p, .customer-info__item p {
+  color: #555555;
+  line-height: 1.6;
+}
+a, a:hover, a:active, a:visited {
+  color: #b83120;
+}
+.main-action-cell .button__cell,
+.actions-buttons .button__cell--primary {
+  background: #c53520;
+  border-radius: 4px;
+}
+.button__text, .button__text:hover,
+.button__text:active, .button__text:visited {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.section__cell {
+  padding: 28px 0;
+  border-top: 1px solid #e5e5e5;
+}
+.order-list__item-title, .order-list__item-price,
+.subtotal-line__value strong {
+  color: #202020;
+}
+.order-list__item-variant, .order-list__item-original-price {
+  color: #666666;
+}
+.order-list__product-image {
+  border-radius: 4px;
+}
+.subtotal-table--total .subtotal-line__value strong {
+  color: #151515;
+  font-weight: 700;
+}
+.footer {
+  background: #151515;
+}
+.footer__cell {
+  padding: 28px 0;
+  border-top: 3px solid #e8432a;
+}
+.footer .disclaimer__subtext {
+  color: #d0d0d0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.footer a, .footer a:visited {
+  color: #ffffff;
+  text-decoration: underline;
+}
+@media only screen and (max-width: 600px) {
+  .container {
+    width: 88% !important;
+  }
+  .header__cell {
+    padding: 24px 0 !important;
+  }
+  .content__cell, .section__cell {
+    padding: 24px 0 !important;
+  }
+  h2 {
+    font-size: 25px !important;
+  }
+  .shop-name__cell img {
+    max-width: 148px !important;
+  }
+}

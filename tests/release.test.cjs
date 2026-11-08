@@ -3,6 +3,13 @@ const { test } = require('node:test');
 const YAML = require('yaml');
 const { read } = require('./helpers/theme.cjs');
 
+test('theme validation excludes only the separately tested email templates', () => {
+  const config = YAML.parse(read('.theme-check.yml'));
+  assert.equal(config.extends, 'theme-check:recommended');
+  assert.deepEqual(config.ignore, ['notifications/**']);
+  assert.deepEqual(Object.keys(config).sort(), ['extends', 'ignore']);
+});
+
 test('release checks use pinned read-only actions, enforce quality gates and never deploy', () => {
   const workflow = YAML.parse(read('.github/workflows/theme-quality.yml'));
   assert.deepEqual(workflow.permissions, { contents: 'read' });
