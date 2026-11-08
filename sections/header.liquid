@@ -34,6 +34,16 @@
   {%- assign default_blog_url = navigation_root | append: 'pages/ae-blog' -%}
 {%- endif -%}
 
+{%- assign account_url = '' -%}
+{%- if shop.customer_accounts_enabled -%}
+  {%- assign account_url = routes.account_login_url -%}
+  {%- assign account_label = 'sections.header.sign_in' | t -%}
+  {%- if customer -%}
+    {%- assign account_url = routes.account_url -%}
+    {%- assign account_label = 'sections.header.account_orders' | t -%}
+  {%- endif -%}
+{%- endif -%}
+
 <header class="site-header{% if settings.enable_sticky_header %} site-header--sticky{% endif %}">
   <div class="site-header__inner page-width">
     <button class="icon-button mobile-menu-trigger" type="button" data-menu-toggle aria-expanded="false" aria-controls="SiteNav">
@@ -108,6 +118,12 @@
         <a href="{{ default_blog_url | escape }}">AE. Blog</a>
         {% render 'contacts-dropdown', label: 'Contacts' %}
       {%- endif -%}
+      {%- if account_url != blank -%}
+        <a class="account-menu-link" href="{{ account_url | escape }}">
+          {% render 'icon', icon: 'account' %}
+          <span>{{ account_label | escape }}</span>
+        </a>
+      {%- endif -%}
     </nav>
 
     <div class="header-logo">
@@ -122,6 +138,12 @@
     </div>
 
     <div class="header-actions">
+      {%- if account_url != blank -%}
+        <a class="icon-button account-toggle" href="{{ account_url | escape }}" title="{{ account_label | escape }}">
+          <span class="visually-hidden">{{ account_label | escape }}</span>
+          {% render 'icon', icon: 'account' %}
+        </a>
+      {%- endif -%}
       <button class="icon-button garage-toggle" type="button" data-garage-toggle aria-expanded="false" aria-controls="MyGarage">
         <span class="visually-hidden">{{ 'sections.header.garage' | t }}</span>
         {% render 'icon', icon: 'garage' %}

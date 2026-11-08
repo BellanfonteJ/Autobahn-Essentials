@@ -111,6 +111,7 @@ const product = {
 
 function context(options = {}) {
   return {
+    customer: options.customer,
     shop: { name: 'Autobahn Essentials', url: 'http://theme.test', currency: 'USD', email: 'support@example.test', policies: [], ...options.shop },
     settings: { ...config, ...options.settings },
     routes: { root_url: '/', cart_url: '/cart', search_url: '/search', collections_url: '/collections', all_products_collection_url: '/collections/all', ...options.routes },

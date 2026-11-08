@@ -1,0 +1,114 @@
+{% assign ae_shop_url = shop.url | default: 'https://autobahnessentials.com' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>{{ email.subject | default: 'The Autobahn Edit | Autobahn Essentials' | escape }}</title>
+  <style>
+    body { margin: 0; padding: 0; background-color: #edf0f2; }
+    table { border-collapse: collapse; mso-table-lspace: 0; mso-table-rspace: 0; }
+    td, p, a, h1, h2 { font-family: Arial, Helvetica, sans-serif; letter-spacing: 0; }
+    img { border: 0; display: block; height: auto; max-width: 100%; }
+    a { color: #b83120; }
+    .email-shell { width: 100%; max-width: 640px; }
+    .email-copy { overflow-wrap: anywhere; word-break: normal; }
+    .email-footer a { color: #ffffff !important; text-decoration: underline; }
+    @media only screen and (max-width: 600px) {
+      .outer-pad { padding: 0 !important; }
+      .section-pad { padding-left: 24px !important; padding-right: 24px !important; }
+      .stack { display: block !important; width: 100% !important; box-sizing: border-box; }
+      .spotlight-copy { padding: 24px 0 0 !important; }
+      .email-title { font-size: 30px !important; }
+      .edition { font-size: 10px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#edf0f2;">
+  <div aria-hidden="true" style="display:none;max-height:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;">
+    {{ email.preview_text | default: 'Performance parts, Euro builds, and your next upgrade.' | escape }}
+  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#edf0f2;">
+    <tr><td class="outer-pad" align="center" style="padding:28px 12px;">
+      <!--[if mso]><table role="presentation" width="640" align="center"><tr><td><![endif]-->
+      <table role="presentation" class="email-shell" width="640" cellpadding="0" cellspacing="0" style="width:100%;max-width:640px;background-color:#ffffff;">
+        <tr><td class="section-pad" style="padding:24px 36px;background-color:#151515;border-bottom:4px solid #e8432a;">
+          <table role="presentation" width="100%"><tr>
+            <td width="55%" style="width:55%;">
+              <a href="{{ ae_shop_url | escape }}" aria-label="Autobahn Essentials home">
+                <img class="ae-newsletter-logo" src="https://cdn.shopify.com/s/files/1/0696/8347/8585/files/autobahn-essentials-logo.png?v=1794169160" width="164" height="75" alt="Autobahn Essentials" style="width:164px;max-width:100%;height:auto;color:#ffffff;">
+              </a>
+            </td>
+            <td class="edition" align="right" style="font-size:12px;line-height:1.6;color:#e5e5e5;">THE AUTOBAHN EDIT<br>EURO PERFORMANCE</td>
+          </tr></table>
+        </td></tr>
+        <tr><td>
+          <a href="{{ ae_shop_url | escape }}/pages/ae-blog">
+            <img class="ae-newsletter-banner" src="https://cdn.shopify.com/s/files/1/0696/8347/8585/files/ae_blog.png?v=1779353178" width="640" height="180" alt="Autobahn Essentials Euro builds" style="width:100%;height:auto;">
+          </a>
+        </td></tr>
+        <!-- Replace editorial copy for each edition; verify every offer before sending. -->
+        <tr><td class="section-pad email-copy" style="padding:32px 36px 28px;">
+          <p style="margin:0 0 12px;font-size:12px;line-height:1.5;font-weight:700;color:#b83120;">PARTS. BUILDS. DETAILS.</p>
+          <h1 class="email-title" style="margin:0 0 16px;font-size:34px;line-height:1.15;font-weight:700;color:#151515;">Autobahn Essentials</h1>
+          <p style="margin:0 0 24px;font-size:17px;line-height:1.7;color:#525252;">Performance parts, considered upgrades, and the details that make your Euro build yours.</p>
+          <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+            <td bgcolor="#c53520" style="background-color:#c53520;border-radius:4px;">
+              <a class="ae-newsletter-cta" href="{{ ae_shop_url | escape }}/collections/all" style="display:inline-block;padding:16px 24px;font-size:15px;line-height:1.5;font-weight:700;color:#ffffff;text-decoration:none;border-radius:4px;">Explore the parts</a>
+            </td>
+          </tr></table>
+        </td></tr>
+        <tr><td class="section-pad" style="padding:0 36px 30px;">
+          <table role="presentation" width="100%" style="border-top:1px solid #e0e3e5;"><tr><td style="padding-top:24px;">
+            <h2 style="margin:0 0 18px;font-size:19px;line-height:1.4;color:#151515;">Browse by platform</h2>
+            <table role="presentation" width="100%" style="table-layout:fixed;"><tr>
+              <td width="33%" style="border-right:1px solid #e0e3e5;"><a href="{{ ae_shop_url | escape }}/collections/bmw" style="display:block;padding:12px 0;font-size:17px;font-weight:700;text-decoration:none;color:#151515;">BMW &rarr;</a></td>
+              <td width="34%" align="center" style="border-right:1px solid #e0e3e5;"><a href="{{ ae_shop_url | escape }}/collections/audi" style="display:block;padding:12px 0;font-size:17px;font-weight:700;text-decoration:none;color:#151515;">Audi &rarr;</a></td>
+              <td width="33%" align="right"><a href="{{ ae_shop_url | escape }}/collections/vw" style="display:block;padding:12px 0;font-size:17px;font-weight:700;text-decoration:none;color:#151515;">VW &rarr;</a></td>
+            </tr></table>
+          </td></tr></table>
+        </td></tr>
+        <tr><td class="section-pad" style="padding:28px 36px;background-color:#f4f5f6;border-top:1px solid #e0e3e5;border-bottom:1px solid #e0e3e5;">
+          <p style="margin:0 0 20px;font-size:12px;line-height:1.5;font-weight:700;color:#b83120;">PERFORMANCE SPOTLIGHT</p>
+          <table role="presentation" width="100%"><tr>
+            <td class="stack" width="44%" valign="top" style="width:44%;">
+              <a href="{{ ae_shop_url | escape }}/products/135i-5-intercooler-fmic">
+                <img class="ae-newsletter-product" src="https://cdn.shopify.com/s/files/1/0696/8347/8585/files/DSC03074.jpg?v=1741030310" width="250" alt="ARM Motorsports BMW 135i five-inch front mount intercooler" style="width:100%;height:auto;background-color:#ffffff;">
+              </a>
+            </td>
+            <td class="stack spotlight-copy email-copy" width="56%" valign="top" style="width:56%;padding-left:24px;">
+              <h2 style="margin:0 0 14px;font-size:22px;line-height:1.35;color:#151515;">BMW 135i<br>5-inch intercooler</h2>
+              <p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#525252;">Explore the product details and listed fitment. Confirm model year and installation requirements before ordering.</p>
+              <a href="{{ ae_shop_url | escape }}/products/135i-5-intercooler-fmic" style="display:inline-block;padding:10px 0;font-size:15px;line-height:1.6;font-weight:700;color:#b83120;text-decoration:underline;">View the intercooler &rarr;</a>
+            </td>
+          </tr></table>
+        </td></tr>
+        <tr><td class="section-pad email-copy" style="padding:28px 36px 32px;">
+          <h2 style="margin:0 0 12px;font-size:20px;line-height:1.4;color:#151515;">Find the right part for your build.</h2>
+          <p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#525252;">Have a fitment question? Include your vehicle and the part you're considering when you contact us.</p>
+          <a href="{{ ae_shop_url | escape }}/pages/contact" style="display:inline-block;padding:10px 0;font-size:15px;font-weight:700;color:#b83120;text-decoration:underline;">Contact the AE team &rarr;</a>
+        </td></tr>
+        <tr><td class="section-pad email-footer email-copy" style="padding:28px 36px;background-color:#151515;border-top:3px solid #e8432a;color:#d0d0d0;">
+          <p style="margin:0 0 14px;font-size:15px;line-height:1.6;font-weight:700;color:#ffffff;">Built for drivers. Backed by passion.</p>
+          <p style="margin:0 0 16px;font-size:13px;line-height:1.7;color:#d0d0d0;">
+            <a href="https://www.instagram.com/autobahnessentials/" style="color:#ffffff;text-decoration:underline;">Instagram</a>
+            &nbsp;&middot;&nbsp; <a href="mailto:autobahnessentials@gmail.com" style="color:#ffffff;text-decoration:underline;">Email support</a>
+          </p>
+          <p style="margin:0 0 14px;font-size:12px;line-height:1.8;color:#d0d0d0;">
+            {{ shop.name | escape }}<br>
+            {{ shop.address.address1 | escape }}{% if shop.address.address2 != blank %}, {{ shop.address.address2 | escape }}{% endif %}<br>
+            {{ shop.address.city | escape }} {{ shop.address.province | escape }} {{ shop.address.zip | escape }}<br>
+            {{ shop.address.country | escape }}
+          </p>
+          <p style="margin:0 0 12px;font-size:12px;line-height:1.8;color:#d0d0d0;">You're receiving this because you subscribed to Autobahn Essentials updates.</p>
+          <div style="font-size:13px;line-height:1.8;color:#ffffff;">{{ unsubscribe_link }}</div>
+          <p style="margin:16px 0 0;font-size:12px;line-height:1.6;color:#bcbcbc;">&copy; {{ 'now' | date: '%Y' }} {{ shop.name | escape }}</p>
+          {{ open_tracking_block }}
+        </td></tr>
+      </table>
+      <!--[if mso]></td></tr></table><![endif]-->
+    </td></tr>
+  </table>
+</body>
+</html>

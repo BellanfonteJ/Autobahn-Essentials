@@ -44,7 +44,9 @@
     "header": {
       "menu": "Open menu",
       "navigation": "Main navigation",
-      "garage": "My Garage"
+      "garage": "My Garage",
+      "sign_in": "Sign in or create account",
+      "account_orders": "Account & orders"
     },
     "cart": {
       "empty": "Your cart is ready for its first upgrade.",
