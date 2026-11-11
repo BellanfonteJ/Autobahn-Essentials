@@ -1,5 +1,6 @@
 {% doc %}
   Renders the return request form and approved return-window guidance.
+  @param {section} section - Section identifier and return-page settings.
 {% enddoc %}
 {%- liquid
   assign returns_form_id = 'ReturnRequest-' | append: section.id
