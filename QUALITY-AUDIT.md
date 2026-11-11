@@ -1,5 +1,9 @@
 # Quality Audit
 
+## November 10 Cart Email
+
+At 7:59:16 PM CST, completed the owner-approved native Shopify Messaging cleanup of **You left items in your cart** and reactivated it after the required draft pause. The active list and reopened read-only preview confirm the saved design. Actual 375px phone and 600px desktop email containers were measured; rendered text/images remain in bounds, the existing logo/product images load, and cart/footer colors remain readable. Dynamic cart section and required footer are retained. A rich-text editor append behavior encountered during editing was corrected before activation; reopened wording is exact. The secondary support URL is configured in the editor, but its rendered preview `href` is empty (also observed on the original generic button), so delivered/tracked destination verification is still pending. No test send, manual campaign, live recovery click, order/payment, workflow/audience/timing/discount/sender change, checkout-email edit, theme/code deployment or GitHub push occurred. This was UI-only; no new code tests were run and prior checks are not recertified. Documentation remains local. See [cart email notes](notifications/abandoned-cart.md).
+
 Code/fixture checks documented through November 7, 2026; live policy/file verification through November 8; native reports below were inspected October 14. This is a scoped audit, not accessibility certification, a guarantee of no remaining bugs or enterprise-readiness sign-off.
 
 ## November 8 Live Verification

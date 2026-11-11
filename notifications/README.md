@@ -1,5 +1,11 @@
 # Notification Branding
 
+## Abandoned Cart
+
+**GitHub checkpoint, November 10 at 8:01:41 PM CST:** Included the cart-email setup, verification limits and timestamped project notes in the `codex/seo-foundations` documentation update for both configured repositories. The original local-only notes below predate this checkpoint. The design is store-managed; this update does not deploy an email template, change its active state or send mail.
+
+**Active November 10, 2026 at 7:59:16 PM CST:** With owner approval, temporarily paused **You left items in your cart** through draft mode, applied AE branding using Shopify Messaging's native section controls, and reactivated it. The active list and reopened preview confirm persistence. Charcoal framing, existing logo, smaller heading, red cart action, clearer spacing and a secondary fitment-help action now match the other AE emails. Native dynamic cart items, unsubscribe footer, subject, audience, timing, conditions, discounts, sender and the separate checkout email are preserved. Actual phone/desktop preview widths measured 375/600px with no content overflow; no test/manual campaign was sent and delivered-link/inbox testing remains pending. This UI-only change generated no new template code or storefront deployment. Documentation is local and unpushed. See [abandoned-cart.md](abandoned-cart.md) for verification limits and future edits.
+
 **GitHub follow-up, November 8, 2026 at 3:34:13 PM CST:** Included the reusable newsletter source, order/shipping styles, preservation/preview tools and nine focused email tests in the `codex/seo-foundations` review-branch update for both configured repositories. The complete November 8 regression run passed 197/197, including these nine email groups; release-configuration tests passed separately, CLI Theme Check is clean and packaging passed. Theme Check excludes only this email-only folder, whose marketing variables are not storefront Liquid; its dedicated tests remain enabled. Earlier local-only and no-full-rerun notes below describe their original checkpoints. Git does not apply Shopify notification/template settings, send mail or create campaigns. Private merchant exports, generated bodies and sample previews remain ignored under `.tools/`.
 
 ## Newsletter Master
