@@ -1,5 +1,18 @@
 # Customer Accounts
 
+## November 11 Signed-In Verification
+
+**GitHub review update:** The account-label fix, regression and verification notes are included in the `codex/seo-foundations` commit for the configured repositories. This does not merge `main`, upload a Shopify theme or publish the live fix. References to local-only work below describe the verification checkpoint before this review update.
+
+The owner completed customer sign-in directly in the browser. The live account domain reached the authenticated Orders page and displayed the expected welcome/shopping empty state. No existing purchase was available for this account, so populated purchase history, order details and tracking remain unverified. No password or verification code was collected in chat, and no other customer's records were accessed.
+
+- Verified the live desktop account icon and mobile menu entry reach branded sign-in, without a draft-preview session. The mobile entry is approximately 50px high. Sign-in and authenticated Orders layouts fit measured 1280px desktop and 390px mobile viewports without horizontal page overflow; temporary viewport overrides were reset.
+- The authenticated `Shop now` link returns to the storefront. The mobile account entry switches to its signed-in label, and following it returns to Orders without another login challenge. The owner remains signed in; no profile, order, marketing preference, payment or account configuration was edited.
+- Found a live label-escaping defect: the signed-in entry displays the literal entity in `Account &amp; orders`. The local header now uses Shopify's `escape_once` for its three account-label outputs, retaining text/attribute escaping without double-encoding existing entities. Native route escaping and authentication behavior are unchanged. This fix is local only, not uploaded, published or pushed to GitHub.
+- Added a regression covering raw and pre-escaped labels, text/attribute output, and markup safety. It reproduced the defect before the fix. All five focused account test groups pass, including eight responsive widths with/without JavaScript and menu accessibility/focus restoration. CLI Theme Check inspected 83 files with no offenses. The bundled AI Toolkit validator still cannot start because its theme-check dependency is missing; that is not a validation pass. The full storefront suite was not rerun for this three-output change.
+
+This verifies successful owner sign-in and the empty-history workflow, not historical order retrieval or every email sign-in method. The earlier November 8 draft-only observations below are historical checkpoints, not today's live navigation status. Official escaping reference: [Shopify escape_once](https://shopify.dev/docs/api/liquid/filters/escape_once).
+
 ## November 8, 2026
 
 Shopify Admin already has customer accounts and "Show sign-in links" enabled. The configured account domain is https://account.autobahnessentials.com. Its hosted login was opened and verified to show the AE logo, "Sign in or create an account", an email field and Continue. No authentication settings were changed.

@@ -4,7 +4,8 @@ const path = require('node:path');
 const { test, before, after } = require('node:test');
 const { chromium } = require('playwright');
 const axe = require('axe-core');
-const { context, renderSection, mount, root } = require('./helpers/theme.cjs');
+const { Liquid } = require('liquidjs');
+const { context, renderSection, mount, root, read } = require('./helpers/theme.cjs');
 
 const accounts = {
   shop: { customer_accounts_enabled: true },
@@ -32,6 +33,28 @@ test('disabled accounts and missing native routes produce no account entry point
     const html = await renderSection('header', context(options));
     assert.doesNotMatch(html, /class="(?:account-menu-link|icon-button account-toggle)"/);
   }
+});
+
+test('translated account labels preserve existing entities while escaping text and attributes', async () => {
+  const outputs = read('sections/header.liquid').match(/{{\s*account_label\s*\|[^}]+}}/g);
+  assert.equal(outputs.length, 3);
+  const liquid = new Liquid();
+  const page = await browser.newPage();
+  try {
+    for (const [label, expected] of [
+      ['Account & orders', 'Account & orders'],
+      ['Account &amp; orders', 'Account & orders'],
+      ['Account &lt;orders&gt; &#34;guest&#34;', 'Account <orders> "guest"'],
+      ['Account <img src=x onerror="alert(1)"> & orders', 'Account <img src=x onerror="alert(1)"> & orders'],
+    ]) {
+      const html = await liquid.parseAndRender(`<a href="/account" title="${outputs[1]}"><span>${outputs[2]}</span></a><span id="menu-label">${outputs[0]}</span>`, { account_label: label });
+      await page.setContent(html);
+      assert.equal(await page.locator('a').getAttribute('title'), expected);
+      assert.equal(await page.locator('a span').textContent(), expected);
+      assert.equal(await page.locator('#menu-label').textContent(), expected);
+      assert.equal(await page.locator('img, script, [onerror]').count(), 0);
+    }
+  } finally { await page.close(); }
 });
 
 test('native account links remain reachable without crowding mobile and desktop headers, including without JavaScript', async () => {

@@ -1,5 +1,25 @@
 # Release Readiness
 
+## November 11 Customer Accounts
+
+**GitHub review follow-up:** The account-label fix, focused regression and November 11 verification checkpoints are included in the `codex/seo-foundations` review update. Earlier local-only statements below describe their original checkpoints. No merge to `main`, theme upload/publication, additional sign-in, order or payment action is part of this update. Separate email/SMS work remains uncommitted.
+
+The owner completed sign-in in the browser; the live customer account shows the expected empty Orders screen. Desktop/mobile entry points, branded login, measured 1280/390px bounds, return-to-store behavior and authenticated return to Orders were verified. No past purchase exists on this test account, so historical order details and tracking are still pending. No customer/profile/order/payment configuration was changed. The owner remains signed in.
+
+A literal `&amp;` in the live signed-in account label was reproduced. A narrowly scoped local fix uses `escape_once` for the three header-label outputs, with a new failing-before/passing-after regression. All five focused account test groups pass; CLI Theme Check reports 83 files and no offenses. No full-suite rerun, draft upload, live publish or GitHub push occurred. The label fix and this checkpoint remain local. See [Customer Accounts](CUSTOMER-ACCOUNTS.md) for verification boundaries and validator limitations.
+
+## November 11 Purchase Test
+
+**November 11, 2026 (America/Chicago): Partial pass, not launch approval.** The owner approved a brief Shopify Payments test-mode window, a temporary $2 physical item with manual fulfillment, and specific test contact/delivery details. The item had stock only at the merchant-managed location, with no supplier mapping. Private buyer details, checkout tokens and product/order identifiers are excluded from this document.
+
+- Exited the old draft-theme preview before opening hosted checkout from the storefront. Free U.S. Economy shipping displayed 5-8 business days; the simulated $2 subtotal returned $0.15 estimated tax and a $2.15 total. This verifies the configured response, not tax correctness or actual delivery.
+- Shopify's official declined test card produced the expected visible card-declined message. Checkout subsequently reported `ready_for_complete`, not a completed order.
+- The successful-card attempt could not be confirmed by the checkout automation. A duplicate-order safety gate first required a fresh status read; after confirming checkout was still pending, the permitted completion call returned `completion_failed`. The visible decline message remained and a targeted Admin lookup found no order for the temporary item's unique SKU. This is an unresolved test, not proof that normal customer payments fail.
+- Ended the window: archived the temporary product, reset its test inventory to zero, switched test mode off, and reloaded Shopify Payments to verify the saved off state. The storefront cart was verified empty. No real payment, supplier request, shipping label, fulfillment or refund was performed. Checkout data-clearing returned empty buyer/billing state, but the rendered stock-error checkout still showed some address fields; do not claim that all retained test checkout records were deleted.
+- Preflight found no active order-fulfillment Flow workflow; physical products were not configured for Shopify automatic fulfillment. DSers' automatic supplier ordering and Syncee's automatic order payment were off. DSers displayed a separate warning that its linked AliExpress account needs reauthorization; that connection was not changed. Other app workflows are not certified by these observations.
+
+**Still pending:** successful test-order creation, actual order-triggered confirmation delivery, refund/cancellation handling, and supplier/tracking verification. Plan a separate supervised test before another interruption to live checkout. No theme source changed, GitHub push or live theme publication occurred. This checkpoint is local only; earlier test counts and historical approvals are unchanged. Test-mode behavior follows [Shopify's testing guidance](https://help.shopify.com/en/manual/payments/shopify-payments/testing-shopify-payments).
+
 ## November 10 Cart Email
 
 **November 10, 2026 at 7:59:16 PM CST:** The approved AE cart-email cleanup is active in Shopify Messaging after its temporary draft pause. Native cart products/action, unsubscribe, sender, subject, audience, workflow rules and separate checkout email are retained. Reopened saved preview was checked at 375/600px without content overflow; no code or theme release was involved. Sample inbox/dark-mode and delivered/tracked-link checks are still pending, including the secondary fitment-help destination configured in the editor. No test/manual campaign was sent or customer cart/order/payment created. Local documentation is not pushed; prior launch blockers and test dates remain unchanged. [Details](notifications/abandoned-cart.md).

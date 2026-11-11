@@ -121,7 +121,7 @@
       {%- if account_url != blank -%}
         <a class="account-menu-link" href="{{ account_url | escape }}">
           {% render 'icon', icon: 'account' %}
-          <span>{{ account_label | escape }}</span>
+          <span>{{ account_label | escape_once }}</span>
         </a>
       {%- endif -%}
     </nav>
@@ -139,8 +139,8 @@
 
     <div class="header-actions">
       {%- if account_url != blank -%}
-        <a class="icon-button account-toggle" href="{{ account_url | escape }}" title="{{ account_label | escape }}">
-          <span class="visually-hidden">{{ account_label | escape }}</span>
+        <a class="icon-button account-toggle" href="{{ account_url | escape }}" title="{{ account_label | escape_once }}">
+          <span class="visually-hidden">{{ account_label | escape_once }}</span>
           {% render 'icon', icon: 'account' %}
         </a>
       {%- endif -%}
