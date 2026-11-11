@@ -1,3 +1,6 @@
+{% doc %}
+  Renders the return request form and approved return-window guidance.
+{% enddoc %}
 {%- liquid
   assign returns_form_id = 'ReturnRequest-' | append: section.id
   assign returns_heading_id = returns_form_id | append: '-heading'
@@ -18,7 +21,7 @@
         <h1>{{ returns_heading | escape }}</h1>
         <p>{{ returns_text | escape }}</p>
       </div>
-      <p class="ae-returns-window">{% render 'icon', icon: 'shield' %}<span>Request a return within <strong>{{ returns_window | escape }} days of delivery.</strong></span></p>
+      <p class="ae-returns-window">{% render 'icon', icon: 'shield' %}<span>Eligible items: <strong>{{ returns_window | escape }} days after delivery.</strong> ARM Motorsports carbon fiber: <strong>30 days.</strong></span></p>
     </header>
 
     <div class="ae-contact-layout">
@@ -107,6 +110,11 @@
 
     <section class="ae-returns-faq" aria-labelledby="{{ returns_form_id }}-faq-heading">
       <h2 id="{{ returns_form_id }}-faq-heading">Return questions</h2>
+      <details>
+        <summary>Which products are eligible for ordinary returns?</summary>
+        <p>Eligible items have a {{ returns_window | escape }}-day return request window after delivery. ARM Motorsports carbon-fiber products have a 30-day window. All other carbon-fiber products and all lighting products are excluded from ordinary, non-defective returns. Other exclusions and return conditions in the refund policy still apply.</p>
+        <p>These exclusions do not change support for defective, damaged or incorrect items, or your statutory rights.</p>
+      </details>
       <details>
         <summary>Received a damaged or incorrect item?</summary>
         <p>Contact us as soon as you notice an issue. Keep the item and packaging, and have photos ready to share with support.</p>
