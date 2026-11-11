@@ -1,5 +1,9 @@
 # Release Readiness
 
+## November 10 Cart Email
+
+**November 10, 2026 at 7:59:16 PM CST:** The approved AE cart-email cleanup is active in Shopify Messaging after its temporary draft pause. Native cart products/action, unsubscribe, sender, subject, audience, workflow rules and separate checkout email are retained. Reopened saved preview was checked at 375/600px without content overflow; no code or theme release was involved. Sample inbox/dark-mode and delivered/tracked-link checks are still pending, including the secondary fitment-help destination configured in the editor. No test/manual campaign was sent or customer cart/order/payment created. Local documentation is not pushed; prior launch blockers and test dates remain unchanged. [Details](notifications/abandoned-cart.md).
+
 ## November 8 Checkpoint
 
 **GitHub follow-up, November 8 at 3:34:13 PM CST:** Today's source, tests and documentation are included in the `codex/seo-foundations` update for both configured repositories. Earlier unpushed notes below describe their original checkpoints. This is a review-branch update only: no main merge/live theme publication or additional Shopify settings/email/payment action. The account draft remains unpublished and the signed-in historical-order test is pending. The existing full-run result is 197/197, followed by both release-configuration checks, clean CLI Theme Check and packaging.
